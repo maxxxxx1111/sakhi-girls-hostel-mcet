@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hostelmate – Modern Hostel &amp; Mess Management Portal</title>
+    <meta name="description" content="Hostelmate is a comprehensive hostel and mess management portal with student and warden dashboards, room allocation, leave gate passes, meal tracking, and digital campus operations." />
+    <meta property="og:title" content="Hostelmate – Modern Hostel &amp; Mess Management Portal" />
+    <meta property="og:description" content="Hostelmate is a comprehensive hostel and mess management portal with student and warden dashboards, room allocation, leave gate passes, meal tracking, and digital campus operations." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <script>
+      (function() {
+        try {
+          var pref = localStorage.getItem('MCET_HOSTEL_THEME_PREFERENCE');
+          var resolved = 'light';
+          if (pref) {
+            var parsed = JSON.parse(pref);
+            if (parsed === 'light' || parsed === 'dark') {
+              resolved = parsed;
+            }
+          }
+          // Default to light as requested for the white main page
+          document.documentElement.classList.remove('dark');
+          document.documentElement.classList.add(resolved);
+          document.documentElement.style.colorScheme = resolved;
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="min-h-screen font-body antialiased selection:bg-violet-500 selection:text-white">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
