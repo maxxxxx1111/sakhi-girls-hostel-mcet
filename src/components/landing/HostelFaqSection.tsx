@@ -69,17 +69,17 @@ export const HostelFaqSection: React.FC = () => {
   };
 
   return (
-    <section id="hostel-faq" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 py-20 border-t border-white/[0.08]">
+    <section id="hostel-faq" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 py-20 border-t border-white/[0.08] light:border-pink-200/80">
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
         <div>
-          <span className="text-xs font-semibold uppercase tracking-wider text-violet-400 bg-violet-500/10 px-3.5 py-1 rounded-full border border-violet-500/20 inline-block mb-3 font-mono">
+          <span className="text-xs font-semibold uppercase tracking-wider text-violet-400 light:text-violet-700 bg-violet-500/10 light:bg-violet-50 px-3.5 py-1 rounded-full border border-violet-500/20 light:border-violet-300 inline-block mb-3 font-mono">
             Resident &amp; Guardian Guide
           </span>
-          <h2 className="font-display text-3xl sm:text-4xl text-white font-bold tracking-tight">
+          <h2 className="font-display text-3xl sm:text-4xl text-white light:text-zinc-900 font-bold tracking-tight">
             Frequently Asked Questions &amp; Rules
           </h2>
         </div>
-        <p className="text-xs sm:text-sm text-zinc-400 max-w-md mt-3 md:mt-0 leading-relaxed">
+        <p className="text-xs sm:text-sm text-zinc-400 light:text-zinc-600 max-w-md mt-3 md:mt-0 leading-relaxed">
           Key guidelines on hostel admissions, curfew compliance, culinary hygiene, and emergency medical support at Sakhi Girls Hostel.
         </p>
       </div>
@@ -94,8 +94,8 @@ export const HostelFaqSection: React.FC = () => {
               key={faq.id}
               className={`rounded-3xl border transition-all duration-200 overflow-hidden ${
                 isOpen
-                  ? 'bg-[#15131C] border-violet-500/40 shadow-[0_8px_30px_rgba(139,92,246,0.12)]'
-                  : 'bg-[#111215]/90 border-white/[0.08] hover:border-white/20'
+                  ? 'bg-[#15131C] light:bg-violet-50/60 border-violet-500/40 light:border-violet-300 shadow-[0_8px_30px_rgba(139,92,246,0.12)] light:shadow-[0_4px_20px_rgba(139,92,246,0.08)]'
+                  : 'bg-[#111215]/90 light:bg-white border-white/[0.08] light:border-pink-200/70 hover:border-white/20 light:hover:border-violet-300 light:shadow-xs'
               }`}
             >
               <button
@@ -106,16 +106,16 @@ export const HostelFaqSection: React.FC = () => {
                 <div className="flex items-center gap-4">
                   <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 border ${
                     isOpen
-                      ? 'bg-violet-600/20 text-violet-400 border-violet-500/40'
-                      : 'bg-[#16181D] text-zinc-400 border-white/[0.06]'
+                      ? 'bg-violet-600/20 light:bg-violet-100 text-violet-400 light:text-violet-700 border-violet-500/40 light:border-violet-300'
+                      : 'bg-[#16181D] light:bg-zinc-100 text-zinc-400 light:text-zinc-600 border-white/[0.06] light:border-zinc-200'
                   }`}>
                     <Icon className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-violet-400/90 font-bold block mb-1">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-violet-400/90 light:text-violet-700 font-bold block mb-1">
                       {faq.category}
                     </span>
-                    <h3 className="text-sm sm:text-base font-bold text-white leading-snug">
+                    <h3 className="text-sm sm:text-base font-bold text-white light:text-zinc-900 leading-snug">
                       {faq.question}
                     </h3>
                   </div>
@@ -123,15 +123,15 @@ export const HostelFaqSection: React.FC = () => {
 
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 border transition-transform duration-200 ${
                   isOpen
-                    ? 'rotate-180 bg-violet-600/20 border-violet-500/30 text-violet-300'
-                    : 'bg-[#16181D] border-white/[0.08] text-zinc-400'
+                    ? 'rotate-180 bg-violet-600/20 light:bg-violet-100 border-violet-500/30 light:border-violet-300 text-violet-300 light:text-violet-700'
+                    : 'bg-[#16181D] light:bg-zinc-100 border-white/[0.08] light:border-zinc-200 text-zinc-400 light:text-zinc-600'
                 }`}>
                   <ChevronDown className="w-4 h-4" />
                 </div>
               </button>
 
               {isOpen && (
-                <div className="px-6 pb-6 pt-1 text-xs sm:text-sm text-zinc-300 leading-relaxed border-t border-white/[0.04]">
+                <div className="px-6 pb-6 pt-1 text-xs sm:text-sm text-zinc-300 light:text-zinc-700 leading-relaxed border-t border-white/[0.04] light:border-violet-100">
                   <p className="pl-14">{faq.answer}</p>
                 </div>
               )}

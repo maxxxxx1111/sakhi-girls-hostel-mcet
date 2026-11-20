@@ -568,3 +568,194 @@ JOIN hostels h ON r.hostel_id = h.hostel_id
 WHERE b.status = 'Available' AND r.status != 'Maintenance'
 ORDER BY r.floor, r.room_number, b.bed_number;
 
+-- =============================================================================
+-- PERFORMANCE INDEXES (Optimized for MySQL Workbench & Production Queries)
+-- =============================================================================
+
+CREATE INDEX idx_students_dept ON students(department);
+CREATE INDEX idx_students_year ON students(year);
+CREATE INDEX idx_beds_status ON beds(status);
+CREATE INDEX idx_rooms_floor ON rooms(floor);
+CREATE INDEX idx_leaves_status ON leave_requests(status);
+CREATE INDEX idx_complaints_priority ON complaints(priority, status);
+CREATE INDEX idx_fees_status ON fee_records(status);
+CREATE INDEX idx_gate_type ON gate_logs(entry_type, checkpost_gate);
+
+-- =============================================================================
+-- STORED PROCEDURES (Relational Business Logic in MySQL Workbench)
+-- =============================================================================
+
+DROP PROCEDURE IF EXISTS sp_allot_bed;
+DELIMITER //
+CREATE PROCEDURE sp_allot_bed(
+  IN p_room_id VARCHAR(32),
+  IN p_bed_id VARCHAR(32),
+  IN p_student_id VARCHAR(32),
+  OUT p_status_msg VARCHAR(255)
+)
+BEGIN
+  DECLARE v_bed_status VARCHAR(32);
+  DECLARE v_std_name VARCHAR(128);
+  DECLARE v_room_no VARCHAR(16);
+  DECLARE v_hostel_id VARCHAR(32);
+  DECLARE v_hostel_name VARCHAR(128);
+  DECLARE v_bed_no VARCHAR(16);
+
+  SELECT status, bed_number INTO v_bed_status, v_bed_no FROM beds WHERE bed_id = p_bed_id AND room_id = p_room_id;
+  SELECT name INTO v_std_name FROM students WHERE student_id = p_student_id;
+  SELECT room_number, hostel_id INTO v_room_no, v_hostel_id FROM rooms WHERE room_id = p_room_id;
+  SELECT name INTO v_hostel_name FROM hostels WHERE hostel_id = v_hostel_id;
+
+  IF v_bed_status = 'Available' THEN
+    START TRANSACTION;
+      UPDATE beds 
+      SET status = 'Occupied', student_id = p_student_id, student_name = v_std_name 
+      WHERE bed_id = p_bed_id;
+
+      UPDATE students 
+      SET room_id = p_room_id, room_number = v_room_no, bed_number = v_bed_no, hostel_id = v_hostel_id, hostel_name = v_hostel_name, status = 'Active' 
+      WHERE student_id = p_student_id;
+
+      UPDATE rooms 
+      SET occupied = (SELECT COUNT(*) FROM beds WHERE room_id = p_room_id AND status = 'Occupied'),
+          status = CASE WHEN (SELECT COUNT(*) FROM beds WHERE room_id = p_room_id AND status = 'Occupied') >= capacity THEN 'Full' ELSE 'Partially Occupied' END
+      WHERE room_id = p_room_id;
+    COMMIT;
+    SET p_status_msg = CONCAT('SUCCESS: Bed ', v_bed_no, ' in Room ', v_room_no, ' allotted to ', v_std_name);
+  ELSE
+    SET p_status_msg = 'ERROR: Bed is not available for allotment';
+  END IF;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS sp_vacate_bed;
+DELIMITER //
+CREATE PROCEDURE sp_vacate_bed(
+  IN p_room_id VARCHAR(32),
+  IN p_bed_id VARCHAR(32),
+  OUT p_status_msg VARCHAR(255)
+)
+BEGIN
+  DECLARE v_std_id VARCHAR(32);
+  DECLARE v_bed_no VARCHAR(16);
+  DECLARE v_room_no VARCHAR(16);
+
+  SELECT student_id, bed_number INTO v_std_id, v_bed_no FROM beds WHERE bed_id = p_bed_id AND room_id = p_room_id;
+  SELECT room_number INTO v_room_no FROM rooms WHERE room_id = p_room_id;
+
+  START TRANSACTION;
+    UPDATE beds 
+    SET status = 'Available', student_id = NULL, student_name = NULL 
+    WHERE bed_id = p_bed_id;
+
+    IF v_std_id IS NOT NULL THEN
+      UPDATE students 
+      SET room_id = NULL, room_number = 'Unassigned', bed_number = 'None', status = 'Vacated' 
+      WHERE student_id = v_std_id;
+    END IF;
+
+    UPDATE rooms 
+    SET occupied = (SELECT COUNT(*) FROM beds WHERE room_id = p_room_id AND status = 'Occupied'),
+        status = CASE WHEN (SELECT COUNT(*) FROM beds WHERE room_id = p_room_id AND status = 'Occupied') = 0 THEN 'Available' ELSE 'Partially Occupied' END
+    WHERE room_id = p_room_id;
+  COMMIT;
+  SET p_status_msg = CONCAT('SUCCESS: Bed ', v_bed_no, ' in Room ', v_room_no, ' vacated');
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS sp_calculate_mess_rebate;
+DELIMITER //
+CREATE PROCEDURE sp_calculate_mess_rebate(
+  IN p_leave_id VARCHAR(32),
+  OUT p_rebate_amount DECIMAL(10,2)
+)
+BEGIN
+  DECLARE v_days INT;
+  DECLARE v_rate DECIMAL(10,2) DEFAULT 85.00;
+
+  SELECT DATEDIFF(to_date, from_date) INTO v_days 
+  FROM leave_requests 
+  WHERE leave_id = p_leave_id AND status = 'Approved';
+
+  IF v_days >= 3 THEN
+    SET p_rebate_amount = v_days * v_rate;
+    UPDATE leave_requests 
+    SET rebate_days = v_days, mess_rebate_inr = p_rebate_amount 
+    WHERE leave_id = p_leave_id;
+  ELSE
+    SET p_rebate_amount = 0.00;
+  END IF;
+END //
+DELIMITER ;
+
+-- =============================================================================
+-- TRIGGERS (Automated Business Rule Enforcement)
+-- =============================================================================
+
+DROP TRIGGER IF EXISTS trg_auto_rebate_on_approval;
+DELIMITER //
+CREATE TRIGGER trg_auto_rebate_on_approval
+BEFORE UPDATE ON leave_requests
+FOR EACH ROW
+BEGIN
+  IF NEW.status = 'Approved' AND DATEDIFF(NEW.to_date, NEW.from_date) >= 3 THEN
+    SET NEW.rebate_days = DATEDIFF(NEW.to_date, NEW.from_date);
+    SET NEW.mess_rebate_inr = NEW.rebate_days * 85.00;
+  END IF;
+END //
+DELIMITER ;
+
+-- =============================================================================
+-- 10 READY-TO-RUN ANALYTICAL QUERIES FOR MYSQL WORKBENCH
+-- (Execute any query directly to evaluate database state & academic insights)
+-- =============================================================================
+
+-- Query 1: Sakhi Girls Hostel Overall Occupancy & Bed Inventory
+-- SELECT * FROM v_sakhi_hostel_summary;
+
+-- Query 2: Room-by-Room Vacancy & Remaining Beds by Academic Year Wing
+-- SELECT * FROM v_room_availability WHERE beds_left > 0;
+
+-- Query 3: Resident Distribution across the 6 Engineering Branches
+-- SELECT * FROM v_department_distribution;
+
+-- Query 4: Approved Outstation Leaves Eligible for Dining Fee Rebate (>= 3 days at ₹85/day)
+-- SELECT student_name, room_number, from_date, to_date, DATEDIFF(to_date, from_date) AS days_absent, 
+--        (DATEDIFF(to_date, from_date) * 85.00) AS mess_rebate_credited_inr
+-- FROM leave_requests 
+-- WHERE status = 'Approved' AND DATEDIFF(to_date, from_date) >= 3;
+
+-- Query 5: Unresolved Maintenance Complaints with Assigned Technicians & SLAs
+-- SELECT complaint_id, room_number, category, title, priority, sla_target_hours, assigned_to, date_submitted 
+-- FROM complaints 
+-- WHERE status != 'Resolved' 
+-- ORDER BY priority = 'Emergency' DESC, priority = 'Urgent' DESC, date_submitted ASC;
+
+-- Query 6: Outstanding Term Fee & Mess Fee Dues Register
+-- SELECT s.name, s.department, s.year, s.room_number, f.total_dues, f.paid_amount, f.pending_amount, f.due_date 
+-- FROM fee_records f 
+-- JOIN students s ON f.student_id = s.student_id 
+-- WHERE f.status != 'Paid' 
+-- ORDER BY f.pending_amount DESC;
+
+-- Query 7: Sentry Gate Movements & Curfew Monitoring (Gate 1 Post)
+-- SELECT pass_code, student_name, room_number, entry_type, movement_timestamp, verification_method, checkpost_gate 
+-- FROM gate_logs 
+-- ORDER BY movement_timestamp DESC 
+-- LIMIT 15;
+
+-- Query 8: Critical Annapurna Mess Food Inventory Below Minimum Re-order Stock
+-- SELECT item_id, name, category, current_stock, minimum_stock, unit, vendor, status 
+-- FROM mess_inventory 
+-- WHERE current_stock <= minimum_stock;
+
+-- Query 9: Average Resident Satisfaction Rating for Annapurna Mess Meals
+-- SELECT meal, COUNT(*) AS total_reviews, ROUND(AVG(overall_rating), 2) AS avg_rating, 
+--        ROUND(AVG(food_quality), 2) AS avg_quality, ROUND(AVG(cleanliness), 2) AS avg_hygiene 
+-- FROM mess_feedback 
+-- GROUP BY meal;
+
+-- Query 10: Immediately Available Vacant Beds Ready for Allotment
+-- SELECT * FROM v_vacant_beds;
+
+

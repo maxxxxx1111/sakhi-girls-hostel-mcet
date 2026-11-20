@@ -49,17 +49,17 @@ export const FeeEstimatorSection: React.FC = () => {
   };
 
   return (
-    <section id="fee-estimator" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 py-20 border-t border-white/[0.08]">
+    <section id="fee-estimator" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 py-20 border-t border-white/[0.08] light:border-pink-100">
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
         <div>
-          <span className="text-xs font-semibold uppercase tracking-wider text-pink-400 bg-pink-500/10 px-3.5 py-1 rounded-full border border-pink-500/20 inline-block mb-3 font-mono">
+          <span className="text-xs font-semibold uppercase tracking-wider text-pink-400 light:text-pink-600 bg-pink-500/10 px-3.5 py-1 rounded-full border border-pink-500/20 inline-block mb-3 font-mono">
             Transparent Pricing • Sakhi Girls Hostel
           </span>
-          <h2 className="font-display text-3xl sm:text-4xl text-white font-bold tracking-tight">
+          <h2 className="font-display text-3xl sm:text-4xl text-white light:text-zinc-900 font-bold tracking-tight">
             Collegiate Fee &amp; Living Cost Estimator
           </h2>
         </div>
-        <p className="text-xs sm:text-sm text-zinc-400 max-w-md mt-3 md:mt-0 leading-relaxed">
+        <p className="text-xs sm:text-sm text-zinc-400 light:text-zinc-600 max-w-md mt-3 md:mt-0 leading-relaxed">
           Interactive semester and annual budget calculator for residential suites, Annapurna dining, and optional campus amenities.
         </p>
       </div>
@@ -68,8 +68,8 @@ export const FeeEstimatorSection: React.FC = () => {
         {/* Left Interactive Selection Panel (7 Cols) */}
         <div className="lg:col-span-7 space-y-6">
           {/* 1. Academic Year */}
-          <div className="p-6 rounded-3xl bg-[#111215]/90 border border-white/[0.08] shadow-lg space-y-3">
-            <label className="text-xs font-mono uppercase tracking-wider text-zinc-400 font-bold block">
+          <div className="p-6 rounded-3xl bg-[#111215]/90 light:bg-white border border-white/[0.08] light:border-pink-200/80 shadow-lg light:shadow-sm space-y-3">
+            <label className="text-xs font-mono uppercase tracking-wider text-zinc-400 light:text-zinc-600 font-bold block">
               1. Resident Academic Year (Designated Floor)
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
@@ -85,20 +85,20 @@ export const FeeEstimatorSection: React.FC = () => {
                   onClick={() => setSelectedYear(y.year as any)}
                   className={`p-3 rounded-2xl border text-left transition-all cursor-pointer ${
                     selectedYear === y.year
-                      ? 'bg-pink-600/20 border-pink-500/50 text-white shadow-[0_0_16px_rgba(236,72,153,0.25)]'
-                      : 'bg-[#16181D]/80 border-white/[0.06] text-zinc-400 hover:border-white/15'
+                      ? 'bg-pink-600/20 light:bg-pink-50 border-pink-500/50 light:border-pink-400 text-white light:text-pink-900 shadow-[0_0_16px_rgba(236,72,153,0.25)]'
+                      : 'bg-[#16181D]/80 light:bg-pink-50/30 border-white/[0.06] light:border-pink-100 text-zinc-400 light:text-zinc-600 hover:border-white/15'
                   }`}
                 >
-                  <p className="text-xs font-bold text-white">{y.label}</p>
-                  <span className="text-[10px] text-pink-400/90 font-mono mt-0.5 block">{y.floor}</span>
+                  <p className="text-xs font-bold text-white light:text-zinc-900">{y.label}</p>
+                  <span className="text-[10px] text-pink-400 light:text-pink-600 font-mono mt-0.5 block">{y.floor}</span>
                 </button>
               ))}
             </div>
           </div>
 
           {/* 2. Room Sharing Tier */}
-          <div className="p-6 rounded-3xl bg-[#111215]/90 border border-white/[0.08] shadow-lg space-y-3">
-            <label className="text-xs font-mono uppercase tracking-wider text-zinc-400 font-bold block">
+          <div className="p-6 rounded-3xl bg-[#111215]/90 light:bg-white border border-white/[0.08] light:border-pink-200/80 shadow-lg light:shadow-sm space-y-3">
+            <label className="text-xs font-mono uppercase tracking-wider text-zinc-400 light:text-zinc-600 font-bold block">
               2. Room Sharing Tier &amp; Accommodation
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -128,26 +128,26 @@ export const FeeEstimatorSection: React.FC = () => {
                   onClick={() => setRoomType(r.type)}
                   className={`p-4 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
                     roomType === r.type
-                      ? 'bg-violet-600/20 border-violet-500/50 text-white shadow-[0_0_16px_rgba(139,92,246,0.25)]'
-                      : 'bg-[#16181D]/80 border-white/[0.06] text-zinc-400 hover:border-white/15'
+                      ? 'bg-pink-600/20 light:bg-pink-50 border-pink-500/50 light:border-pink-400 text-white light:text-pink-900 shadow-[0_0_16px_rgba(236,72,153,0.25)]'
+                      : 'bg-[#16181D]/80 light:bg-pink-50/30 border-white/[0.06] light:border-pink-100 text-zinc-400 light:text-zinc-600 hover:border-white/15'
                   }`}
                 >
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-xs font-bold text-white">{r.title}</span>
-                      <Building2 className={`w-3.5 h-3.5 ${roomType === r.type ? 'text-violet-400' : 'text-zinc-500'}`} />
+                      <span className="text-xs font-bold text-white light:text-zinc-900">{r.title}</span>
+                      <Building2 className={`w-3.5 h-3.5 ${roomType === r.type ? 'text-pink-400 light:text-pink-600' : 'text-zinc-500'}`} />
                     </div>
-                    <p className="text-[11px] text-zinc-400 leading-snug">{r.desc}</p>
+                    <p className="text-[11px] text-zinc-400 light:text-zinc-600 leading-snug">{r.desc}</p>
                   </div>
-                  <span className="text-xs font-bold font-mono text-violet-300 mt-3 block">{r.price}</span>
+                  <span className="text-xs font-bold font-mono text-pink-400 light:text-pink-600 mt-3 block">{r.price}</span>
                 </button>
               ))}
             </div>
           </div>
 
           {/* 3. Dining & Add-ons */}
-          <div className="p-6 rounded-3xl bg-[#111215]/90 border border-white/[0.08] shadow-lg space-y-4">
-            <label className="text-xs font-mono uppercase tracking-wider text-zinc-400 font-bold block">
+          <div className="p-6 rounded-3xl bg-[#111215]/90 light:bg-white border border-white/[0.08] light:border-pink-200/80 shadow-lg light:shadow-sm space-y-4">
+            <label className="text-xs font-mono uppercase tracking-wider text-zinc-400 light:text-zinc-600 font-bold block">
               3. Annapurna Mess Plan &amp; Optional Add-ons
             </label>
 
@@ -158,16 +158,16 @@ export const FeeEstimatorSection: React.FC = () => {
                 onClick={() => setMessPlan('full')}
                 className={`p-4 rounded-2xl border text-left transition-all cursor-pointer ${
                   messPlan === 'full'
-                    ? 'bg-emerald-600/20 border-emerald-500/50 text-white shadow-[0_0_16px_rgba(16,185,129,0.25)]'
-                    : 'bg-[#16181D]/80 border-white/[0.06] text-zinc-400 hover:border-white/15'
+                    ? 'bg-emerald-600/20 light:bg-emerald-50 border-emerald-500/50 light:border-emerald-400 text-white light:text-emerald-950 shadow-[0_0_16px_rgba(16,185,129,0.25)]'
+                    : 'bg-[#16181D]/80 light:bg-pink-50/30 border-white/[0.06] light:border-pink-100 text-zinc-400 light:text-zinc-600 hover:border-white/15'
                 }`}
               >
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-bold text-white">Full 4-Meal Plan</span>
-                  <Utensils className={`w-3.5 h-3.5 ${messPlan === 'full' ? 'text-emerald-400' : 'text-zinc-500'}`} />
+                  <span className="text-xs font-bold text-white light:text-zinc-900">Full 4-Meal Plan</span>
+                  <Utensils className={`w-3.5 h-3.5 ${messPlan === 'full' ? 'text-emerald-400 light:text-emerald-600' : 'text-zinc-500'}`} />
                 </div>
-                <p className="text-[11px] text-zinc-400">Breakfast, Lunch, High Tea, Dinner (Unlimited Thali)</p>
-                <span className="text-xs font-bold font-mono text-emerald-400 mt-2 block">₹18,000 / semester</span>
+                <p className="text-[11px] text-zinc-400 light:text-zinc-600">Breakfast, Lunch, High Tea, Dinner (Unlimited Thali)</p>
+                <span className="text-xs font-bold font-mono text-emerald-400 light:text-emerald-700 mt-2 block">₹18,000 / semester</span>
               </button>
 
               <button
@@ -175,16 +175,16 @@ export const FeeEstimatorSection: React.FC = () => {
                 onClick={() => setMessPlan('saver')}
                 className={`p-4 rounded-2xl border text-left transition-all cursor-pointer ${
                   messPlan === 'saver'
-                    ? 'bg-emerald-600/20 border-emerald-500/50 text-white shadow-[0_0_16px_rgba(16,185,129,0.25)]'
-                    : 'bg-[#16181D]/80 border-white/[0.06] text-zinc-400 hover:border-white/15'
+                    ? 'bg-emerald-600/20 light:bg-emerald-50 border-emerald-500/50 light:border-emerald-400 text-white light:text-emerald-950 shadow-[0_0_16px_rgba(16,185,129,0.25)]'
+                    : 'bg-[#16181D]/80 light:bg-pink-50/30 border-white/[0.06] light:border-pink-100 text-zinc-400 light:text-zinc-600 hover:border-white/15'
                 }`}
               >
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-bold text-white">2-Meal Saver Plan</span>
-                  <Utensils className={`w-3.5 h-3.5 ${messPlan === 'saver' ? 'text-emerald-400' : 'text-zinc-500'}`} />
+                  <span className="text-xs font-bold text-white light:text-zinc-900">2-Meal Saver Plan</span>
+                  <Utensils className={`w-3.5 h-3.5 ${messPlan === 'saver' ? 'text-emerald-400 light:text-emerald-600' : 'text-zinc-500'}`} />
                 </div>
-                <p className="text-[11px] text-zinc-400">Nutritious Lunch &amp; Dinner Thali</p>
-                <span className="text-xs font-bold font-mono text-emerald-400 mt-2 block">₹12,000 / semester</span>
+                <p className="text-[11px] text-zinc-400 light:text-zinc-600">Nutritious Lunch &amp; Dinner Thali</p>
+                <span className="text-xs font-bold font-mono text-emerald-400 light:text-emerald-700 mt-2 block">₹12,000 / semester</span>
               </button>
             </div>
 
@@ -194,36 +194,36 @@ export const FeeEstimatorSection: React.FC = () => {
                 onClick={() => setIncludeLaundry(!includeLaundry)}
                 className={`p-3.5 rounded-2xl border flex items-center justify-between cursor-pointer transition-all ${
                   includeLaundry
-                    ? 'bg-[#1E1A29] border-violet-500/40 text-white'
-                    : 'bg-[#16181D]/60 border-white/[0.06] text-zinc-400'
+                    ? 'bg-[#1E1A29] light:bg-pink-50 border-pink-500/40 light:border-pink-300 text-white light:text-zinc-900'
+                    : 'bg-[#16181D]/60 light:bg-pink-50/30 border-white/[0.06] light:border-pink-100 text-zinc-400 light:text-zinc-600'
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <Shirt className={`w-4 h-4 ${includeLaundry ? 'text-violet-400' : 'text-zinc-500'}`} />
+                  <Shirt className={`w-4 h-4 ${includeLaundry ? 'text-pink-400 light:text-pink-600' : 'text-zinc-500'}`} />
                   <div>
-                    <span className="text-xs font-semibold block text-zinc-200">Laundry Service</span>
+                    <span className="text-xs font-semibold block text-zinc-200 light:text-zinc-800">Laundry Service</span>
                     <span className="text-[10px] text-zinc-500">Weekly machine wash</span>
                   </div>
                 </div>
-                <span className="text-xs font-mono font-bold text-violet-300">+₹1,500</span>
+                <span className="text-xs font-mono font-bold text-pink-300 light:text-pink-700">+₹1,500</span>
               </label>
 
               <label
                 onClick={() => setIncludeCooler(!includeCooler)}
                 className={`p-3.5 rounded-2xl border flex items-center justify-between cursor-pointer transition-all ${
                   includeCooler
-                    ? 'bg-[#1E1A29] border-cyan-500/40 text-white'
-                    : 'bg-[#16181D]/60 border-white/[0.06] text-zinc-400'
+                    ? 'bg-[#1E1A29] light:bg-cyan-50/60 border-cyan-500/40 light:border-cyan-300 text-white light:text-zinc-900'
+                    : 'bg-[#16181D]/60 light:bg-pink-50/30 border-white/[0.06] light:border-pink-100 text-zinc-400 light:text-zinc-600'
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <Wind className={`w-4 h-4 ${includeCooler ? 'text-cyan-400' : 'text-zinc-500'}`} />
+                  <Wind className={`w-4 h-4 ${includeCooler ? 'text-cyan-400 light:text-cyan-600' : 'text-zinc-500'}`} />
                   <div>
-                    <span className="text-xs font-semibold block text-zinc-200">Desert Cooler Unit</span>
+                    <span className="text-xs font-semibold block text-zinc-200 light:text-zinc-800">Desert Cooler Unit</span>
                     <span className="text-[10px] text-zinc-500">Summer season setup</span>
                   </div>
                 </div>
-                <span className="text-xs font-mono font-bold text-cyan-300">+₹2,000</span>
+                <span className="text-xs font-mono font-bold text-cyan-300 light:text-cyan-700">+₹2,000</span>
               </label>
             </div>
           </div>
@@ -231,68 +231,68 @@ export const FeeEstimatorSection: React.FC = () => {
 
         {/* Right Summary Cost Card (5 Cols) */}
         <div className="lg:col-span-5 sticky top-24">
-          <div className="p-8 rounded-3xl bg-gradient-to-br from-[#1A1224] via-[#14121A] to-[#111215] border border-pink-500/30 shadow-[0_12px_40px_rgba(236,72,153,0.15)] space-y-6">
-            <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+          <div className="p-8 rounded-3xl bg-gradient-to-br from-[#1A1224] via-[#14121A] to-[#111215] light:from-white light:via-pink-50/50 light:to-white border border-pink-500/30 light:border-pink-200 shadow-[0_12px_40px_rgba(236,72,153,0.15)] light:shadow-lg space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-white/[0.08] light:border-pink-100">
               <div>
-                <span className="text-[10px] uppercase font-mono font-bold text-pink-400 tracking-wider">
+                <span className="text-[10px] uppercase font-mono font-bold text-pink-400 light:text-pink-600 tracking-wider">
                   Official MCET Quotation
                 </span>
-                <h3 className="text-xl font-display font-bold text-white mt-0.5">
+                <h3 className="text-xl font-display font-bold text-white light:text-zinc-900 mt-0.5">
                   Living Fee Breakdown
                 </h3>
               </div>
-              <div className="w-10 h-10 rounded-2xl bg-pink-500/20 text-pink-400 flex items-center justify-center border border-pink-500/30">
+              <div className="w-10 h-10 rounded-2xl bg-pink-500/20 light:bg-pink-100 text-pink-400 light:text-pink-600 flex items-center justify-center border border-pink-500/30 light:border-pink-200">
                 <Calculator className="w-5 h-5" />
               </div>
             </div>
 
             {/* Itemized lines */}
             <div className="space-y-3 text-xs">
-              <div className="flex justify-between items-center text-zinc-300">
+              <div className="flex justify-between items-center text-zinc-300 light:text-zinc-700">
                 <span>Room Rent ({roomType === 'triple' ? 'Triple Sharing' : roomType === 'twin' ? 'Twin Executive' : 'Single Pod'})</span>
-                <span className="font-mono font-bold text-white">₹{currentRoomRate.toLocaleString('en-IN')}</span>
+                <span className="font-mono font-bold text-white light:text-zinc-900">₹{currentRoomRate.toLocaleString('en-IN')}</span>
               </div>
 
-              <div className="flex justify-between items-center text-zinc-300">
+              <div className="flex justify-between items-center text-zinc-300 light:text-zinc-700">
                 <span>Annapurna Mess ({messPlan === 'full' ? 'Full 4-Meal' : '2-Meal Saver'})</span>
-                <span className="font-mono font-bold text-white">₹{currentMessRate.toLocaleString('en-IN')}</span>
+                <span className="font-mono font-bold text-white light:text-zinc-900">₹{currentMessRate.toLocaleString('en-IN')}</span>
               </div>
 
               {includeLaundry && (
-                <div className="flex justify-between items-center text-zinc-300">
+                <div className="flex justify-between items-center text-zinc-300 light:text-zinc-700">
                   <span>Weekly Laundry Service</span>
-                  <span className="font-mono font-bold text-white">₹1,500</span>
+                  <span className="font-mono font-bold text-white light:text-zinc-900">₹1,500</span>
                 </div>
               )}
 
               {includeCooler && (
-                <div className="flex justify-between items-center text-zinc-300">
+                <div className="flex justify-between items-center text-zinc-300 light:text-zinc-700">
                   <span>In-Room Desert Cooler Appliance</span>
-                  <span className="font-mono font-bold text-white">₹2,000</span>
+                  <span className="font-mono font-bold text-white light:text-zinc-900">₹2,000</span>
                 </div>
               )}
 
-              <div className="flex justify-between items-center text-pink-300/80 pt-2 border-t border-white/[0.06]">
+              <div className="flex justify-between items-center text-pink-300/80 light:text-pink-700 pt-2 border-t border-white/[0.06] light:border-pink-100">
                 <span className="flex items-center gap-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5 text-pink-400" />
+                  <ShieldCheck className="w-3.5 h-3.5 text-pink-400 light:text-pink-600" />
                   <span>Caution Deposit (Refundable at Checkout)</span>
                 </span>
-                <span className="font-mono font-bold text-pink-300">₹{cautionDeposit.toLocaleString('en-IN')}</span>
+                <span className="font-mono font-bold text-pink-300 light:text-pink-700">₹{cautionDeposit.toLocaleString('en-IN')}</span>
               </div>
             </div>
 
             {/* Big Totals Box */}
-            <div className="p-5 rounded-2xl bg-[#16181D]/90 border border-white/[0.08] space-y-3">
+            <div className="p-5 rounded-2xl bg-[#16181D]/90 light:bg-pink-50/70 border border-white/[0.08] light:border-pink-200/80 space-y-3">
               <div className="flex items-baseline justify-between">
-                <span className="text-xs text-zinc-400 font-medium">Semester Total:</span>
-                <span className="text-2xl font-display font-bold text-white font-mono">
+                <span className="text-xs text-zinc-400 light:text-zinc-600 font-medium">Semester Total:</span>
+                <span className="text-2xl font-display font-bold text-white light:text-zinc-900 font-mono">
                   ₹{semesterTotal.toLocaleString('en-IN')}
                 </span>
               </div>
 
-              <div className="flex items-baseline justify-between pt-2 border-t border-white/[0.06]">
-                <span className="text-xs text-zinc-400 font-medium">Annual Academic Total (with Deposit):</span>
-                <span className="text-base font-bold text-pink-400 font-mono">
+              <div className="flex items-baseline justify-between pt-2 border-t border-white/[0.06] light:border-pink-200/60">
+                <span className="text-xs text-zinc-400 light:text-zinc-600 font-medium">Annual Academic Total (with Deposit):</span>
+                <span className="text-base font-bold text-pink-400 light:text-pink-600 font-mono">
                   ₹{annualTotal.toLocaleString('en-IN')}
                 </span>
               </div>
@@ -312,14 +312,14 @@ export const FeeEstimatorSection: React.FC = () => {
               <button
                 type="button"
                 onClick={handlePrint}
-                className="w-full py-2.5 px-4 rounded-full bg-[#16181D] hover:bg-[#1E2026] text-zinc-300 border border-white/[0.12] text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer transition-colors"
+                className="w-full py-2.5 px-4 rounded-full bg-[#16181D] hover:bg-[#1E2026] text-zinc-300 light:text-zinc-700 light:bg-white light:hover:bg-pink-50 border border-white/[0.12] light:border-pink-200 text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer transition-colors light:shadow-2xs"
               >
                 <Printer className="w-3.5 h-3.5 text-zinc-400" />
                 <span>Print / Save Estimate Breakdown</span>
               </button>
             </div>
 
-            <p className="text-[10px] text-zinc-500 text-center leading-relaxed">
+            <p className="text-[10px] text-zinc-500 light:text-zinc-500 text-center leading-relaxed">
               * Mess rebate of ₹85/day is automatically credited during approved outstation leaves $\ge$ 3 days.
             </p>
           </div>

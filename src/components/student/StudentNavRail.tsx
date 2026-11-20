@@ -113,13 +113,13 @@ export const StudentNavRail: React.FC<StudentNavRailProps> = ({
           <div className="px-2 pb-3 border-b border-[#FBCFE8] dark:border-[#2C2436]">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#F472B6] to-[#EC4899] shadow-sm flex items-center justify-center text-white text-xs font-bold tracking-wider shrink-0">
-                N
+                S
               </div>
               {!isCollapsed && (
                 <div className="min-w-0">
                   <div className="flex items-center gap-1.5">
                     <span className="text-base font-extrabold tracking-tight text-[#831843] dark:text-white">
-                      Nestos
+                      Sakhi
                     </span>
                     <span className="text-[10px] px-2 py-0.5 rounded-full bg-white dark:bg-[#201B26] text-[#BE185D] dark:text-[#F472B6] font-bold border border-[#FBCFE8] dark:border-[#38283B] shadow-2xs">
                       Portal

@@ -26,39 +26,39 @@ import { VacateBedModal } from './VacateBedModal';
 const DEPT_CONFIG: { [key: string]: { code: string; color: string; border: string; bg: string } } = {
   'Computer Science & Engineering': {
     code: 'CS',
-    color: 'text-blue-300',
-    border: 'border-blue-500/30',
-    bg: 'bg-blue-500/15',
+    color: 'text-blue-300 light:text-blue-800',
+    border: 'border-blue-500/30 light:border-blue-300',
+    bg: 'bg-blue-500/15 light:bg-blue-50',
   },
   'Information Technology': {
     code: 'IT',
-    color: 'text-cyan-300',
-    border: 'border-cyan-500/30',
-    bg: 'bg-cyan-500/15',
+    color: 'text-cyan-300 light:text-cyan-800',
+    border: 'border-cyan-500/30 light:border-cyan-300',
+    bg: 'bg-cyan-500/15 light:bg-cyan-50',
   },
   'Electronics & Telecommunication': {
     code: 'ENTC',
-    color: 'text-purple-300',
-    border: 'border-purple-500/30',
-    bg: 'bg-purple-500/15',
+    color: 'text-purple-300 light:text-purple-800',
+    border: 'border-purple-500/30 light:border-purple-300',
+    bg: 'bg-purple-500/15 light:bg-purple-50',
   },
   'Electrical Power Systems (ELPO)': {
     code: 'ELPO',
-    color: 'text-amber-300',
-    border: 'border-amber-500/30',
-    bg: 'bg-amber-500/15',
+    color: 'text-amber-300 light:text-amber-800',
+    border: 'border-amber-500/30 light:border-amber-300',
+    bg: 'bg-amber-500/15 light:bg-amber-50',
   },
   'Civil Engineering': {
     code: 'CIVIL',
-    color: 'text-emerald-300',
-    border: 'border-emerald-500/30',
-    bg: 'bg-emerald-500/15',
+    color: 'text-emerald-300 light:text-emerald-800',
+    border: 'border-emerald-500/30 light:border-emerald-300',
+    bg: 'bg-emerald-500/15 light:bg-emerald-50',
   },
   'Mechanical Engineering': {
     code: 'MECHANICAL',
-    color: 'text-rose-300',
-    border: 'border-rose-500/30',
-    bg: 'bg-rose-500/15',
+    color: 'text-rose-300 light:text-rose-800',
+    border: 'border-rose-500/30 light:border-rose-300',
+    bg: 'bg-rose-500/15 light:bg-rose-50',
   },
 };
 
@@ -82,7 +82,7 @@ const getDeptBadge = (deptName: string = '') => {
   if (lower.includes('mechanical') || lower.includes('mech') || lower === 'me') {
     return DEPT_CONFIG['Mechanical Engineering'];
   }
-  return { code: deptName.slice(0, 4).toUpperCase(), color: 'text-zinc-300', border: 'border-zinc-500/30', bg: 'bg-zinc-500/15' };
+  return { code: deptName.slice(0, 4).toUpperCase(), color: 'text-zinc-300 light:text-zinc-700', border: 'border-zinc-500/30 light:border-zinc-300', bg: 'bg-zinc-500/15 light:bg-zinc-100' };
 };
 
 const FLOOR_YEAR_MAP: { [key: number]: { label: string; yearName: string; short: string } } = {
@@ -201,33 +201,33 @@ export const WardenRoomsTab: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6 max-w-6xl animate-in fade-in duration-300 font-body text-zinc-100">
+    <div className="space-y-6 max-w-6xl animate-in fade-in duration-300 font-body text-zinc-100 light:text-zinc-900">
       {/* 1. Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/[0.08]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/[0.08] light:border-pink-200/80">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wider bg-pink-500/15 text-pink-300 border border-pink-500/30 uppercase">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wider bg-pink-500/15 light:bg-pink-50 text-pink-300 light:text-pink-700 border border-pink-500/30 light:border-pink-200 uppercase">
               Exclusive Girls Residential Facility
             </span>
-            <span className="text-xs text-zinc-500 font-mono">CODE: SGH-MCET</span>
+            <span className="text-xs text-zinc-500 light:text-zinc-500 font-mono">CODE: SGH-MCET</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-display text-white font-bold tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-display text-white light:text-zinc-900 font-bold tracking-tight">
             Sakhi Girls Hostel — Allotment &amp; Vacancy Desk
           </h2>
-          <p className="text-xs text-zinc-400 mt-1">
+          <p className="text-xs text-zinc-400 light:text-zinc-600 mt-1">
             4-Year Academic Mapping (1st, 2nd, 3rd, 4th Year) across all 6 Engineering Departments (CS, IT, ENTC, ELPO, CIVIL, MECHANICAL).
           </p>
         </div>
 
         {/* Sub-view switcher */}
-        <div className="flex items-center gap-2 bg-[#16181D] p-1 rounded-2xl border border-white/[0.08] shrink-0">
+        <div className="flex items-center gap-2 bg-[#16181D] light:bg-white p-1 rounded-2xl border border-white/[0.08] light:border-pink-200/80 shrink-0 shadow-xs">
           <button
             type="button"
             onClick={() => setSubTab('matrix')}
             className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
               subTab === 'matrix'
                 ? 'bg-violet-600 text-white shadow-sm'
-                : 'text-zinc-400 hover:text-white'
+                : 'text-zinc-400 light:text-zinc-600 hover:text-white light:hover:text-zinc-900'
             }`}
           >
             Room &amp; Bed Grid
@@ -238,7 +238,7 @@ export const WardenRoomsTab: React.FC = () => {
             className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
               subTab === 'transfers'
                 ? 'bg-violet-600 text-white shadow-sm'
-                : 'text-zinc-400 hover:text-white'
+                : 'text-zinc-400 light:text-zinc-600 hover:text-white light:hover:text-zinc-900'
             }`}
           >
             <ArrowRightLeft className="w-3.5 h-3.5" />
@@ -265,7 +265,7 @@ export const WardenRoomsTab: React.FC = () => {
                   className={`px-3 py-1.5 rounded-xl text-xs font-semibold capitalize transition-colors cursor-pointer ${
                     transferFilter === filter
                       ? 'bg-violet-600 text-white shadow-sm'
-                      : 'bg-[#16181D] text-zinc-400 hover:text-white border border-white/[0.08]'
+                      : 'bg-[#16181D] light:bg-white text-zinc-400 light:text-zinc-600 hover:text-white light:hover:text-zinc-900 border border-white/[0.08] light:border-pink-200/80 shadow-xs'
                   }`}
                 >
                   {filter} (
@@ -277,16 +277,16 @@ export const WardenRoomsTab: React.FC = () => {
               ))}
             </div>
 
-            <span className="text-xs text-zinc-400 font-mono">
+            <span className="text-xs text-zinc-400 light:text-zinc-600 font-mono">
               Pending Decisions: {pendingTransfersCount}
             </span>
           </div>
 
           {filteredTransfers.length === 0 ? (
-            <div className="p-12 rounded-3xl bg-[#111215]/90 border border-white/[0.08] text-center space-y-3">
-              <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto" />
-              <p className="text-sm font-semibold text-white">No Transfer Applications</p>
-              <p className="text-xs text-zinc-400">
+            <div className="p-12 rounded-3xl bg-[#111215]/90 light:bg-white border border-white/[0.08] light:border-pink-200/80 text-center space-y-3 shadow-sm">
+              <CheckCircle2 className="w-8 h-8 text-emerald-400 light:text-emerald-600 mx-auto" />
+              <p className="text-sm font-semibold text-white light:text-zinc-900">No Transfer Applications</p>
+              <p className="text-xs text-zinc-400 light:text-zinc-600">
                 There are no room change requests matching this filter.
               </p>
             </div>
@@ -295,16 +295,16 @@ export const WardenRoomsTab: React.FC = () => {
               {filteredTransfers.map((req) => (
                 <div
                   key={req.id}
-                  className="p-6 rounded-3xl bg-[#111215]/90 border border-white/[0.08] space-y-4 backdrop-blur-xl shadow-lg"
+                  className="p-6 rounded-3xl bg-[#111215]/90 light:bg-white border border-white/[0.08] light:border-pink-200/80 space-y-4 backdrop-blur-xl shadow-lg light:shadow-md"
                 >
-                  <div className="flex items-start justify-between gap-3 pb-3 border-b border-white/[0.08]">
+                  <div className="flex items-start justify-between gap-3 pb-3 border-b border-white/[0.08] light:border-pink-200/70">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-2xl bg-pink-600/15 border border-pink-500/20 text-pink-400 flex items-center justify-center font-bold font-mono">
+                      <div className="w-10 h-10 rounded-2xl bg-pink-600/15 light:bg-pink-50 border border-pink-500/20 light:border-pink-200 text-pink-400 light:text-pink-700 flex items-center justify-center font-bold font-mono">
                         {req.currentRoom}
                       </div>
                       <div>
-                        <h4 className="text-sm font-bold text-white">{req.studentName}</h4>
-                        <span className="text-[11px] font-mono text-zinc-400">
+                        <h4 className="text-sm font-bold text-white light:text-zinc-900">{req.studentName}</h4>
+                        <span className="text-[11px] font-mono text-zinc-400 light:text-zinc-500">
                           PRN: {req.studentId} • Current: Room {req.currentRoom}
                         </span>
                       </div>
@@ -313,44 +313,44 @@ export const WardenRoomsTab: React.FC = () => {
                     <span
                       className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${
                         req.status === 'Approved'
-                          ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+                          ? 'bg-emerald-500/15 light:bg-emerald-50 text-emerald-300 light:text-emerald-800 border-emerald-500/30 light:border-emerald-300'
                           : req.status === 'Rejected'
-                          ? 'bg-red-500/15 text-red-300 border-red-500/30'
-                          : 'bg-amber-500/15 text-amber-300 border-amber-500/30'
+                          ? 'bg-red-500/15 light:bg-red-50 text-red-300 light:text-red-800 border-red-500/30 light:border-red-300'
+                          : 'bg-amber-500/15 light:bg-amber-50 text-amber-300 light:text-amber-800 border-amber-500/30 light:border-amber-300'
                       }`}
                     >
                       {req.status}
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3 text-xs bg-[#16181D]/80 p-3.5 rounded-2xl border border-white/[0.06]">
+                  <div className="grid grid-cols-2 gap-3 text-xs bg-[#16181D]/80 light:bg-zinc-50 p-3.5 rounded-2xl border border-white/[0.06] light:border-zinc-200">
                     <div>
-                      <span className="text-[10px] text-zinc-400 block uppercase font-mono">
+                      <span className="text-[10px] text-zinc-400 light:text-zinc-500 block uppercase font-mono">
                         Target Suite &amp; Type
                       </span>
-                      <span className="font-semibold text-white">
+                      <span className="font-semibold text-white light:text-zinc-900">
                         {req.preferredBlock} • {req.preferredRoomType}
                       </span>
                     </div>
                     <div>
-                      <span className="text-[10px] text-zinc-400 block uppercase font-mono">
+                      <span className="text-[10px] text-zinc-400 light:text-zinc-500 block uppercase font-mono">
                         Reason Category
                       </span>
-                      <span className="font-semibold text-pink-300">{req.reasonCategory}</span>
+                      <span className="font-semibold text-pink-300 light:text-pink-700">{req.reasonCategory}</span>
                     </div>
                   </div>
 
                   <div className="space-y-1.5 text-xs">
-                    <span className="text-[10px] text-zinc-400 font-mono uppercase block">
+                    <span className="text-[10px] text-zinc-400 light:text-zinc-500 font-mono uppercase block">
                       Student Justification:
                     </span>
-                    <p className="text-zinc-300 italic bg-[#16181D]/40 p-2.5 rounded-xl border border-white/[0.04]">
+                    <p className="text-zinc-300 light:text-zinc-700 italic bg-[#16181D]/40 light:bg-zinc-50/80 p-2.5 rounded-xl border border-white/[0.04] light:border-zinc-200">
                       "{req.reason}"
                     </p>
                   </div>
 
                   {req.status === 'Pending' ? (
-                    <div className="pt-3 border-t border-white/[0.08] space-y-3">
+                    <div className="pt-3 border-t border-white/[0.08] light:border-pink-200/70 space-y-3">
                       <input
                         type="text"
                         placeholder="Warden allotment remarks (e.g. Assigned to Floor 3 Room S-303)..."
@@ -358,7 +358,7 @@ export const WardenRoomsTab: React.FC = () => {
                         onChange={(e) =>
                           setReviewRemarks({ ...reviewRemarks, [req.id]: e.target.value })
                         }
-                        className="w-full h-8 px-3 rounded-xl bg-[#16181D] border border-white/[0.12] text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-pink-500"
+                        className="w-full h-8 px-3 rounded-xl bg-[#16181D] light:bg-white border border-white/[0.12] light:border-zinc-300 text-xs text-white light:text-zinc-900 placeholder:text-zinc-500 light:placeholder:text-zinc-400 focus:outline-none focus:border-pink-500"
                       />
 
                       <div className="flex items-center gap-2">
@@ -386,7 +386,7 @@ export const WardenRoomsTab: React.FC = () => {
                               reviewRemarks[req.id] || 'Room currently unavailable'
                             );
                           }}
-                          className="flex-1 h-8 rounded-xl bg-red-600/20 hover:bg-red-600/30 text-red-300 border border-red-500/30 text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                          className="flex-1 h-8 rounded-xl bg-red-600/20 hover:bg-red-600/30 text-red-300 light:text-red-700 border border-red-500/30 light:border-red-300 text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                         >
                           <XCircle className="w-3.5 h-3.5" />
                           <span>Reject</span>
@@ -394,10 +394,10 @@ export const WardenRoomsTab: React.FC = () => {
                       </div>
                     </div>
                   ) : (
-                    <div className="pt-2 border-t border-white/[0.08] text-[11px] text-zinc-400 flex items-center justify-between">
+                    <div className="pt-2 border-t border-white/[0.08] light:border-pink-200/70 text-[11px] text-zinc-400 light:text-zinc-500 flex items-center justify-between">
                       <span>Reviewed: {req.reviewedDate || req.appliedDate}</span>
                       {req.remarks && (
-                        <span className="text-zinc-300 italic truncate max-w-[200px]">
+                        <span className="text-zinc-300 light:text-zinc-700 italic truncate max-w-[200px]">
                           "{req.remarks}"
                         </span>
                       )}
@@ -412,21 +412,21 @@ export const WardenRoomsTab: React.FC = () => {
         /* BED ALLOTMENT MATRIX GRID VIEW */
         <>
           {/* 2. SAKHI GIRLS HOSTEL VACANCY COMMAND BANNER (5 Prominent Key Metrics) */}
-          <div className="p-6 rounded-3xl bg-gradient-to-br from-[#1E112A] via-[#14121A] to-[#111215] border border-pink-500/20 shadow-[0_8px_32px_rgba(236,72,153,0.12)] space-y-5">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-white/[0.08]">
+          <div className="p-6 rounded-3xl bg-gradient-to-br from-[#1E112A] via-[#14121A] to-[#111215] light:from-pink-50/80 light:via-rose-50/50 light:to-white border border-pink-500/20 light:border-pink-200/80 shadow-[0_8px_32px_rgba(236,72,153,0.12)] light:shadow-[0_8px_30px_rgba(236,72,153,0.06)] space-y-5">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-white/[0.08] light:border-pink-200/70">
               <div>
-                <span className="text-[10px] font-mono uppercase tracking-wider text-pink-400 font-bold">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-pink-400 light:text-pink-600 font-bold">
                   Single Central Residential Complex
                 </span>
-                <h3 className="text-2xl font-display font-bold text-white mt-0.5">
+                <h3 className="text-2xl font-display font-bold text-white light:text-zinc-900 mt-0.5">
                   Sakhi Girls Hostel Live Capacity &amp; Vacancy Status
                 </h3>
               </div>
 
               {/* Glowing Beds Available Pill */}
               <div className="flex items-center gap-3">
-                <div className="px-4 py-2 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 flex items-center gap-2 shadow-[0_0_16px_rgba(16,185,129,0.2)]">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+                <div className="px-4 py-2 rounded-2xl bg-emerald-500/15 light:bg-emerald-50 border border-emerald-500/30 light:border-emerald-300 text-emerald-300 light:text-emerald-800 flex items-center gap-2 shadow-[0_0_16px_rgba(16,185,129,0.2)] light:shadow-sm">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 light:bg-emerald-600 animate-pulse" />
                   <span className="text-sm font-bold font-mono">
                     {totalAvailableBedsLeft} Beds Left / Available
                   </span>
@@ -436,46 +436,46 @@ export const WardenRoomsTab: React.FC = () => {
 
             {/* 4 Metric Cards */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-              <div className="p-4 rounded-2xl bg-[#16181D]/80 border border-white/[0.06]">
-                <span className="text-[11px] text-zinc-400 font-mono block">Total Residential Suites</span>
-                <p className="text-2xl font-display font-bold text-white mt-1">
+              <div className="p-4 rounded-2xl bg-[#16181D]/80 light:bg-white border border-white/[0.06] light:border-pink-200/70 shadow-xs">
+                <span className="text-[11px] text-zinc-400 light:text-zinc-500 font-mono block">Total Residential Suites</span>
+                <p className="text-2xl font-display font-bold text-white light:text-zinc-900 mt-1">
                   {totalRooms}{' '}
-                  <span className="text-xs text-zinc-400 font-normal font-body">Rooms (4 Floors)</span>
+                  <span className="text-xs text-zinc-400 light:text-zinc-500 font-normal font-body">Rooms (4 Floors)</span>
                 </p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-[#16181D]/80 border border-white/[0.06]">
-                <span className="text-[11px] text-zinc-400 font-mono block">Total Bed Capacity</span>
-                <p className="text-2xl font-display font-bold text-white mt-1">
+              <div className="p-4 rounded-2xl bg-[#16181D]/80 light:bg-white border border-white/[0.06] light:border-pink-200/70 shadow-xs">
+                <span className="text-[11px] text-zinc-400 light:text-zinc-500 font-mono block">Total Bed Capacity</span>
+                <p className="text-2xl font-display font-bold text-white light:text-zinc-900 mt-1">
                   {totalBedsCapacity}{' '}
-                  <span className="text-xs text-zinc-400 font-normal font-body">Beds</span>
+                  <span className="text-xs text-zinc-400 light:text-zinc-500 font-normal font-body">Beds</span>
                 </p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-[#16181D]/80 border border-white/[0.06]">
-                <span className="text-[11px] text-zinc-400 font-mono block">Beds Currently Occupied</span>
-                <p className="text-2xl font-display font-bold text-violet-300 mt-1">
+              <div className="p-4 rounded-2xl bg-[#16181D]/80 light:bg-white border border-white/[0.06] light:border-pink-200/70 shadow-xs">
+                <span className="text-[11px] text-zinc-400 light:text-zinc-500 font-mono block">Beds Currently Occupied</span>
+                <p className="text-2xl font-display font-bold text-violet-300 light:text-violet-700 mt-1">
                   {totalOccupiedBeds}{' '}
-                  <span className="text-xs text-zinc-400 font-normal font-body">Residents ({occupancyPercentage}%)</span>
+                  <span className="text-xs text-zinc-400 light:text-zinc-500 font-normal font-body">Residents ({occupancyPercentage}%)</span>
                 </p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-[#16181D]/80 border border-emerald-500/20 bg-emerald-950/10">
-                <span className="text-[11px] text-emerald-400 font-mono block font-semibold">Vacant Beds Available</span>
-                <p className="text-2xl font-display font-bold text-emerald-400 mt-1">
+              <div className="p-4 rounded-2xl bg-[#16181D]/80 light:bg-emerald-50/80 border border-emerald-500/20 light:border-emerald-300 bg-emerald-950/10 shadow-xs">
+                <span className="text-[11px] text-emerald-400 light:text-emerald-700 font-mono block font-semibold">Vacant Beds Available</span>
+                <p className="text-2xl font-display font-bold text-emerald-400 light:text-emerald-700 mt-1">
                   {totalAvailableBedsLeft}{' '}
-                  <span className="text-xs text-emerald-300/70 font-normal font-body">Ready to Allot</span>
+                  <span className="text-xs text-emerald-300/70 light:text-emerald-700/70 font-normal font-body">Ready to Allot</span>
                 </p>
               </div>
             </div>
 
             {/* Occupancy Progress Bar */}
             <div className="space-y-1.5">
-              <div className="flex justify-between text-xs text-zinc-400 font-mono">
+              <div className="flex justify-between text-xs text-zinc-400 light:text-zinc-500 font-mono">
                 <span>Allotment Rate: {occupancyPercentage}% Occupied</span>
                 <span>{totalAvailableBedsLeft} Beds Unallotted • {totalMaintenanceBeds} Maintenance</span>
               </div>
-              <div className="w-full bg-white/[0.08] rounded-full h-2 overflow-hidden flex">
+              <div className="w-full bg-white/[0.08] light:bg-zinc-200 rounded-full h-2 overflow-hidden flex">
                 <div
                   className="bg-gradient-to-r from-violet-500 to-pink-500 h-full transition-all"
                   style={{ width: `${occupancyPercentage}%` }}
@@ -495,8 +495,8 @@ export const WardenRoomsTab: React.FC = () => {
             </div>
 
             {/* 6 Engineering Departments Representation Bar */}
-            <div className="pt-3 border-t border-white/[0.06]">
-              <span className="text-[10px] text-zinc-400 font-mono uppercase tracking-wider block mb-2">
+            <div className="pt-3 border-t border-white/[0.06] light:border-pink-200/70">
+              <span className="text-[10px] text-zinc-400 light:text-zinc-500 font-mono uppercase tracking-wider block mb-2">
                 Residents Enrolled by Department (6 Branches):
               </span>
               <div className="grid grid-cols-2 sm:grid-cols-6 gap-2">
@@ -510,17 +510,17 @@ export const WardenRoomsTab: React.FC = () => {
                       onClick={() => setSelectedDept(isFiltered ? 'all' : conf.code)}
                       className={`p-2 rounded-xl text-left border transition-all cursor-pointer ${
                         isFiltered
-                          ? `${conf.bg} ${conf.border} ring-1 ring-white/20`
-                          : 'bg-[#16181D]/60 border-white/[0.04] hover:border-white/10'
+                          ? `${conf.bg} ${conf.border} ring-1 ring-white/20 light:ring-pink-400/40`
+                          : 'bg-[#16181D]/60 light:bg-white border-white/[0.04] light:border-pink-100 hover:border-white/10 light:hover:border-pink-300 shadow-xs'
                       }`}
                     >
                       <div className="flex items-center justify-between">
                         <span className={`text-[11px] font-bold font-mono ${conf.color}`}>{conf.code}</span>
-                        <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-white/10 text-white font-mono font-bold">
+                        <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-white/10 light:bg-zinc-100 text-white light:text-zinc-800 font-mono font-bold">
                           {count}
                         </span>
                       </div>
-                      <span className="text-[10px] text-zinc-400 truncate block mt-0.5">
+                      <span className="text-[10px] text-zinc-400 light:text-zinc-500 truncate block mt-0.5">
                         {conf.code === 'ELPO' ? 'Electrical (ELPO)' : name.split(' ')[0]}
                       </span>
                     </button>
@@ -540,7 +540,7 @@ export const WardenRoomsTab: React.FC = () => {
                 className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
                   selectedFloor === 'all'
                     ? 'bg-violet-600 text-white shadow-[0_0_12px_rgba(139,92,246,0.35)]'
-                    : 'bg-[#16181D] text-zinc-400 hover:text-white border border-white/[0.08]'
+                    : 'bg-[#16181D] light:bg-white text-zinc-400 light:text-zinc-600 hover:text-white light:hover:text-zinc-900 border border-white/[0.08] light:border-pink-200/80 shadow-xs'
                 }`}
               >
                 All 4 Floors (16 Suites)
@@ -561,11 +561,11 @@ export const WardenRoomsTab: React.FC = () => {
                     className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
                       selectedFloor === fl.toString()
                         ? 'bg-pink-600 text-white shadow-[0_0_12px_rgba(236,72,153,0.35)]'
-                        : 'bg-[#16181D] text-zinc-400 hover:text-white border border-white/[0.08]'
+                        : 'bg-[#16181D] light:bg-white text-zinc-400 light:text-zinc-600 hover:text-white light:hover:text-zinc-900 border border-white/[0.08] light:border-pink-200/80 shadow-xs'
                     }`}
                   >
                     <span>{info.label} ({info.short})</span>
-                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-500/20 text-emerald-300 font-mono">
+                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-500/20 light:bg-emerald-50 text-emerald-300 light:text-emerald-800 border border-emerald-500/30 light:border-emerald-300 font-mono">
                       {flLeft} Left
                     </span>
                   </button>
@@ -579,7 +579,7 @@ export const WardenRoomsTab: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setSelectedDept('all')}
-                  className="px-2.5 py-1.5 rounded-xl bg-violet-600/20 border border-violet-500/30 text-violet-300 text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                  className="px-2.5 py-1.5 rounded-xl bg-violet-600/20 light:bg-violet-100 border border-violet-500/30 light:border-violet-300 text-violet-300 light:text-violet-800 text-xs font-semibold flex items-center gap-1 cursor-pointer"
                 >
                   <span>Branch: {selectedDept}</span>
                   <XCircle className="w-3.5 h-3.5" />
@@ -587,13 +587,13 @@ export const WardenRoomsTab: React.FC = () => {
               )}
 
               <div className="relative">
-                <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Search className="w-3.5 h-3.5 text-zinc-400 light:text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   placeholder="Search room, resident or PRN..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="h-9 pl-8 pr-3 rounded-xl bg-[#16181D] border border-white/[0.1] text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-pink-500 w-48 sm:w-60"
+                  className="h-9 pl-8 pr-3 rounded-xl bg-[#16181D] light:bg-white border border-white/[0.1] light:border-pink-200 text-xs text-white light:text-zinc-900 placeholder:text-zinc-500 light:placeholder:text-zinc-400 focus:outline-none focus:border-pink-500 w-48 sm:w-60 shadow-xs"
                 />
               </div>
             </div>
@@ -612,30 +612,30 @@ export const WardenRoomsTab: React.FC = () => {
               return (
                 <div
                   key={room.id}
-                  className={`p-5 rounded-3xl bg-[#111215]/95 border transition-all shadow-md backdrop-blur-xl space-y-4 ${
+                  className={`p-5 rounded-3xl bg-[#111215]/95 light:bg-white border transition-all shadow-md backdrop-blur-xl space-y-4 ${
                     isUnderMaintenance
-                      ? 'border-amber-500/30 bg-amber-950/10'
+                      ? 'border-amber-500/30 light:border-amber-300 bg-amber-950/10 light:bg-amber-50/50'
                       : isFull
-                      ? 'border-white/[0.08]'
-                      : 'border-emerald-500/30 hover:border-emerald-500/60 shadow-[0_0_16px_rgba(16,185,129,0.06)]'
+                      ? 'border-white/[0.08] light:border-pink-200/80'
+                      : 'border-emerald-500/30 light:border-emerald-300/80 hover:border-emerald-500/60 light:hover:border-emerald-400 shadow-[0_0_16px_rgba(16,185,129,0.06)] light:shadow-sm'
                   }`}
                 >
                   {/* Card Top: Room Number & Availability Badge */}
-                  <div className="flex items-start justify-between pb-3 border-b border-white/[0.08]">
+                  <div className="flex items-start justify-between pb-3 border-b border-white/[0.08] light:border-pink-200/70">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-10 h-10 rounded-2xl bg-pink-600/15 text-pink-400 border border-pink-500/20 flex items-center justify-center shrink-0 font-bold font-mono">
+                      <div className="w-10 h-10 rounded-2xl bg-pink-600/15 light:bg-pink-50 text-pink-400 light:text-pink-700 border border-pink-500/20 light:border-pink-200 flex items-center justify-center shrink-0 font-bold font-mono">
                         {room.roomNumber.replace('S-', '')}
                       </div>
                       <div>
                         <div className="flex items-center gap-1.5">
-                          <h4 className="text-base font-display text-white font-bold">
+                          <h4 className="text-base font-display text-white light:text-zinc-900 font-bold">
                             Room {room.roomNumber}
                           </h4>
-                          <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-white/10 text-zinc-300">
+                          <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-white/10 light:bg-zinc-100 text-zinc-300 light:text-zinc-700">
                             {room.roomType || room.type}
                           </span>
                         </div>
-                        <span className="text-[11px] text-pink-300 font-medium">
+                        <span className="text-[11px] text-pink-300 light:text-pink-700 font-medium">
                           {floorMeta.label} • {floorMeta.yearName} ({floorMeta.short})
                         </span>
                       </div>
@@ -645,10 +645,10 @@ export const WardenRoomsTab: React.FC = () => {
                     <span
                       className={`px-2.5 py-1 rounded-full text-[11px] font-bold font-mono border ${
                         isUnderMaintenance
-                          ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
+                          ? 'bg-amber-500/15 light:bg-amber-50 text-amber-300 light:text-amber-800 border-amber-500/30 light:border-amber-300'
                           : isFull
-                          ? 'bg-zinc-800 text-zinc-400 border-white/10'
-                          : 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30 shadow-[0_0_10px_rgba(16,185,129,0.2)]'
+                          ? 'bg-zinc-800 light:bg-zinc-100 text-zinc-400 light:text-zinc-600 border-white/10 light:border-zinc-200'
+                          : 'bg-emerald-500/15 light:bg-emerald-50 text-emerald-300 light:text-emerald-800 border-emerald-500/30 light:border-emerald-300 shadow-[0_0_10px_rgba(16,185,129,0.2)]'
                       }`}
                     >
                       {isUnderMaintenance
@@ -661,9 +661,9 @@ export const WardenRoomsTab: React.FC = () => {
 
                   {/* Bed Occupants & Vacant Beds List */}
                   <div className="space-y-2">
-                    <div className="flex justify-between items-center text-[10px] uppercase tracking-wider font-mono text-zinc-400">
+                    <div className="flex justify-between items-center text-[10px] uppercase tracking-wider font-mono text-zinc-400 light:text-zinc-500">
                       <span>Bed Allocation ({occupiedCount}/{room.capacity})</span>
-                      <span className="text-emerald-400 font-semibold">{vacantCount} Available</span>
+                      <span className="text-emerald-400 light:text-emerald-700 font-semibold">{vacantCount} Available</span>
                     </div>
 
                     <div className="space-y-1.5">
@@ -686,15 +686,15 @@ export const WardenRoomsTab: React.FC = () => {
                           return (
                             <div
                               key={bed.bedId || bIdx}
-                              className="flex items-center justify-between p-2.5 rounded-xl bg-[#16181D]/90 border border-white/[0.06] text-xs hover:border-white/15 transition-colors"
+                              className="flex items-center justify-between p-2.5 rounded-xl bg-[#16181D]/90 light:bg-zinc-50 border border-white/[0.06] light:border-zinc-200 text-xs hover:border-white/15 light:hover:border-zinc-300 transition-colors"
                             >
                               <div className="flex items-center gap-2 overflow-hidden">
-                                <span className="font-mono text-[10px] text-pink-400 font-bold bg-pink-500/10 px-1.5 py-0.5 rounded border border-pink-500/20 shrink-0">
+                                <span className="font-mono text-[10px] text-pink-400 light:text-pink-700 font-bold bg-pink-500/10 light:bg-pink-100 px-1.5 py-0.5 rounded border border-pink-500/20 light:border-pink-200 shrink-0">
                                   {occupant.bedNumber || bed.bedNumber}
                                 </span>
                                 <div className="truncate">
-                                  <p className="font-semibold text-white truncate">{occupant.name}</p>
-                                  <p className="text-[10px] text-zinc-400 font-mono truncate">{occupant.studentId}</p>
+                                  <p className="font-semibold text-white light:text-zinc-900 truncate">{occupant.name}</p>
+                                  <p className="text-[10px] text-zinc-400 light:text-zinc-500 font-mono truncate">{occupant.studentId}</p>
                                 </div>
                               </div>
 
@@ -716,7 +716,7 @@ export const WardenRoomsTab: React.FC = () => {
                                     setVacateModalOpen(true);
                                   }}
                                   title={`Vacate ${bed.bedNumber} (${occupant.name})`}
-                                  className="px-2 py-0.5 rounded-md bg-rose-500/10 hover:bg-rose-500/25 text-rose-300 hover:text-rose-100 border border-rose-500/20 text-[10px] font-mono font-semibold transition-colors cursor-pointer"
+                                  className="px-2 py-0.5 rounded-md bg-rose-500/10 light:bg-rose-50 hover:bg-rose-500/25 light:hover:bg-rose-100 text-rose-300 light:text-rose-700 hover:text-rose-100 light:hover:text-rose-900 border border-rose-500/20 light:border-rose-200 text-[10px] font-mono font-semibold transition-colors cursor-pointer"
                                 >
                                   Vacate
                                 </button>
@@ -729,14 +729,14 @@ export const WardenRoomsTab: React.FC = () => {
                         return (
                           <div
                             key={bed.bedId || bIdx}
-                            className="flex items-center justify-between p-2.5 rounded-xl bg-emerald-950/10 border border-dashed border-emerald-500/30 text-xs text-emerald-300"
+                            className="flex items-center justify-between p-2.5 rounded-xl bg-emerald-950/10 light:bg-emerald-50/70 border border-dashed border-emerald-500/30 light:border-emerald-300 text-xs text-emerald-300 light:text-emerald-800"
                           >
                             <div className="flex items-center gap-2">
-                              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                              <span className="font-mono text-[10px] font-bold text-emerald-400">
+                              <span className="w-2 h-2 rounded-full bg-emerald-400 light:bg-emerald-600 animate-pulse" />
+                              <span className="font-mono text-[10px] font-bold text-emerald-400 light:text-emerald-700">
                                 {bed.bedNumber}
                               </span>
-                              <span className="text-[11px] font-medium text-emerald-300">
+                              <span className="text-[11px] font-medium text-emerald-300 light:text-emerald-800">
                                 Available (Vacant)
                               </span>
                             </div>
@@ -747,7 +747,7 @@ export const WardenRoomsTab: React.FC = () => {
                                 setSelectedBedForAction(bed);
                                 setAllotModalOpen(true);
                               }}
-                              className="px-2.5 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/40 text-[10px] font-mono font-bold transition-all cursor-pointer flex items-center gap-1 shadow-sm"
+                              className="px-2.5 py-1 rounded-lg bg-emerald-500/20 light:bg-emerald-600 text-emerald-300 light:text-white hover:bg-emerald-600 light:hover:bg-emerald-700 border border-emerald-500/40 light:border-emerald-600 text-[10px] font-mono font-bold transition-all cursor-pointer flex items-center gap-1 shadow-sm"
                             >
                               <span>+ Allot Bed</span>
                             </button>
@@ -763,7 +763,7 @@ export const WardenRoomsTab: React.FC = () => {
                       {room.amenities.slice(0, 3).map((amenity, aIdx) => (
                         <span
                           key={aIdx}
-                          className="text-[9px] px-2 py-0.5 rounded-md bg-[#16181D] text-zinc-400 border border-white/[0.04]"
+                          className="text-[9px] px-2 py-0.5 rounded-md bg-[#16181D] light:bg-zinc-100 text-zinc-400 light:text-zinc-600 border border-white/[0.04] light:border-zinc-200"
                         >
                           {amenity}
                         </span>
@@ -772,12 +772,12 @@ export const WardenRoomsTab: React.FC = () => {
                   )}
 
                   {/* Card Bottom: Status Selector */}
-                  <div className="pt-2 border-t border-white/[0.08] flex items-center justify-between text-xs">
-                    <span className="text-[11px] text-zinc-400">Room Status:</span>
+                  <div className="pt-2 border-t border-white/[0.08] light:border-pink-200/70 flex items-center justify-between text-xs">
+                    <span className="text-[11px] text-zinc-400 light:text-zinc-500">Room Status:</span>
                     <select
                       value={room.status}
                       onChange={(e) => updateRoomStatus(room.id, e.target.value as any)}
-                      className="px-2.5 py-1 rounded-lg bg-[#16181D] border border-white/[0.12] text-xs text-white focus:outline-none focus:border-pink-500 cursor-pointer"
+                      className="px-2.5 py-1 rounded-lg bg-[#16181D] light:bg-white border border-white/[0.12] light:border-zinc-300 text-xs text-white light:text-zinc-900 focus:outline-none focus:border-pink-500 cursor-pointer shadow-xs"
                     >
                       <option value="Available">Available</option>
                       <option value="Partially Occupied">Partially Occupied</option>

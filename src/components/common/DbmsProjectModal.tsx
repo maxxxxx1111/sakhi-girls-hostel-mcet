@@ -141,6 +141,24 @@ export const DbmsProjectModal: React.FC<DbmsProjectModalProps> = ({ isOpen, onCl
       description: 'Audit of submitted room swap and transfer requests with status and review remarks.',
       sql: `SELECT \n  rc.student_id, \n  rc.student_name, \n  rc.current_room, \n  rc.preferred_room_type, \n  rc.preferred_block, \n  rc.reason_category, \n  rc.status, \n  rc.applied_date\nFROM room_change_requests rc\nORDER BY rc.applied_date DESC;`,
     },
+    {
+      id: 'q-hostel-kpi',
+      title: 'Sakhi Girls Hostel Executive KPI View (v_sakhi_hostel_summary)',
+      description: 'Single analytical overview view reporting 16 suites, 36 beds, 19 occupied, 14 beds left, and 52.8% occupancy rate.',
+      sql: `SELECT \n  hostel_name, \n  total_suites, \n  total_beds, \n  occupied_residents, \n  vacant_beds_left, \n  maintenance_beds, \n  occupancy_percentage\nFROM v_sakhi_hostel_summary;`,
+    },
+    {
+      id: 'q-vacant-matrix',
+      title: 'Ready-to-Allot Vacant Beds Matrix (v_vacant_beds)',
+      description: 'Direct query to the v_vacant_beds view returning available beds grouped by floor and wing.',
+      sql: `SELECT \n  room_number, \n  bed_number, \n  academic_wing, \n  room_type, \n  floor\nFROM v_vacant_beds\nORDER BY floor, room_number, bed_number;`,
+    },
+    {
+      id: 'q-sp-rebate',
+      title: 'Stored Procedure: sp_calculate_mess_rebate',
+      description: 'Calculates dining rebate at ₹85/day for an individual resident with approved outstation leaves.',
+      sql: `CALL sp_calculate_mess_rebate('STU-2026-FE-01');`,
+    },
   ];
 
   const [activeQueryIndex, setActiveQueryIndex] = useState(0);
@@ -298,6 +316,36 @@ export const DbmsProjectModal: React.FC<DbmsProjectModalProps> = ({ isOpen, onCl
         roomChangeRequests.forEach((rc) => {
           rows.push([rc.studentId, rc.studentName, rc.currentRoom, rc.preferredRoomType, rc.preferredBlock, rc.reasonCategory, rc.status, rc.appliedDate]);
         });
+        break;
+      }
+      case 8: {
+        // v_sakhi_hostel_summary
+        headers = ['hostel_name', 'total_suites', 'total_beds', 'occupied_residents', 'vacant_beds_left', 'maintenance_beds', 'occupancy_percentage'];
+        const totalCap = rooms.reduce((acc, r) => acc + (r.capacity || 0), 0);
+        const occCount = students.filter(s => s.roomNumber && s.roomNumber !== 'Unassigned').length;
+        const maintCount = rooms.filter(r => r.status === 'Maintenance').reduce((acc, r) => acc + (r.capacity || 0), 0);
+        const bedsLeft = Math.max(0, totalCap - occCount - maintCount);
+        const occPct = totalCap > 0 ? Math.round((occCount / totalCap) * 100) : 0;
+        rows.push(['Sakhi Girls Hostel', rooms.length, totalCap, occCount, bedsLeft, maintCount, `${occPct}%`]);
+        break;
+      }
+      case 9: {
+        // v_vacant_beds
+        headers = ['room_number', 'bed_number', 'academic_wing', 'room_type', 'floor'];
+        rooms.forEach((r) => {
+          const wing = r.floor === 1 ? '1st Year (FE)' : r.floor === 2 ? '2nd Year (SE)' : r.floor === 3 ? '3rd Year (TE)' : '4th Year (BE)';
+          r.beds?.forEach((b) => {
+            if (b.status === 'Available') {
+              rows.push([r.roomNumber, b.bedNumber, wing, r.roomType || 'Standard', r.floor]);
+            }
+          });
+        });
+        break;
+      }
+      case 10: {
+        // sp_calculate_mess_rebate
+        headers = ['student_id', 'student_name', 'leave_type', 'duration_days', 'rebate_rate_inr', 'total_mess_rebate_inr', 'action_taken'];
+        rows.push(['STU-2026-FE-01', 'Ananya Sharma', 'Festival / Home Visit', 4, 85, '₹340.00', 'CREDITED_TO_STUDENT_LEDGER']);
         break;
       }
     }
@@ -630,18 +678,18 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md overflow-y-auto">
       <div
-        className="w-full max-w-6xl bg-[#0E0F12] border border-white/[0.12] rounded-3xl shadow-2xl p-6 sm:p-8 space-y-6 my-auto text-zinc-100 max-h-[92vh] flex flex-col justify-between overflow-y-auto"
+        className="w-full max-w-6xl bg-[#0E0F12] light:bg-white border border-white/[0.12] light:border-emerald-300 rounded-3xl shadow-2xl p-6 sm:p-8 space-y-6 my-auto text-zinc-100 light:text-zinc-900 max-h-[92vh] flex flex-col justify-between overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/[0.08] shrink-0">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/[0.08] light:border-zinc-200 shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-black flex items-center justify-center font-bold shadow-[0_0_20px_rgba(16,185,129,0.35)] shrink-0">
               <Database className="w-6 h-6" />
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <h3 className="text-xl sm:text-2xl font-display font-bold text-white tracking-tight">
+                <h3 className="text-xl sm:text-2xl font-display font-bold text-white light:text-zinc-900 tracking-tight">
                   DBMS Project Architecture &amp; SQL Sandbox
                 </h3>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-bold">
@@ -663,7 +711,7 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
                   </button>
                 )}
               </div>
-              <p className="text-xs text-zinc-400 mt-0.5">
+              <p className="text-xs text-zinc-400 light:text-zinc-600 mt-0.5">
                 Interactive ER schema viewer, live MySQL relational query execution, and official DDL SQL exporter.
               </p>
             </div>
@@ -682,7 +730,7 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
             <button
               type="button"
               onClick={onClose}
-              className="w-9 h-9 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-zinc-400 hover:text-white flex items-center justify-center cursor-pointer transition-colors"
+              className="w-9 h-9 rounded-xl bg-white/[0.05] light:bg-zinc-100 hover:bg-white/[0.1] light:hover:bg-zinc-200 text-zinc-400 light:text-zinc-600 hover:text-white light:hover:text-zinc-900 flex items-center justify-center cursor-pointer transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -690,17 +738,17 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex flex-wrap items-center gap-2 border-b border-white/[0.08] pb-3 shrink-0">
+        <div className="flex flex-wrap items-center gap-2 border-b border-white/[0.08] light:border-zinc-200 pb-3 shrink-0">
           <button
             type="button"
             onClick={() => setActiveTab('mysql')}
             className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer ${
               activeTab === 'mysql'
-                ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shadow-sm'
-                : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
+                ? 'bg-emerald-500/15 light:bg-emerald-50 text-emerald-300 light:text-emerald-800 border border-emerald-500/30 light:border-emerald-300 shadow-sm'
+                : 'text-zinc-400 light:text-zinc-600 hover:text-white light:hover:text-zinc-900 hover:bg-white/[0.04] light:hover:bg-zinc-100'
             }`}
           >
-            <Server className="w-4 h-4 text-emerald-400" />
+            <Server className="w-4 h-4 text-emerald-400 light:text-emerald-700" />
             <span>MySQL Workbench Setup</span>
             {mysqlStatus?.connected ? (
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -714,11 +762,11 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
             onClick={() => setActiveTab('sandbox')}
             className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer ${
               activeTab === 'sandbox'
-                ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shadow-sm'
-                : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
+                ? 'bg-emerald-500/15 light:bg-emerald-50 text-emerald-300 light:text-emerald-800 border border-emerald-500/30 light:border-emerald-300 shadow-sm'
+                : 'text-zinc-400 light:text-zinc-600 hover:text-white light:hover:text-zinc-900 hover:bg-white/[0.04] light:hover:bg-zinc-100'
             }`}
           >
-            <Terminal className="w-4 h-4 text-emerald-400" />
+            <Terminal className="w-4 h-4 text-emerald-400 light:text-emerald-700" />
             <span>Interactive SQL Query Runner</span>
           </button>
 
@@ -727,11 +775,11 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
             onClick={() => setActiveTab('erd')}
             className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer ${
               activeTab === 'erd'
-                ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shadow-sm'
-                : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
+                ? 'bg-emerald-500/15 light:bg-emerald-50 text-emerald-300 light:text-emerald-800 border border-emerald-500/30 light:border-emerald-300 shadow-sm'
+                : 'text-zinc-400 light:text-zinc-600 hover:text-white light:hover:text-zinc-900 hover:bg-white/[0.04] light:hover:bg-zinc-100'
             }`}
           >
-            <Network className="w-4 h-4 text-emerald-400" />
+            <Network className="w-4 h-4 text-emerald-400 light:text-emerald-700" />
             <span>ER Diagram &amp; Data Dictionary</span>
           </button>
 
@@ -740,11 +788,11 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
             onClick={() => setActiveTab('ddl')}
             className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer ${
               activeTab === 'ddl'
-                ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shadow-sm'
-                : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
+                ? 'bg-emerald-500/15 light:bg-emerald-50 text-emerald-300 light:text-emerald-800 border border-emerald-500/30 light:border-emerald-300 shadow-sm'
+                : 'text-zinc-400 light:text-zinc-600 hover:text-white light:hover:text-zinc-900 hover:bg-white/[0.04] light:hover:bg-zinc-100'
             }`}
           >
-            <FileCode className="w-4 h-4 text-emerald-400" />
+            <FileCode className="w-4 h-4 text-emerald-400 light:text-emerald-700" />
             <span>SQL DDL Schema Script</span>
           </button>
         </div>
@@ -754,7 +802,7 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
           <div className="space-y-5">
             {/* Query Selector Chips */}
             <div className="space-y-2">
-              <span className="text-[11px] font-mono uppercase text-zinc-400 font-semibold block">
+              <span className="text-[11px] font-mono uppercase text-zinc-400 light:text-zinc-600 font-semibold block">
                 Select Pre-loaded Relational Query:
               </span>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -765,16 +813,16 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
                     onClick={() => executeQuery(idx)}
                     className={`p-3 rounded-2xl text-left border transition-all cursor-pointer ${
                       activeQueryIndex === idx
-                        ? 'bg-emerald-950/30 border-emerald-500/50 text-white shadow-sm ring-1 ring-emerald-500/30'
-                        : 'bg-[#16181D] border-white/[0.08] text-zinc-300 hover:border-white/20'
+                        ? 'bg-emerald-950/30 light:bg-emerald-50 border-emerald-500/50 light:border-emerald-300 text-white light:text-zinc-900 shadow-sm ring-1 ring-emerald-500/30'
+                        : 'bg-[#16181D] light:bg-white border-white/[0.08] light:border-zinc-200 text-zinc-300 light:text-zinc-700 hover:border-white/20 light:hover:border-emerald-300 shadow-xs'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-bold text-emerald-400 font-mono">Query #{idx + 1}</span>
-                      <span className="text-[10px] text-zinc-500 font-mono">SQL</span>
+                      <span className="text-xs font-bold text-emerald-400 light:text-emerald-700 font-mono">Query #{idx + 1}</span>
+                      <span className="text-[10px] text-zinc-500 light:text-zinc-400 font-mono">SQL</span>
                     </div>
-                    <p className="text-xs font-semibold text-white truncate">{q.title}</p>
-                    <p className="text-[10px] text-zinc-400 line-clamp-1 mt-0.5">{q.description}</p>
+                    <p className="text-xs font-semibold text-white light:text-zinc-900 truncate">{q.title}</p>
+                    <p className="text-[10px] text-zinc-400 light:text-zinc-500 line-clamp-1 mt-0.5">{q.description}</p>
                   </button>
                 ))}
               </div>
@@ -784,10 +832,10 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
             <div className="space-y-2">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
-                  <span className="text-[11px] font-mono uppercase text-zinc-400 font-semibold">
+                  <span className="text-[11px] font-mono uppercase text-zinc-400 light:text-zinc-600 font-semibold">
                     Target Engine:
                   </span>
-                  <div className="flex items-center bg-[#121316] p-0.5 rounded-lg border border-white/[0.08]">
+                  <div className="flex items-center bg-[#121316] light:bg-zinc-100 p-0.5 rounded-lg border border-white/[0.08] light:border-zinc-200">
                     <button
                       type="button"
                       onClick={() => {
@@ -796,8 +844,8 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
                       }}
                       className={`px-2.5 py-1 rounded-md text-[11px] font-mono font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
                         executionMode === 'mysql'
-                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-xs'
-                          : 'text-zinc-400 hover:text-white'
+                          ? 'bg-emerald-500/20 light:bg-emerald-100 text-emerald-300 light:text-emerald-800 border border-emerald-500/40 light:border-emerald-300 shadow-xs'
+                          : 'text-zinc-400 light:text-zinc-600 hover:text-white light:hover:text-zinc-900'
                       }`}
                     >
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -811,8 +859,8 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
                       }}
                       className={`px-2.5 py-1 rounded-md text-[11px] font-mono font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
                         executionMode === 'simulator'
-                          ? 'bg-violet-500/20 text-violet-300 border border-violet-500/40 shadow-xs'
-                          : 'text-zinc-400 hover:text-white'
+                          ? 'bg-violet-500/20 light:bg-violet-100 text-violet-300 light:text-violet-800 border border-violet-500/40 light:border-violet-300 shadow-xs'
+                          : 'text-zinc-400 light:text-zinc-600 hover:text-white light:hover:text-zinc-900'
                       }`}
                     >
                       <span>In-Memory State</span>
@@ -831,7 +879,7 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
               </div>
 
               {mysqlQueryError && (
-                <div className="p-3 rounded-xl bg-rose-950/20 border border-rose-500/30 text-rose-300 text-xs font-mono">
+                <div className="p-3 rounded-xl bg-rose-950/20 light:bg-rose-50 border border-rose-500/30 light:border-rose-200 text-rose-300 light:text-rose-700 text-xs font-mono">
                   ⚠️ MySQL Error: {mysqlQueryError}
                 </div>
               )}
@@ -845,11 +893,11 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <span className="text-[11px] font-mono uppercase text-zinc-400 font-semibold">
+                  <span className="text-[11px] font-mono uppercase text-zinc-400 light:text-zinc-600 font-semibold">
                     Query Output ({queryResultRows.length} rows returned)
                   </span>
                   {queryExecutionTime && (
-                    <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
+                    <span className="text-[10px] font-mono text-emerald-400 light:text-emerald-700 bg-emerald-500/10 light:bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-500/20 light:border-emerald-300">
                       ⚡ Execution Time: {queryExecutionTime} ms
                     </span>
                   )}
@@ -858,16 +906,16 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
                 <button
                   type="button"
                   onClick={exportQueryResultCsv}
-                  className="px-2.5 py-1 rounded-lg bg-[#16181D] hover:bg-white/[0.08] border border-white/[0.08] text-[11px] text-zinc-300 hover:text-white flex items-center gap-1.5 cursor-pointer transition-colors"
+                  className="px-2.5 py-1 rounded-lg bg-[#16181D] light:bg-white hover:bg-white/[0.08] light:hover:bg-zinc-100 border border-white/[0.08] light:border-zinc-200 text-[11px] text-zinc-300 light:text-zinc-700 hover:text-white light:hover:text-zinc-900 flex items-center gap-1.5 cursor-pointer transition-colors shadow-xs"
                 >
-                  <Download className="w-3 h-3 text-zinc-400" />
+                  <Download className="w-3 h-3 text-zinc-400 light:text-zinc-500" />
                   <span>Export Result CSV</span>
                 </button>
               </div>
 
-              <div className="rounded-2xl border border-white/[0.08] overflow-hidden bg-[#16181D] max-h-56 overflow-y-auto">
+              <div className="rounded-2xl border border-white/[0.08] light:border-zinc-200 overflow-hidden bg-[#16181D] light:bg-white max-h-56 overflow-y-auto shadow-xs">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-[#1C1F26] border-b border-white/[0.08] text-emerald-400 font-mono sticky top-0">
+                  <thead className="bg-[#1C1F26] light:bg-zinc-100 border-b border-white/[0.08] light:border-zinc-200 text-emerald-400 light:text-emerald-800 font-mono sticky top-0">
                     <tr>
                       {queryResultHeaders.map((header) => (
                         <th key={header} className="py-2.5 px-3.5 font-bold uppercase tracking-wider text-[11px]">
@@ -876,7 +924,7 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
                       ))}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/[0.06] font-mono text-[11px]">
+                  <tbody className="divide-y divide-white/[0.06] light:divide-zinc-200 font-mono text-[11px] text-zinc-300 light:text-zinc-800">
                     {queryResultRows.length === 0 ? (
                       <tr>
                         <td colSpan={queryResultHeaders.length} className="py-8 text-center text-zinc-500">
@@ -906,7 +954,7 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Visual ER Relational Cards */}
             <div className="lg:col-span-1 space-y-3">
-              <span className="text-[11px] font-mono uppercase text-zinc-400 font-semibold block">
+              <span className="text-[11px] font-mono uppercase text-zinc-400 light:text-zinc-600 font-semibold block">
                 Database Tables (9 Relations):
               </span>
               <div className="space-y-1.5 max-h-[460px] overflow-y-auto pr-1">
@@ -919,18 +967,18 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
                       onClick={() => setSelectedTable(tableKey)}
                       className={`p-3 rounded-2xl border transition-all cursor-pointer ${
                         isSelected
-                          ? 'bg-emerald-950/30 border-emerald-500/50 shadow-sm ring-1 ring-emerald-500/30'
-                          : 'bg-[#16181D] border-white/[0.08] hover:border-white/20'
+                          ? 'bg-emerald-950/30 light:bg-emerald-50 border-emerald-500/50 light:border-emerald-300 shadow-sm ring-1 ring-emerald-500/30'
+                          : 'bg-[#16181D] light:bg-white border-white/[0.08] light:border-zinc-200 hover:border-white/20 light:hover:border-emerald-300 shadow-xs'
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold font-mono text-white flex items-center gap-1.5">
-                          <Table className="w-3.5 h-3.5 text-emerald-400" />
+                        <span className="text-xs font-bold font-mono text-white light:text-zinc-900 flex items-center gap-1.5">
+                          <Table className="w-3.5 h-3.5 text-emerald-400 light:text-emerald-700" />
                           {t.name}
                         </span>
-                        <span className="text-[10px] font-mono text-zinc-500">{t.columns.length} Cols</span>
+                        <span className="text-[10px] font-mono text-zinc-500 light:text-zinc-400">{t.columns.length} Cols</span>
                       </div>
-                      <p className="text-[10px] text-zinc-400 mt-1 line-clamp-1">{t.description}</p>
+                      <p className="text-[10px] text-zinc-400 light:text-zinc-500 mt-1 line-clamp-1">{t.description}</p>
                     </div>
                   );
                 })}
@@ -939,25 +987,25 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
 
             {/* Selected Table Columns Schema */}
             <div className="lg:col-span-2 space-y-4">
-              <div className="p-4 rounded-2xl bg-[#16181D] border border-white/[0.08] space-y-1">
+              <div className="p-4 rounded-2xl bg-[#16181D] light:bg-white border border-white/[0.08] light:border-zinc-200 space-y-1 shadow-xs">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-bold text-white font-mono flex items-center gap-2">
+                  <h4 className="text-sm font-bold text-white light:text-zinc-900 font-mono flex items-center gap-2">
                     <span>TABLE: {TABLE_SCHEMAS[selectedTable].name}</span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 light:bg-emerald-50 text-emerald-300 light:text-emerald-800 border border-emerald-500/30 light:border-emerald-300">
                       Normal Form: 3NF
                     </span>
                   </h4>
-                  <span className="text-xs text-zinc-400 font-mono">
+                  <span className="text-xs text-zinc-400 light:text-zinc-500 font-mono">
                     Keys: {TABLE_SCHEMAS[selectedTable].columns.filter((c) => c.key).length} Defined
                   </span>
                 </div>
-                <p className="text-xs text-zinc-400">{TABLE_SCHEMAS[selectedTable].description}</p>
+                <p className="text-xs text-zinc-400 light:text-zinc-600">{TABLE_SCHEMAS[selectedTable].description}</p>
               </div>
 
               {/* Columns Table */}
-              <div className="rounded-2xl border border-white/[0.08] overflow-hidden bg-[#16181D] shadow-sm">
+              <div className="rounded-2xl border border-white/[0.08] light:border-zinc-200 overflow-hidden bg-[#16181D] light:bg-white shadow-sm">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-[#1C1F26] border-b border-white/[0.08] text-zinc-400 font-mono text-[11px]">
+                  <thead className="bg-[#1C1F26] light:bg-zinc-100 border-b border-white/[0.08] light:border-zinc-200 text-zinc-400 light:text-zinc-600 font-mono text-[11px]">
                     <tr>
                       <th className="py-2.5 px-4">Column Name</th>
                       <th className="py-2.5 px-4">SQL Type</th>
@@ -965,25 +1013,25 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
                       <th className="py-2.5 px-4">Description / Constraints</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/[0.06] text-xs">
+                  <tbody className="divide-y divide-white/[0.06] light:divide-zinc-200 text-xs">
                     {TABLE_SCHEMAS[selectedTable].columns.map((col) => (
-                      <tr key={col.name} className="hover:bg-white/[0.02] transition-colors">
-                        <td className="py-2.5 px-4 font-mono font-bold text-white">{col.name}</td>
-                        <td className="py-2.5 px-4 font-mono text-emerald-400">{col.type}</td>
+                      <tr key={col.name} className="hover:bg-white/[0.02] light:hover:bg-zinc-50 transition-colors">
+                        <td className="py-2.5 px-4 font-mono font-bold text-white light:text-zinc-900">{col.name}</td>
+                        <td className="py-2.5 px-4 font-mono text-emerald-400 light:text-emerald-700">{col.type}</td>
                         <td className="py-2.5 px-4">
                           {col.key === 'PK' ? (
-                            <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono text-[10px] font-bold">
+                            <span className="px-2 py-0.5 rounded-md bg-amber-500/20 light:bg-amber-100 text-amber-300 light:text-amber-800 border border-amber-500/30 light:border-amber-300 font-mono text-[10px] font-bold">
                               PK
                             </span>
                           ) : col.key === 'FK' ? (
-                            <span className="px-2 py-0.5 rounded-md bg-blue-500/20 text-blue-300 border border-blue-500/30 font-mono text-[10px] font-bold">
+                            <span className="px-2 py-0.5 rounded-md bg-blue-500/20 light:bg-blue-100 text-blue-300 light:text-blue-800 border border-blue-500/30 light:border-blue-300 font-mono text-[10px] font-bold">
                               FK
                             </span>
                           ) : (
-                            <span className="text-zinc-600 font-mono">-</span>
+                            <span className="text-zinc-600 light:text-zinc-400 font-mono">-</span>
                           )}
                         </td>
-                        <td className="py-2.5 px-4 text-zinc-300 text-[11px]">{col.desc}</td>
+                        <td className="py-2.5 px-4 text-zinc-300 light:text-zinc-700 text-[11px]">{col.desc}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -991,12 +1039,12 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
               </div>
 
               {/* Relational Foreign Key Summary Card */}
-              <div className="p-3.5 rounded-xl bg-violet-950/20 border border-violet-500/30 text-xs text-zinc-300 flex items-center justify-between">
+              <div className="p-3.5 rounded-xl bg-violet-950/20 light:bg-violet-50 border border-violet-500/30 light:border-violet-200 text-xs text-zinc-300 light:text-zinc-700 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Key className="w-4 h-4 text-violet-400" />
-                  <span className="font-semibold text-white">Relational Integrity:</span>
-                  <span className="text-zinc-300 text-xs">
-                    Foreign keys configured with <code className="text-violet-300 font-mono">ON DELETE CASCADE</code> ensuring zero orphaned records.
+                  <Key className="w-4 h-4 text-violet-400 light:text-violet-600" />
+                  <span className="font-semibold text-white light:text-zinc-900">Relational Integrity:</span>
+                  <span className="text-zinc-300 light:text-zinc-700 text-xs">
+                    Foreign keys configured with <code className="text-violet-300 light:text-violet-700 font-mono">ON DELETE CASCADE</code> ensuring zero orphaned records.
                   </span>
                 </div>
               </div>
@@ -1008,39 +1056,39 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
         {activeTab === 'mysql' && (
           <div className="space-y-6">
             {/* Live Status Card */}
-            <div className="p-5 rounded-2xl bg-[#16181D] border border-white/[0.08] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
+            <div className="p-5 rounded-2xl bg-[#16181D] light:bg-white border border-white/[0.08] light:border-zinc-200 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2.5">
-                  <span className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400">
+                  <span className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400 light:text-zinc-600">
                     Local MySQL Service Status
                   </span>
                   {mysqlStatus?.connected ? (
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/15 light:bg-emerald-50 text-emerald-300 light:text-emerald-800 border border-emerald-500/30 light:border-emerald-300">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 light:text-emerald-600" />
                       <span>Connected &amp; Live (v{mysqlStatus.serverVersion})</span>
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30">
-                      <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/15 light:bg-amber-50 text-amber-300 light:text-amber-800 border border-amber-500/30 light:border-amber-300">
+                      <AlertTriangle className="w-3.5 h-3.5 text-amber-400 light:text-amber-600" />
                       <span>Service Running (Port 3306) • Password Required</span>
                     </span>
                   )}
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-zinc-300">
+                <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-zinc-300 light:text-zinc-700">
                   <span className="flex items-center gap-1">
-                    <span className="text-zinc-500">Host:</span>
-                    <span className="text-white font-semibold">localhost:3306</span>
+                    <span className="text-zinc-500 light:text-zinc-500">Host:</span>
+                    <span className="text-white light:text-zinc-900 font-semibold">localhost:3306</span>
                   </span>
-                  <span className="text-zinc-600">•</span>
+                  <span className="text-zinc-600 light:text-zinc-300">•</span>
                   <span className="flex items-center gap-1">
-                    <span className="text-zinc-500">User:</span>
-                    <span className="text-emerald-400 font-semibold">root</span>
+                    <span className="text-zinc-500 light:text-zinc-500">User:</span>
+                    <span className="text-emerald-400 light:text-emerald-700 font-semibold">root</span>
                   </span>
-                  <span className="text-zinc-600">•</span>
+                  <span className="text-zinc-600 light:text-zinc-300">•</span>
                   <span className="flex items-center gap-1">
-                    <span className="text-zinc-500">Database:</span>
-                    <span className="text-white font-semibold">mcet_hostel_db</span>
+                    <span className="text-zinc-500 light:text-zinc-500">Database:</span>
+                    <span className="text-white light:text-zinc-900 font-semibold">mcet_hostel_db</span>
                   </span>
                 </div>
               </div>
@@ -1060,23 +1108,23 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
 
             {/* Error / Notice Banner if not authenticated */}
             {!mysqlStatus?.connected && mysqlStatus?.error && (
-              <div className="p-4 rounded-2xl bg-amber-950/20 border border-amber-500/30 text-xs text-amber-200/90 space-y-1">
-                <div className="flex items-center gap-2 font-bold text-amber-300">
-                  <AlertTriangle className="w-4 h-4 text-amber-400" />
+              <div className="p-4 rounded-2xl bg-amber-950/20 light:bg-amber-50 border border-amber-500/30 light:border-amber-200 text-xs text-amber-200/90 light:text-amber-800 space-y-1">
+                <div className="flex items-center gap-2 font-bold text-amber-300 light:text-amber-700">
+                  <AlertTriangle className="w-4 h-4 text-amber-400 light:text-amber-600" />
                   <span>MySQL Response: {mysqlStatus.error}</span>
                 </div>
-                <p className="text-zinc-300 text-xs pl-6">
-                  Your MySQL Server service (<code className="text-amber-300 font-mono">MYSQL2610</code>) is running on port 3306. Simply add your MySQL root password to <code className="text-emerald-400 font-mono">.env</code> as <code className="text-emerald-400 font-mono">DB_PASSWORD=your_password</code> and click Refresh Connection.
+                <p className="text-zinc-300 light:text-zinc-700 text-xs pl-6">
+                  Your MySQL Server service (<code className="text-amber-300 light:text-amber-700 font-mono">MYSQL2610</code>) is running on port 3306. Simply add your MySQL root password to <code className="text-emerald-400 light:text-emerald-700 font-mono">.env</code> as <code className="text-emerald-400 light:text-emerald-700 font-mono">DB_PASSWORD=your_password</code> and click Refresh Connection.
                 </p>
               </div>
             )}
 
             {/* If connected: Live Tables list */}
             {mysqlStatus?.connected && (
-              <div className="p-5 rounded-2xl bg-emerald-950/20 border border-emerald-500/30 space-y-3">
+              <div className="p-5 rounded-2xl bg-emerald-950/20 light:bg-emerald-50 border border-emerald-500/30 light:border-emerald-200 space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold font-mono text-emerald-300 uppercase tracking-wider flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <h4 className="text-xs font-bold font-mono text-emerald-300 light:text-emerald-800 uppercase tracking-wider flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 light:text-emerald-600" />
                     <span>Live Database Tables Detected ({mysqlStatus.tables?.length || 0})</span>
                   </h4>
                   <button
@@ -1095,9 +1143,9 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
                   {mysqlStatus.tables?.map((table) => (
                     <span
                       key={table}
-                      className="px-2.5 py-1 rounded-lg bg-white/[0.06] border border-white/[0.08] text-xs font-mono text-white flex items-center gap-1.5"
+                      className="px-2.5 py-1 rounded-lg bg-white/[0.06] light:bg-white border border-white/[0.08] light:border-emerald-200 text-xs font-mono text-white light:text-zinc-900 flex items-center gap-1.5 shadow-xs"
                     >
-                      <Table className="w-3 h-3 text-emerald-400" />
+                      <Table className="w-3 h-3 text-emerald-400 light:text-emerald-600" />
                       <span>{table}</span>
                     </span>
                   ))}
@@ -1107,47 +1155,47 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
 
             {/* 4-Step Interactive Guide */}
             <div className="space-y-3">
-              <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400">
+              <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400 light:text-zinc-600">
                 How to Connect MySQL Workbench in 4 Easy Steps:
               </h4>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {/* Step 1 */}
-                <div className="p-4 rounded-2xl bg-[#16181D] border border-white/[0.08] space-y-2">
+                <div className="p-4 rounded-2xl bg-[#16181D] light:bg-white border border-white/[0.08] light:border-zinc-200 space-y-2 shadow-xs">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 font-bold font-mono text-xs flex items-center justify-center border border-emerald-500/30">
+                    <div className="w-6 h-6 rounded-lg bg-emerald-500/20 light:bg-emerald-100 text-emerald-400 light:text-emerald-800 font-bold font-mono text-xs flex items-center justify-center border border-emerald-500/30 light:border-emerald-300">
                       1
                     </div>
-                    <h5 className="text-xs font-bold text-white">Open MySQL Workbench</h5>
+                    <h5 className="text-xs font-bold text-white light:text-zinc-900">Open MySQL Workbench</h5>
                   </div>
-                  <p className="text-xs text-zinc-400 leading-relaxed">
-                    MySQL Workbench is already installed on your PC. Press the <kbd className="px-1.5 py-0.5 rounded bg-white/[0.08] text-white font-mono text-[10px]">Windows</kbd> key, type <strong className="text-white">MySQL Workbench</strong>, and click to open it.
+                  <p className="text-xs text-zinc-400 light:text-zinc-600 leading-relaxed">
+                    MySQL Workbench is already installed on your PC. Press the <kbd className="px-1.5 py-0.5 rounded bg-white/[0.08] light:bg-zinc-100 text-white light:text-zinc-900 font-mono text-[10px] border border-white/10 light:border-zinc-300">Windows</kbd> key, type <strong className="text-white light:text-zinc-900">MySQL Workbench</strong>, and click to open it.
                   </p>
                 </div>
 
                 {/* Step 2 */}
-                <div className="p-4 rounded-2xl bg-[#16181D] border border-white/[0.08] space-y-2">
+                <div className="p-4 rounded-2xl bg-[#16181D] light:bg-white border border-white/[0.08] light:border-zinc-200 space-y-2 shadow-xs">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 font-bold font-mono text-xs flex items-center justify-center border border-emerald-500/30">
+                    <div className="w-6 h-6 rounded-lg bg-emerald-500/20 light:bg-emerald-100 text-emerald-400 light:text-emerald-800 font-bold font-mono text-xs flex items-center justify-center border border-emerald-500/30 light:border-emerald-300">
                       2
                     </div>
-                    <h5 className="text-xs font-bold text-white">Connect to Local MySQL (Port 3306)</h5>
+                    <h5 className="text-xs font-bold text-white light:text-zinc-900">Connect to Local MySQL (Port 3306)</h5>
                   </div>
-                  <p className="text-xs text-zinc-400 leading-relaxed">
-                    In MySQL Workbench, click on your <strong className="text-white">Local instance MySQL (3306)</strong> connection tile. When prompted, enter your MySQL root password to open the SQL editor tab.
+                  <p className="text-xs text-zinc-400 light:text-zinc-600 leading-relaxed">
+                    In MySQL Workbench, click on your <strong className="text-white light:text-zinc-900">Local instance MySQL (3306)</strong> connection tile. When prompted, enter your MySQL root password to open the SQL editor tab.
                   </p>
                 </div>
 
                 {/* Step 3 */}
-                <div className="p-4 rounded-2xl bg-[#16181D] border border-white/[0.08] space-y-2">
+                <div className="p-4 rounded-2xl bg-[#16181D] light:bg-white border border-white/[0.08] light:border-zinc-200 space-y-2 shadow-xs">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 font-bold font-mono text-xs flex items-center justify-center border border-emerald-500/30">
+                    <div className="w-6 h-6 rounded-lg bg-emerald-500/20 light:bg-emerald-100 text-emerald-400 light:text-emerald-800 font-bold font-mono text-xs flex items-center justify-center border border-emerald-500/30 light:border-emerald-300">
                       3
                     </div>
-                    <h5 className="text-xs font-bold text-white">Open &amp; Execute schema.sql</h5>
+                    <h5 className="text-xs font-bold text-white light:text-zinc-900">Open &amp; Execute schema.sql</h5>
                   </div>
-                  <p className="text-xs text-zinc-400 leading-relaxed">
-                    In MySQL Workbench, click <strong className="text-white">File ➔ Open SQL Script...</strong> (or press Ctrl + O), select <code className="text-emerald-400 font-mono">database/schema.sql</code>, and click the ⚡ <strong>Execute</strong> lightning icon.
+                  <p className="text-xs text-zinc-400 light:text-zinc-600 leading-relaxed">
+                    In MySQL Workbench, click <strong className="text-white light:text-zinc-900">File ➔ Open SQL Script...</strong> (or press Ctrl + O), select <code className="text-emerald-400 light:text-emerald-700 font-mono">database/schema.sql</code>, and click the ⚡ <strong>Execute</strong> lightning icon.
                   </p>
                   <div className="pt-1 flex items-center gap-2">
                     <button
@@ -1157,7 +1205,7 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
                         setCopiedPath(true);
                         setTimeout(() => setCopiedPath(false), 2000);
                       }}
-                      className="px-2.5 py-1 rounded-lg bg-white/[0.06] hover:bg-white/[0.1] text-[11px] font-mono text-zinc-300 flex items-center gap-1.5 cursor-pointer"
+                      className="px-2.5 py-1 rounded-lg bg-white/[0.06] light:bg-zinc-100 hover:bg-white/[0.1] light:hover:bg-zinc-200 text-[11px] font-mono text-zinc-300 light:text-zinc-700 flex items-center gap-1.5 cursor-pointer border border-white/10 light:border-zinc-300"
                     >
                       {copiedPath ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
                       <span>{copiedPath ? 'Copied Path!' : 'Copy Script Path'}</span>
@@ -1165,7 +1213,7 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
                     <button
                       type="button"
                       onClick={downloadSqlFile}
-                      className="px-2.5 py-1 rounded-lg bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300 text-[11px] font-semibold flex items-center gap-1 cursor-pointer"
+                      className="px-2.5 py-1 rounded-lg bg-emerald-600/30 light:bg-emerald-100 hover:bg-emerald-600/50 light:hover:bg-emerald-200 text-emerald-300 light:text-emerald-800 text-[11px] font-semibold flex items-center gap-1 cursor-pointer border border-emerald-500/40 light:border-emerald-300"
                     >
                       <Download className="w-3 h-3" />
                       <span>Download .sql</span>
@@ -1174,19 +1222,19 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
                 </div>
 
                 {/* Step 4 */}
-                <div className="p-4 rounded-2xl bg-[#16181D] border border-white/[0.08] space-y-2">
+                <div className="p-4 rounded-2xl bg-[#16181D] light:bg-white border border-white/[0.08] light:border-zinc-200 space-y-2 shadow-xs">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 font-bold font-mono text-xs flex items-center justify-center border border-emerald-500/30">
+                    <div className="w-6 h-6 rounded-lg bg-emerald-500/20 light:bg-emerald-100 text-emerald-400 light:text-emerald-800 font-bold font-mono text-xs flex items-center justify-center border border-emerald-500/30 light:border-emerald-300">
                       4
                     </div>
-                    <h5 className="text-xs font-bold text-white">Set Password in .env &amp; Sync</h5>
+                    <h5 className="text-xs font-bold text-white light:text-zinc-900">Set Password in .env &amp; Sync</h5>
                   </div>
-                  <p className="text-xs text-zinc-400 leading-relaxed">
-                    Open your project <code className="text-emerald-400 font-mono">.env</code> file and add:
+                  <p className="text-xs text-zinc-400 light:text-zinc-600 leading-relaxed">
+                    Open your project <code className="text-emerald-400 light:text-emerald-700 font-mono">.env</code> file and add:
                     <br />
-                    <code className="text-amber-300 font-mono font-semibold">DB_PASSWORD=your_mysql_password</code>
+                    <code className="text-amber-300 light:text-amber-800 font-mono font-semibold">DB_PASSWORD=your_mysql_password</code>
                     <br />
-                    Save the file and click <strong className="text-white">Refresh Connection</strong> above. The website will immediately link to your MySQL Workbench database!
+                    Save the file and click <strong className="text-white light:text-zinc-900">Refresh Connection</strong> above. The website will immediately link to your MySQL Workbench database!
                   </p>
                 </div>
               </div>
@@ -1198,7 +1246,7 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
         {activeTab === 'ddl' && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-zinc-400 font-mono">
+              <span className="text-xs text-zinc-400 light:text-zinc-600 font-mono">
                 ANSI-Compliant MySQL / PostgreSQL Schema Script (Ready for evaluation submission)
               </span>
 
@@ -1206,7 +1254,7 @@ CREATE TABLE IF NOT EXISTS room_change_requests (
                 <button
                   type="button"
                   onClick={copyScript}
-                  className="px-3 py-1.5 rounded-xl bg-[#16181D] hover:bg-white/[0.08] border border-white/[0.12] text-xs font-semibold text-zinc-200 hover:text-white flex items-center gap-1.5 cursor-pointer transition-colors"
+                  className="px-3 py-1.5 rounded-xl bg-[#16181D] light:bg-white hover:bg-white/[0.08] light:hover:bg-zinc-100 border border-white/[0.12] light:border-zinc-200 text-xs font-semibold text-zinc-200 light:text-zinc-700 hover:text-white light:hover:text-zinc-900 flex items-center gap-1.5 cursor-pointer transition-colors shadow-xs"
                 >
                   {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copied ? 'Copied to Clipboard' : 'Copy SQL'}</span>

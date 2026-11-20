@@ -325,35 +325,35 @@ html.light body,
   border-color: var(--border-app);
 }
 
-/* Text colors for light mode (excluding video overlay hero sections) */
-.light :not(#hero-section):not(#cta-footer-section) .text-\[\#F7F6F2\],
-.light :not(#hero-section):not(#cta-footer-section) .text-\[\#F4F4F5\],
-.light :not(#hero-section):not(#cta-footer-section) .text-zinc-100,
-.light :not(#hero-section):not(#cta-footer-section) .text-zinc-200 {
+/* Text colors for light mode (excluding video overlay hero sections & auth modal showcase) */
+.light :not(#hero-section):not(#cta-footer-section):not(#auth-modal-showcase):not(#auth-modal-showcase *) .text-\[\#F7F6F2\],
+.light :not(#hero-section):not(#cta-footer-section):not(#auth-modal-showcase):not(#auth-modal-showcase *) .text-\[\#F4F4F5\],
+.light :not(#hero-section):not(#cta-footer-section):not(#auth-modal-showcase):not(#auth-modal-showcase *) .text-zinc-100,
+.light :not(#hero-section):not(#cta-footer-section):not(#auth-modal-showcase):not(#auth-modal-showcase *) .text-zinc-200 {
   color: var(--text-primary);
 }
 
-.light :not(#hero-section):not(#cta-footer-section) .text-\[\#A7A9B6\],
-.light :not(#hero-section):not(#cta-footer-section) .text-zinc-300,
-.light :not(#hero-section):not(#cta-footer-section) .text-zinc-400 {
+.light :not(#hero-section):not(#cta-footer-section):not(#auth-modal-showcase):not(#auth-modal-showcase *) .text-\[\#A7A9B6\],
+.light :not(#hero-section):not(#cta-footer-section):not(#auth-modal-showcase):not(#auth-modal-showcase *) .text-zinc-300,
+.light :not(#hero-section):not(#cta-footer-section):not(#auth-modal-showcase):not(#auth-modal-showcase *) .text-zinc-400 {
   color: var(--text-secondary);
 }
 
-.light :not(#hero-section):not(#cta-footer-section) .text-\[\#737684\],
-.light :not(#hero-section):not(#cta-footer-section) .text-zinc-500 {
+.light :not(#hero-section):not(#cta-footer-section):not(#auth-modal-showcase):not(#auth-modal-showcase *) .text-\[\#737684\],
+.light :not(#hero-section):not(#cta-footer-section):not(#auth-modal-showcase):not(#auth-modal-showcase *) .text-zinc-500 {
   color: var(--text-muted);
 }
 
 /* Headings in light mode that have text-white */
-.light :not(#hero-section):not(#cta-footer-section) > h1.text-white,
-.light :not(#hero-section):not(#cta-footer-section) > h2.text-white,
-.light :not(#hero-section):not(#cta-footer-section) > h3.text-white,
-.light :not(#hero-section):not(#cta-footer-section) > h4.text-white,
-.light :not(#hero-section):not(#cta-footer-section) h1.text-white,
-.light :not(#hero-section):not(#cta-footer-section) h2.text-white,
-.light :not(#hero-section):not(#cta-footer-section) h3.text-white,
-.light :not(#hero-section):not(#cta-footer-section) h4.text-white,
-.light :not(#hero-section):not(#cta-footer-section) .font-display.text-white {
+.light :not(#hero-section):not(#cta-footer-section):not(#auth-modal-showcase):not(#auth-modal-showcase *) > h1.text-white,
+.light :not(#hero-section):not(#cta-footer-section):not(#auth-modal-showcase):not(#auth-modal-showcase *) > h2.text-white,
+.light :not(#hero-section):not(#cta-footer-section):not(#auth-modal-showcase):not(#auth-modal-showcase *) > h3.text-white,
+.light :not(#hero-section):not(#cta-footer-section):not(#auth-modal-showcase):not(#auth-modal-showcase *) > h4.text-white,
+.light :not(#hero-section):not(#cta-footer-section):not(#auth-modal-showcase):not(#auth-modal-showcase *) h1.text-white,
+.light :not(#hero-section):not(#cta-footer-section):not(#auth-modal-showcase):not(#auth-modal-showcase *) h2.text-white,
+.light :not(#hero-section):not(#cta-footer-section):not(#auth-modal-showcase):not(#auth-modal-showcase *) h3.text-white,
+.light :not(#hero-section):not(#cta-footer-section):not(#auth-modal-showcase):not(#auth-modal-showcase *) h4.text-white,
+.light :not(#hero-section):not(#cta-footer-section):not(#auth-modal-showcase):not(#auth-modal-showcase *) .font-display.text-white {
   color: var(--text-primary);
 }
 
@@ -465,4 +465,54 @@ html.light body,
   color: rgba(255, 255, 255, 0.85) !important;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85) !important;
 }
+
+/* =========================================================================
+   AUTH MODAL SHOWCASE PANEL PROTECTION (PREMIUM DARK PRESENTATION)
+   Prevents light-theme global overrides from turning text dark on the
+   obsidian luxury showcase card in AuthModal.
+   ========================================================================= */
+
+#auth-modal-showcase,
+.light #auth-modal-showcase {
+  background: linear-gradient(135deg, #1B0F2A 0%, #120D1F 50%, #0A0713 100%) !important;
+  color: #FFFFFF !important;
+}
+
+#auth-modal-showcase .brand-title,
+.light #auth-modal-showcase .brand-title,
+#auth-modal-showcase .showcase-heading,
+.light #auth-modal-showcase .showcase-heading,
+#auth-modal-showcase h3,
+.light #auth-modal-showcase h3,
+#auth-modal-showcase h5,
+.light #auth-modal-showcase h5,
+#auth-modal-showcase .feature-title,
+.light #auth-modal-showcase .feature-title {
+  color: #FFFFFF !important;
+}
+
+#auth-modal-showcase p,
+.light #auth-modal-showcase p,
+#auth-modal-showcase .showcase-desc,
+.light #auth-modal-showcase .showcase-desc {
+  color: #E4E4E7 !important;
+}
+
+#auth-modal-showcase .feature-desc,
+.light #auth-modal-showcase .feature-desc {
+  color: #A1A1AA !important;
+}
+
+#auth-modal-showcase .showcase-card,
+.light #auth-modal-showcase .showcase-card {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+#auth-modal-showcase .showcase-card:hover,
+.light #auth-modal-showcase .showcase-card:hover {
+  background-color: rgba(255, 255, 255, 0.09) !important;
+  border-color: rgba(244, 114, 182, 0.35) !important;
+}
+
 

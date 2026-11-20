@@ -178,6 +178,8 @@ async function seedEverything() {
       destination VARCHAR(128),
       parent_contact VARCHAR(20) NOT NULL,
       status VARCHAR(32) DEFAULT 'Pending',
+      rebate_days INT DEFAULT 0,
+      mess_rebate_inr DECIMAL(10,2) DEFAULT 0.00,
       gate_pass_code VARCHAR(64) UNIQUE,
       applied_date VARCHAR(32) NOT NULL,
       reviewed_date VARCHAR(32),
@@ -772,7 +774,139 @@ async function seedEverything() {
     ORDER BY r.floor, r.room_number, b.bed_number;
   `);
 
-  console.log('✅ ALL 17 TABLES & 5 VIEWS SUCCESSFULLY CREATED AND POPULATED IN MYSQL WORKBENCH!');
+  console.log('Creating Performance Indexes...');
+  try {
+    await conn.query(`CREATE INDEX idx_students_dept ON students(department);`);
+    await conn.query(`CREATE INDEX idx_students_year ON students(year);`);
+    await conn.query(`CREATE INDEX idx_beds_status ON beds(status);`);
+    await conn.query(`CREATE INDEX idx_rooms_floor ON rooms(floor);`);
+    await conn.query(`CREATE INDEX idx_leaves_status ON leave_requests(status);`);
+    await conn.query(`CREATE INDEX idx_complaints_priority ON complaints(priority, status);`);
+    await conn.query(`CREATE INDEX idx_fees_status ON fee_records(payment_status);`);
+    await conn.query(`CREATE INDEX idx_gate_action ON gate_logs(action, gate_name);`);
+  } catch (idxErr) {
+    console.log('Indexes note:', (idxErr as any)?.message || idxErr);
+  }
+
+  console.log('Creating Stored Procedures...');
+  await conn.query(`DROP PROCEDURE IF EXISTS sp_allot_bed;`);
+  await conn.query(`
+    CREATE PROCEDURE sp_allot_bed(
+      IN p_room_id VARCHAR(32),
+      IN p_bed_id VARCHAR(32),
+      IN p_student_id VARCHAR(32),
+      OUT p_status_msg VARCHAR(255)
+    )
+    BEGIN
+      DECLARE v_bed_status VARCHAR(32);
+      DECLARE v_std_name VARCHAR(128);
+      DECLARE v_room_no VARCHAR(16);
+      DECLARE v_hostel_id VARCHAR(32);
+      DECLARE v_hostel_name VARCHAR(128);
+      DECLARE v_bed_no VARCHAR(16);
+
+      SELECT status, bed_number INTO v_bed_status, v_bed_no FROM beds WHERE bed_id = p_bed_id AND room_id = p_room_id;
+      SELECT name INTO v_std_name FROM students WHERE student_id = p_student_id;
+      SELECT room_number, hostel_id INTO v_room_no, v_hostel_id FROM rooms WHERE room_id = p_room_id;
+      SELECT name INTO v_hostel_name FROM hostels WHERE hostel_id = v_hostel_id;
+
+      IF v_bed_status = 'Available' THEN
+        START TRANSACTION;
+          UPDATE beds 
+          SET status = 'Occupied', student_id = p_student_id, student_name = v_std_name 
+          WHERE bed_id = p_bed_id;
+
+          UPDATE students 
+          SET room_id = p_room_id, room_number = v_room_no, bed_number = v_bed_no, hostel_id = v_hostel_id, hostel_name = v_hostel_name, status = 'Active' 
+          WHERE student_id = p_student_id;
+
+          UPDATE rooms 
+          SET occupied = (SELECT COUNT(*) FROM beds WHERE room_id = p_room_id AND status = 'Occupied'),
+              status = CASE WHEN (SELECT COUNT(*) FROM beds WHERE room_id = p_room_id AND status = 'Occupied') >= capacity THEN 'Full' ELSE 'Partially Occupied' END
+          WHERE room_id = p_room_id;
+        COMMIT;
+        SET p_status_msg = CONCAT('SUCCESS: Bed ', v_bed_no, ' in Room ', v_room_no, ' allotted to ', v_std_name);
+      ELSE
+        SET p_status_msg = 'ERROR: Bed is not available for allotment';
+      END IF;
+    END;
+  `);
+
+  await conn.query(`DROP PROCEDURE IF EXISTS sp_vacate_bed;`);
+  await conn.query(`
+    CREATE PROCEDURE sp_vacate_bed(
+      IN p_room_id VARCHAR(32),
+      IN p_bed_id VARCHAR(32),
+      OUT p_status_msg VARCHAR(255)
+    )
+    BEGIN
+      DECLARE v_std_id VARCHAR(32);
+      DECLARE v_bed_no VARCHAR(16);
+      DECLARE v_room_no VARCHAR(16);
+
+      SELECT student_id, bed_number INTO v_std_id, v_bed_no FROM beds WHERE bed_id = p_bed_id AND room_id = p_room_id;
+      SELECT room_number INTO v_room_no FROM rooms WHERE room_id = p_room_id;
+
+      START TRANSACTION;
+        UPDATE beds 
+        SET status = 'Available', student_id = NULL, student_name = NULL 
+        WHERE bed_id = p_bed_id;
+
+        IF v_std_id IS NOT NULL THEN
+          UPDATE students 
+          SET room_id = NULL, room_number = 'Unassigned', bed_number = 'None', status = 'Vacated' 
+          WHERE student_id = v_std_id;
+        END IF;
+
+        UPDATE rooms 
+        SET occupied = (SELECT COUNT(*) FROM beds WHERE room_id = p_room_id AND status = 'Occupied'),
+            status = CASE WHEN (SELECT COUNT(*) FROM beds WHERE room_id = p_room_id AND status = 'Occupied') = 0 THEN 'Available' ELSE 'Partially Occupied' END
+        WHERE room_id = p_room_id;
+      COMMIT;
+      SET p_status_msg = CONCAT('SUCCESS: Bed ', v_bed_no, ' in Room ', v_room_no, ' vacated');
+    END;
+  `);
+
+  await conn.query(`DROP PROCEDURE IF EXISTS sp_calculate_mess_rebate;`);
+  await conn.query(`
+    CREATE PROCEDURE sp_calculate_mess_rebate(
+      IN p_leave_id VARCHAR(32),
+      OUT p_rebate_amount DECIMAL(10,2)
+    )
+    BEGIN
+      DECLARE v_days INT;
+      DECLARE v_rate DECIMAL(10,2) DEFAULT 85.00;
+
+      SELECT DATEDIFF(to_date, from_date) INTO v_days 
+      FROM leave_requests 
+      WHERE leave_id = p_leave_id AND status = 'Approved';
+
+      IF v_days >= 3 THEN
+        SET p_rebate_amount = v_days * v_rate;
+        UPDATE leave_requests 
+        SET rebate_days = v_days, mess_rebate_inr = p_rebate_amount 
+        WHERE leave_id = p_leave_id;
+      ELSE
+        SET p_rebate_amount = 0.00;
+      END IF;
+    END;
+  `);
+
+  console.log('Creating Automated Database Triggers...');
+  await conn.query(`DROP TRIGGER IF EXISTS trg_auto_rebate_on_approval;`);
+  await conn.query(`
+    CREATE TRIGGER trg_auto_rebate_on_approval
+    BEFORE UPDATE ON leave_requests
+    FOR EACH ROW
+    BEGIN
+      IF NEW.status = 'Approved' AND DATEDIFF(NEW.to_date, NEW.from_date) >= 3 THEN
+        SET NEW.rebate_days = DATEDIFF(NEW.to_date, NEW.from_date);
+        SET NEW.mess_rebate_inr = NEW.rebate_days * 85.00;
+      END IF;
+    END;
+  `);
+
+  console.log('✅ ALL 17 TABLES, 5 VIEWS, 3 PROCEDURES & TRIGGERS SUCCESSFULLY SEEDED IN MYSQL WORKBENCH!');
   await conn.end();
 }
 

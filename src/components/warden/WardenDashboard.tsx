@@ -53,37 +53,37 @@ export const WardenDashboard: React.FC = () => {
   return (
     <div id="warden-portal-root" className="min-h-[calc(100vh-60px)] bg-[var(--bg-app)] text-[var(--text-primary)] flex flex-col md:flex-row font-body transition-colors duration-200">
       {/* Mobile Top Sub-Header */}
-      <div className="md:hidden flex items-center justify-between p-3.5 border-b border-white/[0.08] bg-[#0E0F12]">
+      <div className="md:hidden flex items-center justify-between p-3.5 border-b border-white/[0.08] light:border-pink-200/80 bg-[#0E0F12] light:bg-white">
         <button
           onClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
-          className="p-2 rounded-xl bg-[#16181D] text-zinc-300 flex items-center gap-2 text-xs font-medium cursor-pointer border border-white/[0.08]"
+          className="p-2 rounded-xl bg-[#16181D] light:bg-pink-50 text-zinc-300 light:text-zinc-700 flex items-center gap-2 text-xs font-medium cursor-pointer border border-white/[0.08] light:border-pink-200"
         >
           {isMobileSidebarOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
           <span>Admin Navigation</span>
         </button>
         <button
           onClick={() => setIsDbmsModalOpen(true)}
-          className="p-1.5 px-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs flex items-center gap-1.5 font-medium cursor-pointer"
+          className="p-1.5 px-2.5 rounded-lg bg-emerald-500/10 light:bg-emerald-50 border border-emerald-500/30 light:border-emerald-300 text-emerald-400 light:text-emerald-700 text-xs flex items-center gap-1.5 font-medium cursor-pointer"
         >
           <Database className="w-3.5 h-3.5" />
           <span>DBMS</span>
         </button>
         <div className="text-right">
-          <p className="text-xs font-semibold text-white">{currentWarden.name}</p>
-          <p className="text-[10px] text-violet-400 font-mono">{currentWarden.role}</p>
+          <p className="text-xs font-semibold text-white light:text-zinc-900">{currentWarden.name}</p>
+          <p className="text-[10px] text-violet-400 light:text-violet-600 font-mono">{currentWarden.role}</p>
         </div>
       </div>
 
       {/* Sidebar Navigation */}
       <aside
         id="warden-sidebar"
-        className={`fixed md:sticky top-0 md:top-[57px] z-30 h-full md:h-[calc(100vh-57px)] w-64 shrink-0 border-r border-white/[0.08] bg-[#0E0F12]/95 backdrop-blur-xl p-4 flex flex-col justify-between transition-transform duration-200 overflow-y-auto ${
+        className={`fixed md:sticky top-0 md:top-[57px] z-30 h-full md:h-[calc(100vh-57px)] w-64 shrink-0 border-r border-white/[0.08] light:border-pink-200/80 bg-[#0E0F12]/95 light:bg-white backdrop-blur-xl p-4 flex flex-col justify-between transition-transform duration-200 overflow-y-auto ${
           isMobileSidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full md:translate-x-0'
         }`}
       >
         <div className="space-y-4">
           {/* Warden Profile Card */}
-          <div className="p-3.5 rounded-2xl bg-[#16181D]/80 border border-white/[0.08] flex items-center gap-3">
+          <div className="p-3.5 rounded-2xl bg-[#16181D]/80 light:bg-pink-50/50 border border-white/[0.08] light:border-pink-200/70 flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-500 text-white flex items-center justify-center overflow-hidden shrink-0 font-bold text-xs shadow-[0_0_12px_rgba(139,92,246,0.3)]">
               {currentWarden.avatar ? (
                 <img src={currentWarden.avatar} alt={currentWarden.name || 'Warden'} className="w-full h-full object-cover" />
@@ -92,10 +92,10 @@ export const WardenDashboard: React.FC = () => {
               )}
             </div>
             <div className="overflow-hidden min-w-0">
-              <h4 className="text-xs font-semibold text-white truncate">{currentWarden.name}</h4>
+              <h4 className="text-xs font-semibold text-white light:text-zinc-900 truncate">{currentWarden.name}</h4>
               <p className="text-[10px] text-zinc-500 font-mono truncate">{currentWarden.wardenId}</p>
-              <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 font-mono font-medium mt-0.5">
-                <ShieldCheck className="w-3 h-3 text-emerald-400" />
+              <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 light:text-emerald-700 font-mono font-medium mt-0.5">
+                <ShieldCheck className="w-3 h-3 text-emerald-400 light:text-emerald-700" />
                 <span>{currentWarden.role}</span>
               </span>
             </div>
@@ -133,15 +133,15 @@ export const WardenDashboard: React.FC = () => {
                       }}
                       className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer ${
                         isActive
-                          ? 'bg-violet-600/20 text-violet-300 font-semibold border border-violet-500/30'
-                          : 'text-zinc-400 hover:bg-white/[0.04] hover:text-white border border-transparent'
+                          ? 'bg-violet-600/20 light:bg-violet-100 text-violet-300 light:text-violet-800 font-semibold border border-violet-500/30 light:border-violet-300'
+                          : 'text-zinc-400 light:text-zinc-600 hover:bg-white/[0.04] light:hover:bg-pink-50 hover:text-white light:hover:text-zinc-900 border border-transparent'
                       }`}
                     >
                       <div className="flex items-center gap-2.5">
-                        <Icon className={`w-4 h-4 ${isActive ? 'text-violet-400' : 'text-zinc-500'}`} />
+                        <Icon className={`w-4 h-4 ${isActive ? 'text-violet-400 light:text-violet-700' : 'text-zinc-500'}`} />
                         <span>{item.label}</span>
                       </div>
-                      {isActive && <ChevronRight className="w-3.5 h-3.5 text-violet-400 shrink-0" />}
+                      {isActive && <ChevronRight className="w-3.5 h-3.5 text-violet-400 light:text-violet-700 shrink-0" />}
                     </button>
                   );
                 })}
@@ -166,15 +166,15 @@ export const WardenDashboard: React.FC = () => {
                       }}
                       className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer ${
                         isActive
-                          ? 'bg-violet-600/20 text-violet-300 font-semibold border border-violet-500/30'
-                          : 'text-zinc-400 hover:bg-white/[0.04] hover:text-white border border-transparent'
+                          ? 'bg-violet-600/20 light:bg-violet-100 text-violet-300 light:text-violet-800 font-semibold border border-violet-500/30 light:border-violet-300'
+                          : 'text-zinc-400 light:text-zinc-600 hover:bg-white/[0.04] light:hover:bg-pink-50 hover:text-white light:hover:text-zinc-900 border border-transparent'
                       }`}
                     >
                       <div className="flex items-center gap-2.5">
-                        <Icon className={`w-4 h-4 ${isActive ? 'text-violet-400' : 'text-zinc-500'}`} />
+                        <Icon className={`w-4 h-4 ${isActive ? 'text-violet-400 light:text-violet-700' : 'text-zinc-500'}`} />
                         <span>{item.label}</span>
                       </div>
-                      {isActive && <ChevronRight className="w-3.5 h-3.5 text-violet-400 shrink-0" />}
+                      {isActive && <ChevronRight className="w-3.5 h-3.5 text-violet-400 light:text-violet-700 shrink-0" />}
                     </button>
                   );
                 })}
@@ -184,19 +184,19 @@ export const WardenDashboard: React.FC = () => {
         </div>
 
         {/* Sidebar Bottom Controls */}
-        <div className="pt-3 border-t border-white/[0.08] space-y-2 mt-4">
+        <div className="pt-3 border-t border-white/[0.08] light:border-pink-200/70 space-y-2 mt-4">
           <button
             onClick={() => setIsDbmsModalOpen(true)}
-            className="w-full py-2 px-3 rounded-xl text-xs text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 flex items-center justify-center gap-2 transition-all cursor-pointer font-semibold border border-emerald-500/30 shadow-[0_0_12px_rgba(16,185,129,0.15)]"
+            className="w-full py-2 px-3 rounded-xl text-xs text-emerald-400 light:text-emerald-700 bg-emerald-500/10 light:bg-emerald-50 hover:bg-emerald-500/20 light:hover:bg-emerald-100 flex items-center justify-center gap-2 transition-all cursor-pointer font-semibold border border-emerald-500/30 light:border-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.15)] light:shadow-none"
             title="Open Academic DBMS Project ER Schema & Interactive SQL Sandbox"
           >
-            <Database className="w-3.5 h-3.5 text-emerald-400" />
-            <span>DBMS Schema & SQL</span>
+            <Database className="w-3.5 h-3.5 text-emerald-400 light:text-emerald-700" />
+            <span>DBMS Schema &amp; SQL</span>
           </button>
 
           <button
             onClick={logout}
-            className="w-full py-2 px-3 rounded-xl text-xs text-zinc-400 hover:text-rose-400 hover:bg-rose-500/10 flex items-center justify-center gap-1.5 transition-colors cursor-pointer font-medium border border-transparent hover:border-rose-500/20"
+            className="w-full py-2 px-3 rounded-xl text-xs text-zinc-400 light:text-zinc-600 hover:text-rose-400 light:hover:text-rose-600 hover:bg-rose-500/10 light:hover:bg-rose-50 flex items-center justify-center gap-1.5 transition-colors cursor-pointer font-medium border border-transparent hover:border-rose-500/20 light:hover:border-rose-200"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span>Sign Out Admin</span>

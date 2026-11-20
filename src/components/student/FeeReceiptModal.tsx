@@ -229,7 +229,7 @@ export const FeeReceiptModal: React.FC<FeeReceiptModalProps> = ({
 
             {/* Footer */}
             <div className="pt-2 border-t border-zinc-100 flex items-center justify-between text-[10px] text-zinc-500 font-mono">
-              <span>Automated Billing System • Nestos Campus Hub</span>
+              <span>Automated Billing System • Sakhi Girls Hostel ERP</span>
               <span>This is a computer-generated official receipt</span>
             </div>
           </div>

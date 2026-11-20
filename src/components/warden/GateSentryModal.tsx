@@ -145,7 +145,7 @@ export const GateSentryModal: React.FC<GateSentryModalProps> = ({ isOpen, onClos
                 type="button"
                 onClick={() => setScanCode('GP-MCET-2026-0941')}
                 className="px-3 h-11 rounded-xl bg-[#16181D] border border-white/[0.08] hover:border-white/20 text-[11px] font-mono text-zinc-300 hover:text-white cursor-pointer transition-colors"
-                title="Quick load Rahul Sharma's Approved Pass"
+                title="Quick load Pooja Shinde's Approved Pass"
               >
                 Sample Pass 1
               </button>

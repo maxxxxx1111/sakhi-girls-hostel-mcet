@@ -95,7 +95,7 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-[#09090B]/80 backdrop-blur-xl border-b border-white/[0.08] px-4 sm:px-6 lg:px-8 py-3 transition-all font-body">
+    <header className="sticky top-0 z-40 bg-[#09090B]/85 dark:bg-[#09090B]/85 light:bg-white/90 backdrop-blur-xl border-b border-white/[0.08] light:border-[#F3E8EF] px-4 sm:px-6 lg:px-8 py-3 transition-all font-body light:shadow-xs">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
         
         {/* Left: Brand Identity */}
@@ -110,36 +110,36 @@ export const Navbar: React.FC = () => {
           }}
           className="flex items-center gap-3 cursor-pointer select-none group"
         >
-          <div className="w-8 h-8 rounded-lg bg-violet-600/90 text-white flex items-center justify-center shadow-[0_0_16px_rgba(139,92,246,0.35)] group-hover:scale-105 transition-transform duration-200">
+          <div className="w-8 h-8 rounded-lg bg-pink-600/90 text-white flex items-center justify-center shadow-[0_0_16px_rgba(236,72,153,0.35)] group-hover:scale-105 transition-transform duration-200">
             <Building2 className="w-4 h-4" />
           </div>
 
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
-              <span className="text-base font-semibold text-zinc-100 tracking-tight">
-                Nestos
+              <span className="text-base font-semibold text-zinc-100 light:text-zinc-900 tracking-tight">
+                Sakhi
               </span>
-              <span className="text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-white/[0.06] text-zinc-400 border border-white/[0.08]">
+              <span className="text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-white/[0.06] light:bg-pink-500/10 text-zinc-400 light:text-pink-600 border border-white/[0.08] light:border-pink-200">
                 MCET
               </span>
             </div>
-            <span className="text-[11px] text-zinc-500 hidden sm:inline -mt-0.5">
-              Hostel &amp; Dining System
+            <span className="text-[11px] text-zinc-500 light:text-zinc-500 hidden sm:inline -mt-0.5">
+              Sakhi Girls Hostel &amp; Dining
             </span>
           </div>
         </div>
 
         {/* Center: Clean visitor navigation */}
         {!role && (
-          <nav className="hidden md:flex items-center gap-1 bg-[#121316]/60 p-1 rounded-full border border-white/[0.06]">
+          <nav className="hidden md:flex items-center gap-1 bg-[#121316]/60 light:bg-pink-50/70 p-1 rounded-full border border-white/[0.06] light:border-pink-200/60">
             {NAV_ITEMS.map((item) => (
               <button
                 key={item.label}
                 onClick={() => handleNavClick(item.label, item.sectionId)}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-150 cursor-pointer ${
                   activeItem === item.label
-                    ? 'bg-white/[0.1] text-white font-semibold'
-                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]'
+                    ? 'bg-white/[0.1] light:bg-pink-600 text-white font-semibold light:shadow-sm'
+                    : 'text-zinc-400 light:text-zinc-600 hover:text-zinc-200 light:hover:text-pink-700 hover:bg-white/[0.04] light:hover:bg-pink-100/50'
                 }`}
               >
                 {item.label}
@@ -154,26 +154,26 @@ export const Navbar: React.FC = () => {
           <div className="relative" ref={demoMenuRef}>
             <button
               onClick={() => setIsDemoMenuOpen(!isDemoMenuOpen)}
-              className="flex items-center gap-2 px-3 py-1.5 text-xs text-zinc-300 bg-[#121316] hover:bg-[#18191E] rounded-full border border-white/[0.08] hover:border-white/[0.16] transition-all cursor-pointer font-medium"
+              className="flex items-center gap-2 px-3 py-1.5 text-xs text-zinc-300 light:text-zinc-700 bg-[#121316] light:bg-white hover:bg-[#18191E] light:hover:bg-pink-50/70 rounded-full border border-white/[0.08] light:border-pink-200 hover:border-white/[0.16] transition-all cursor-pointer font-medium light:shadow-2xs"
               title="Switch demo account"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
-              <span className="hidden sm:inline text-zinc-400 text-[11px]">Demo:</span>
-              <span className="font-semibold text-zinc-100">
+              <span className="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse" />
+              <span className="hidden sm:inline text-zinc-400 light:text-zinc-500 text-[11px]">Demo:</span>
+              <span className="font-semibold text-zinc-100 light:text-zinc-900">
                 {role === 'student' ? 'Student' : role === 'warden' ? 'Warden' : 'Switch'}
               </span>
               <ChevronDown className="w-3.5 h-3.5 text-zinc-500" />
             </button>
 
             {isDemoMenuOpen && (
-              <div className="absolute right-0 mt-2 w-72 bg-[#111215]/95 backdrop-blur-2xl rounded-2xl p-2.5 z-50 border border-white/[0.12] shadow-[0_12px_40px_rgba(0,0,0,0.8)] text-xs animate-in fade-in zoom-in-95 duration-150">
-                <div className="px-2.5 py-2 border-b border-white/[0.08] flex items-center justify-between text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">
+              <div className="absolute right-0 mt-2 w-72 bg-[#111215]/95 light:bg-white backdrop-blur-2xl rounded-2xl p-2.5 z-50 border border-white/[0.12] light:border-pink-200 shadow-[0_12px_40px_rgba(0,0,0,0.8)] light:shadow-xl text-xs animate-in fade-in zoom-in-95 duration-150">
+                <div className="px-2.5 py-2 border-b border-white/[0.08] light:border-pink-100 flex items-center justify-between text-[11px] font-semibold text-zinc-400 light:text-zinc-500 uppercase tracking-wider">
                   <span>Demo Profiles</span>
-                  <span className="text-violet-400 font-mono text-[10px]">1-Click Instant</span>
+                  <span className="text-pink-400 light:text-pink-600 font-mono text-[10px]">1-Click Instant</span>
                 </div>
 
                 <div className="pt-2 space-y-1">
-                  <p className="text-[10px] font-semibold text-zinc-500 px-2.5 uppercase tracking-wider">
+                  <p className="text-[10px] font-semibold text-zinc-500 light:text-zinc-400 px-2.5 uppercase tracking-wider">
                     Student Residents
                   </p>
                   {students.slice(0, 2).map((std) => (
@@ -185,24 +185,24 @@ export const Navbar: React.FC = () => {
                       }}
                       className={`w-full text-left px-3 py-2 rounded-xl flex items-center justify-between transition-all cursor-pointer ${
                         role === 'student' && currentUser?.id === std.id
-                          ? 'bg-violet-600/15 border border-violet-500/30 text-violet-300 font-medium'
-                          : 'text-zinc-300 hover:bg-white/[0.04]'
+                          ? 'bg-pink-600/15 light:bg-pink-50 border border-pink-500/30 light:border-pink-300 text-pink-300 light:text-pink-700 font-medium'
+                          : 'text-zinc-300 light:text-zinc-700 hover:bg-white/[0.04] light:hover:bg-pink-50/50'
                       }`}
                     >
                       <div>
-                        <p className="font-medium text-zinc-200">{std.name}</p>
-                        <p className="text-[11px] text-zinc-500 font-mono">
+                        <p className="font-medium text-zinc-200 light:text-zinc-900">{std.name}</p>
+                        <p className="text-[11px] text-zinc-500 light:text-zinc-500 font-mono">
                           {std.studentId} • Room {std.roomNumber}
                         </p>
                       </div>
                       {role === 'student' && currentUser?.id === std.id && (
-                        <CheckCircle className="w-3.5 h-3.5 text-violet-400 shrink-0" />
+                        <CheckCircle className="w-3.5 h-3.5 text-pink-500 shrink-0" />
                       )}
                     </button>
                   ))}
 
-                  <div className="border-t border-white/[0.08] my-1.5"></div>
-                  <p className="text-[10px] font-semibold text-zinc-500 px-2.5 uppercase tracking-wider">
+                  <div className="border-t border-white/[0.08] light:border-pink-100 my-1.5"></div>
+                  <p className="text-[10px] font-semibold text-zinc-500 light:text-zinc-400 px-2.5 uppercase tracking-wider">
                     Hostel Administration
                   </p>
                   {wardens.slice(0, 2).map((w) => (
@@ -214,18 +214,18 @@ export const Navbar: React.FC = () => {
                       }}
                       className={`w-full text-left px-3 py-2 rounded-xl flex items-center justify-between transition-all cursor-pointer ${
                         role === 'warden' && currentUser?.id === w.id
-                          ? 'bg-violet-600/15 border border-violet-500/30 text-violet-300 font-medium'
-                          : 'text-zinc-300 hover:bg-white/[0.04]'
+                          ? 'bg-amber-500/15 light:bg-amber-50 border border-amber-500/30 light:border-amber-300 text-amber-300 light:text-amber-800 font-medium'
+                          : 'text-zinc-300 light:text-zinc-700 hover:bg-white/[0.04] light:hover:bg-pink-50/50'
                       }`}
                     >
                       <div>
-                        <p className="font-medium text-zinc-200">{w.name}</p>
-                        <p className="text-[11px] text-zinc-500">
+                        <p className="font-medium text-zinc-200 light:text-zinc-900">{w.name}</p>
+                        <p className="text-[11px] text-zinc-500 light:text-zinc-500">
                           {w.role}
                         </p>
                       </div>
                       {role === 'warden' && currentUser?.id === w.id && (
-                        <CheckCircle className="w-3.5 h-3.5 text-violet-400 shrink-0" />
+                        <CheckCircle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
                       )}
                     </button>
                   ))}
@@ -268,33 +268,33 @@ export const Navbar: React.FC = () => {
               <div className="relative" ref={notifRef}>
                 <button
                   onClick={() => setIsNotifOpen(!isNotifOpen)}
-                  className="relative p-2 rounded-full text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.06] transition-colors cursor-pointer border border-white/[0.06]"
+                  className="relative p-2 rounded-full text-zinc-400 light:text-zinc-600 hover:text-zinc-200 light:hover:text-zinc-900 hover:bg-white/[0.06] light:hover:bg-pink-100/50 transition-colors cursor-pointer border border-white/[0.06] light:border-pink-200"
                   aria-label="View notifications"
                 >
                   <Bell className="w-4 h-4" />
                   {unreadNotifications.length > 0 && (
-                    <span className="absolute top-1 right-1 w-2 h-2 bg-violet-500 rounded-full ring-2 ring-[#09090B] animate-pulse" />
+                    <span className="absolute top-1 right-1 w-2 h-2 bg-pink-500 rounded-full ring-2 ring-[#09090B] light:ring-white animate-pulse" />
                   )}
                 </button>
 
                 {isNotifOpen && (
-                  <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-[#111215]/95 backdrop-blur-2xl rounded-2xl p-3 z-50 border border-white/[0.12] shadow-[0_16px_48px_rgba(0,0,0,0.8)] max-h-[420px] overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
-                    <div className="flex items-center justify-between pb-2.5 border-b border-white/[0.08] px-1">
+                  <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-[#111215]/95 light:bg-white backdrop-blur-2xl rounded-2xl p-3 z-50 border border-white/[0.12] light:border-pink-200 shadow-[0_16px_48px_rgba(0,0,0,0.8)] light:shadow-2xl max-h-[420px] overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
+                    <div className="flex items-center justify-between pb-2.5 border-b border-white/[0.08] light:border-pink-100 px-1">
                       <div>
-                        <h4 className="text-xs font-semibold text-zinc-100">Notifications</h4>
-                        <p className="text-[11px] text-zinc-500">{unreadNotifications.length} unread updates</p>
+                        <h4 className="text-xs font-semibold text-zinc-100 light:text-zinc-900">Notifications</h4>
+                        <p className="text-[11px] text-zinc-500 light:text-zinc-500">{unreadNotifications.length} unread updates</p>
                       </div>
                       {unreadNotifications.length > 0 && (
                         <button
                           onClick={() => markAllNotificationsAsRead()}
-                          className="text-[11px] font-medium text-violet-400 hover:text-violet-300 hover:underline cursor-pointer"
+                          className="text-[11px] font-medium text-pink-400 light:text-pink-600 hover:underline cursor-pointer"
                         >
                           Mark all as read
                         </button>
                       )}
                     </div>
 
-                    <div className="divide-y divide-white/[0.06] mt-1">
+                    <div className="divide-y divide-white/[0.06] light:divide-pink-100 mt-1">
                       {notifications.length === 0 ? (
                         <p className="text-center py-6 text-xs text-zinc-500">No notifications.</p>
                       ) : (
@@ -309,11 +309,13 @@ export const Navbar: React.FC = () => {
                               }
                             }}
                             className={`py-2.5 px-2.5 rounded-xl text-xs transition-colors cursor-pointer ${
-                              !ntf.read ? 'bg-violet-600/10 border border-violet-500/20' : 'hover:bg-white/[0.04]'
+                              !ntf.read
+                                ? 'bg-pink-600/10 light:bg-pink-50 border border-pink-500/20 light:border-pink-200'
+                                : 'hover:bg-white/[0.04] light:hover:bg-pink-50/50'
                             }`}
                           >
-                            <p className="font-medium text-zinc-200">{ntf.title}</p>
-                            <p className="text-[11px] text-zinc-400 mt-0.5 line-clamp-2">{ntf.message}</p>
+                            <p className="font-medium text-zinc-200 light:text-zinc-900">{ntf.title}</p>
+                            <p className="text-[11px] text-zinc-400 light:text-zinc-600 mt-0.5 line-clamp-2">{ntf.message}</p>
                           </div>
                         ))
                       )}
@@ -326,23 +328,23 @@ export const Navbar: React.FC = () => {
               <div className="relative" ref={userMenuRef}>
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center gap-2 pl-1 pr-2.5 py-1 rounded-full bg-[#121316] hover:bg-[#18191E] border border-white/[0.08] hover:border-white/[0.16] transition-all cursor-pointer"
+                  className="flex items-center gap-2 pl-1 pr-2.5 py-1 rounded-full bg-[#121316] light:bg-white hover:bg-[#18191E] light:hover:bg-pink-50/70 border border-white/[0.08] light:border-pink-200 transition-all cursor-pointer light:shadow-2xs"
                 >
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-violet-600 to-indigo-500 text-white flex items-center justify-center font-medium text-xs shadow-xs">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-pink-600 to-rose-500 text-white flex items-center justify-center font-medium text-xs shadow-xs">
                     {currentUser?.name ? currentUser.name[0] : <User className="w-3 h-3" />}
                   </div>
-                  <span className="text-xs font-medium text-zinc-200 hidden md:inline max-w-[120px] truncate">
+                  <span className="text-xs font-medium text-zinc-200 light:text-zinc-800 hidden md:inline max-w-[120px] truncate">
                     {currentUser?.name}
                   </span>
                   <ChevronDown className="w-3.5 h-3.5 text-zinc-500 hidden md:inline" />
                 </button>
 
                 {isUserMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-64 bg-[#111215]/95 backdrop-blur-2xl rounded-2xl p-3 z-50 border border-white/[0.12] shadow-[0_16px_48px_rgba(0,0,0,0.8)] animate-in fade-in zoom-in-95 duration-150">
-                    <div className="pb-2.5 border-b border-white/[0.08] px-1">
-                      <p className="text-xs font-semibold text-zinc-100 truncate">{currentUser?.name}</p>
-                      <p className="text-[11px] text-zinc-400 font-mono truncate">{currentUser?.email}</p>
-                      <span className="inline-block mt-1.5 text-[10px] font-medium px-2 py-0.5 rounded-full bg-white/[0.06] text-zinc-300 border border-white/[0.08]">
+                  <div className="absolute right-0 mt-2 w-64 bg-[#111215]/95 light:bg-white backdrop-blur-2xl rounded-2xl p-3 z-50 border border-white/[0.12] light:border-pink-200 shadow-[0_16px_48px_rgba(0,0,0,0.8)] light:shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+                    <div className="pb-2.5 border-b border-white/[0.08] light:border-pink-100 px-1">
+                      <p className="text-xs font-semibold text-zinc-100 light:text-zinc-900 truncate">{currentUser?.name}</p>
+                      <p className="text-[11px] text-zinc-400 light:text-zinc-500 font-mono truncate">{currentUser?.email}</p>
+                      <span className="inline-block mt-1.5 text-[10px] font-medium px-2 py-0.5 rounded-full bg-white/[0.06] light:bg-pink-50 text-zinc-300 light:text-pink-700 border border-white/[0.08] light:border-pink-200">
                         {role === 'student' ? `Room ${(currentUser as any).roomNumber}` : `${(currentUser as any).role || 'Warden Staff'}`}
                       </span>
                     </div>
@@ -353,9 +355,9 @@ export const Navbar: React.FC = () => {
                           setActiveTab('profile');
                           setIsUserMenuOpen(false);
                         }}
-                        className="w-full text-left px-2.5 py-2 rounded-xl text-xs text-zinc-300 hover:text-white hover:bg-white/[0.05] flex items-center gap-2 font-medium cursor-pointer transition-colors"
+                        className="w-full text-left px-2.5 py-2 rounded-xl text-xs text-zinc-300 light:text-zinc-700 hover:text-white light:hover:text-zinc-900 hover:bg-white/[0.05] light:hover:bg-pink-50 flex items-center gap-2 font-medium cursor-pointer transition-colors"
                       >
-                        <User className="w-3.5 h-3.5 text-zinc-400" />
+                        <User className="w-3.5 h-3.5 text-zinc-400 light:text-zinc-500" />
                         <span>My Profile</span>
                       </button>
 
@@ -364,9 +366,9 @@ export const Navbar: React.FC = () => {
                           logout();
                           setIsUserMenuOpen(false);
                         }}
-                        className="w-full text-left px-2.5 py-2 rounded-xl text-xs text-rose-400 hover:bg-rose-500/10 flex items-center gap-2 font-medium cursor-pointer transition-colors"
+                        className="w-full text-left px-2.5 py-2 rounded-xl text-xs text-rose-400 light:text-rose-600 hover:bg-rose-500/10 light:hover:bg-rose-50 flex items-center gap-2 font-medium cursor-pointer transition-colors"
                       >
-                        <LogOut className="w-3.5 h-3.5 text-rose-400" />
+                        <LogOut className="w-3.5 h-3.5 text-rose-400 light:text-rose-600" />
                         <span>Sign Out</span>
                       </button>
                     </div>
