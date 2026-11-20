@@ -567,7 +567,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             );
             const occupiedCount = updatedBeds.filter((b) => b.status === 'Occupied').length;
             const status = occupiedCount === r.capacity ? 'Full' : occupiedCount > 0 ? 'Partially Occupied' : 'Available';
-            return { ...r, beds: updatedBeds, status };
+            return { ...r, beds: updatedBeds, occupied: occupiedCount, status };
           }
           return r;
         })
@@ -1101,7 +1101,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           );
           const occupiedCount = updatedBeds.filter((b) => b.status === 'Occupied').length;
           const status = occupiedCount === r.capacity ? 'Full' : occupiedCount > 0 ? 'Partially Occupied' : 'Available';
-          return { ...r, beds: updatedBeds, status };
+          return { ...r, beds: updatedBeds, occupied: occupiedCount, status };
         }
         return r;
       })
@@ -1152,7 +1152,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             );
           }
 
-          return { ...r, beds: updatedBeds, status };
+          return { ...r, beds: updatedBeds, occupied: occupiedCount, status };
         }
         return r;
       })

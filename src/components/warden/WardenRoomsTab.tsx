@@ -18,7 +18,9 @@ import {
   Layers,
   Filter,
 } from 'lucide-react';
-import { Room } from '../../types';
+import { Room, Bed as BedType, Student } from '../../types';
+import { BedAllotmentModal } from './BedAllotmentModal';
+import { VacateBedModal } from './VacateBedModal';
 
 // Department styling & abbreviation helper
 const DEPT_CONFIG: { [key: string]: { code: string; color: string; border: string; bg: string } } = {
@@ -100,6 +102,14 @@ export const WardenRoomsTab: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [transferFilter, setTransferFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
   const [reviewRemarks, setReviewRemarks] = useState<{ [id: string]: string }>({});
+
+  // Bed allotment & vacancy modals
+  const [allotModalOpen, setAllotModalOpen] = useState<boolean>(false);
+  const [selectedRoomForBed, setSelectedRoomForBed] = useState<Room | null>(null);
+  const [selectedBedForAction, setSelectedBedForAction] = useState<BedType | null>(null);
+
+  const [vacateModalOpen, setVacateModalOpen] = useState<boolean>(false);
+  const [selectedOccupantToVacate, setSelectedOccupantToVacate] = useState<Student | null>(null);
 
   const sakhiHostel = hostels[0] || {
     id: 'hostel-sakhi',
@@ -688,14 +698,29 @@ export const WardenRoomsTab: React.FC = () => {
                                 </div>
                               </div>
 
-                              {deptBadge && (
-                                <span
-                                  className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-md border shrink-0 ${deptBadge.bg} ${deptBadge.color} ${deptBadge.border}`}
-                                  title={occupant.department}
+                              <div className="flex items-center gap-2 shrink-0">
+                                {deptBadge && (
+                                  <span
+                                    className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-md border shrink-0 ${deptBadge.bg} ${deptBadge.color} ${deptBadge.border}`}
+                                    title={occupant.department}
+                                  >
+                                    {deptBadge.code}
+                                  </span>
+                                )}
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setSelectedRoomForBed(room);
+                                    setSelectedBedForAction(bed);
+                                    setSelectedOccupantToVacate(occupant);
+                                    setVacateModalOpen(true);
+                                  }}
+                                  title={`Vacate ${bed.bedNumber} (${occupant.name})`}
+                                  className="px-2 py-0.5 rounded-md bg-rose-500/10 hover:bg-rose-500/25 text-rose-300 hover:text-rose-100 border border-rose-500/20 text-[10px] font-mono font-semibold transition-colors cursor-pointer"
                                 >
-                                  {deptBadge.code}
-                                </span>
-                              )}
+                                  Vacate
+                                </button>
+                              </div>
                             </div>
                           );
                         }
@@ -715,7 +740,17 @@ export const WardenRoomsTab: React.FC = () => {
                                 Available (Vacant)
                               </span>
                             </div>
-                            <span className="text-[10px] font-mono text-emerald-400/80">Ready to Allot</span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setSelectedRoomForBed(room);
+                                setSelectedBedForAction(bed);
+                                setAllotModalOpen(true);
+                              }}
+                              className="px-2.5 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/40 text-[10px] font-mono font-bold transition-all cursor-pointer flex items-center gap-1 shadow-sm"
+                            >
+                              <span>+ Allot Bed</span>
+                            </button>
                           </div>
                         );
                       })}
@@ -756,6 +791,32 @@ export const WardenRoomsTab: React.FC = () => {
           </div>
         </>
       )}
+
+      {/* Official Bed Allotment Modal */}
+      <BedAllotmentModal
+        isOpen={allotModalOpen}
+        onClose={() => {
+          setAllotModalOpen(false);
+          setSelectedRoomForBed(null);
+          setSelectedBedForAction(null);
+        }}
+        room={selectedRoomForBed}
+        bed={selectedBedForAction}
+      />
+
+      {/* Vacate Bed Confirmation Modal */}
+      <VacateBedModal
+        isOpen={vacateModalOpen}
+        onClose={() => {
+          setVacateModalOpen(false);
+          setSelectedRoomForBed(null);
+          setSelectedBedForAction(null);
+          setSelectedOccupantToVacate(null);
+        }}
+        room={selectedRoomForBed}
+        bed={selectedBedForAction}
+        occupant={selectedOccupantToVacate}
+      />
     </div>
   );
 };

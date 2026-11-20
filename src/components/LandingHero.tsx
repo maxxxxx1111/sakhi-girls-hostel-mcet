@@ -15,6 +15,9 @@ import {
 import { useApp } from '../context/AppContext';
 import { HeroSection } from './HeroSection';
 import { HostelRoomsSection } from './HostelRoomsSection';
+import { FeeEstimatorSection } from './landing/FeeEstimatorSection';
+import { HostelFloorRadarSection } from './landing/HostelFloorRadarSection';
+import { HostelFaqSection } from './landing/HostelFaqSection';
 
 export const LandingHero: React.FC = () => {
   const { openAuthModal, switchDemoUser, students, wardens, notices, weeklyMenu, setIsSOSModalOpen } = useApp();
@@ -76,19 +79,19 @@ export const LandingHero: React.FC = () => {
                 <ArrowRight className="w-4 h-4" />
               </button>
 
-              <div className="flex items-center gap-2 pt-1">
+              <div className="flex items-center gap-2 pt-1 flex-wrap">
                 <span className="text-[11px] text-zinc-500 font-medium">Quick Demo:</span>
                 <button
-                  onClick={() => switchDemoUser('student', students[0]?.id || 'std-1')}
-                  className="text-xs text-violet-400 hover:bg-violet-500/10 px-3 py-1 rounded-lg border border-white/[0.08] transition-colors cursor-pointer font-medium"
+                  onClick={() => switchDemoUser('student', students[0]?.id || 'std-fe-1')}
+                  className="text-xs text-pink-400 hover:bg-pink-500/10 px-3 py-1 rounded-lg border border-white/[0.08] transition-colors cursor-pointer font-medium"
                 >
-                  Rahul (CS)
+                  Pooja (CS • 1st Yr)
                 </button>
                 <button
-                  onClick={() => switchDemoUser('student', students[1]?.id || 'std-2')}
-                  className="text-xs text-violet-400 hover:bg-violet-500/10 px-3 py-1 rounded-lg border border-white/[0.08] transition-colors cursor-pointer font-medium"
+                  onClick={() => switchDemoUser('student', students[1]?.id || 'std-se-1')}
+                  className="text-xs text-pink-400 hover:bg-pink-500/10 px-3 py-1 rounded-lg border border-white/[0.08] transition-colors cursor-pointer font-medium"
                 >
-                  Priya (IT)
+                  Priya (IT • 2nd Yr)
                 </button>
               </div>
             </div>
@@ -122,19 +125,19 @@ export const LandingHero: React.FC = () => {
                 <ArrowRight className="w-4 h-4 text-amber-400" />
               </button>
 
-              <div className="flex items-center gap-2 pt-1">
+              <div className="flex items-center gap-2 pt-1 flex-wrap">
                 <span className="text-[11px] text-zinc-500 font-medium">Quick Demo:</span>
                 <button
-                  onClick={() => switchDemoUser('warden', wardens[0]?.id || 'warden-1')}
+                  onClick={() => switchDemoUser('warden', wardens[0]?.id || 'warden-rector')}
                   className="text-xs text-amber-400 hover:bg-amber-500/10 px-3 py-1 rounded-lg border border-white/[0.08] transition-colors cursor-pointer font-medium"
                 >
-                  Dr. Deshmukh (Chief)
+                  Dr. Sunita Gaikwad (Chief Rector)
                 </button>
                 <button
-                  onClick={() => switchDemoUser('warden', wardens[1]?.id || 'warden-2')}
+                  onClick={() => switchDemoUser('warden', wardens[1]?.id || 'warden-asst')}
                   className="text-xs text-amber-400 hover:bg-amber-500/10 px-3 py-1 rounded-lg border border-white/[0.08] transition-colors cursor-pointer font-medium"
                 >
-                  Prof. Joshi (Boys)
+                  Pratibha Deshmukh (Asst. Warden)
                 </button>
               </div>
             </div>
@@ -145,7 +148,10 @@ export const LandingHero: React.FC = () => {
       {/* 3. Authentic Hostel Rooms & Living Spaces Section */}
       <HostelRoomsSection />
 
-      {/* 4. Annapurna Mess & Amenities Section (#amenities-section) */}
+      {/* 4. Live Residential Floor & Vacancy Radar (Sakhi Girls Hostel) */}
+      <HostelFloorRadarSection />
+
+      {/* 5. Annapurna Mess & Amenities Section (#amenities-section) */}
       <section id="amenities-section" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 py-20 border-t border-white/[0.08]">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
           <div>
@@ -295,7 +301,10 @@ export const LandingHero: React.FC = () => {
         </div>
       </section>
 
-      {/* 5. Community Section (#community-section) */}
+      {/* 6. Collegiate Living Fee & Budget Estimator */}
+      <FeeEstimatorSection />
+
+      {/* 7. Community Section (#community-section) */}
       <section id="community-section" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 py-20 border-t border-white/[0.08]">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10">
           <div>
@@ -345,7 +354,10 @@ export const LandingHero: React.FC = () => {
         </div>
       </section>
 
-      {/* 6. Contact Us Section (#contact-section) */}
+      {/* 8. Institutional Rules & Curfew FAQ Accordion */}
+      <HostelFaqSection />
+
+      {/* 9. Contact Us Section (#contact-section) */}
       <section id="contact-section" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 py-20 border-t border-white/[0.08]">
         <div className="p-8 sm:p-10 rounded-3xl bg-[#111215]/90 border border-white/[0.08] flex flex-col md:flex-row items-center justify-between gap-8 shadow-lg">
           <div className="space-y-3 text-center md:text-left max-w-2xl">
