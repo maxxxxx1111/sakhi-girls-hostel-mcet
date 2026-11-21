@@ -17,6 +17,7 @@ import {
   CalendarDays,
   Wrench,
   Database,
+  MessageSquare,
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -244,6 +245,21 @@ export const Navbar: React.FC = () => {
             <span className="hidden sm:inline font-semibold">DBMS</span>
           </button>
 
+          {/* WhatsApp Gate Pass Cloud Bot 1-Click Showcase */}
+          <button
+            onClick={() => {
+              if (role !== 'warden') {
+                switchDemoUser('warden', wardens[0]?.id || 'warden-1');
+              }
+              setActiveTab('whatsapp');
+            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-600/15 hover:bg-emerald-600/25 text-emerald-400 border border-emerald-500/40 text-xs font-medium transition-all duration-200 cursor-pointer shadow-[0_0_12px_rgba(16,185,129,0.2)] group"
+            title="Interactive WhatsApp Cloud Gate Pass Chatbot & Live MySQL Logs"
+          >
+            <MessageSquare className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" />
+            <span className="hidden sm:inline font-semibold">WhatsApp Bot</span>
+          </button>
+
           {/* Emergency SOS Trigger with subtle pulse animation */}
           <button
             onClick={() => setIsSOSModalOpen(true)}
@@ -420,6 +436,19 @@ export const Navbar: React.FC = () => {
             >
               <Database className="w-4 h-4 text-emerald-400" />
               <span>DBMS Architecture & SQL</span>
+            </button>
+            <button
+              onClick={() => {
+                if (role !== 'warden') {
+                  switchDemoUser('warden', wardens[0]?.id || 'warden-1');
+                }
+                setActiveTab('whatsapp');
+                setIsMobileMenuOpen(false);
+              }}
+              className="text-left py-2 px-3 rounded-lg text-xs font-semibold cursor-pointer text-emerald-400 hover:bg-emerald-500/10 flex items-center gap-2 transition-colors"
+            >
+              <MessageSquare className="w-4 h-4 text-emerald-400" />
+              <span>WhatsApp Cloud Bot Demo</span>
             </button>
             <div className="pt-2 mt-1 border-t border-white/[0.08] flex items-center justify-between px-3 py-1">
               <span className="text-xs text-zinc-400">Theme</span>

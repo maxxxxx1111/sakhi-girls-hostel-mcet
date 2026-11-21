@@ -17,17 +17,20 @@ import {
   ShieldCheck,
   Plus,
   Database,
+  MessageSquare,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { WardenOverviewTab } from './WardenOverviewTab';
 import { WardenStudentsTab } from './WardenStudentsTab';
 import { WardenRoomsTab } from './WardenRoomsTab';
 import { WardenLeavesTab } from './WardenLeavesTab';
+import { WardenWhatsAppTab } from './WardenWhatsAppTab';
 import { WardenComplaintsTab } from './WardenComplaintsTab';
 import { WardenMessTab } from './WardenMessTab';
 import { WardenExpensesTab } from './WardenExpensesTab';
 import { WardenNoticesTab } from './WardenNoticesTab';
 import { WardenAnalyticsTab } from './WardenAnalyticsTab';
+import { WardenSecurityTab } from './WardenSecurityTab';
 
 export const WardenDashboard: React.FC = () => {
   const { currentWarden, activeTab, setActiveTab, logout, setIsDbmsModalOpen } = useApp();
@@ -40,6 +43,7 @@ export const WardenDashboard: React.FC = () => {
     { id: 'students', label: 'Student Directory', icon: Users },
     { id: 'rooms', label: 'Hostel & Bed Allotment', icon: Building2 },
     { id: 'leaves', label: 'Gate Passes & Leaves', icon: CalendarDays },
+    { id: 'whatsapp', label: 'WhatsApp Cloud Bot', icon: MessageSquare },
     { id: 'complaints', label: 'Maintenance & Tickets', icon: Wrench },
   ];
 
@@ -48,6 +52,7 @@ export const WardenDashboard: React.FC = () => {
     { id: 'expenses', label: 'Fees & Budget Ledger', icon: CreditCard },
     { id: 'notices', label: 'Circulars & Notices', icon: Bell },
     { id: 'analytics', label: 'Reports & Analytics', icon: BarChart3 },
+    { id: 'security', label: 'RBAC Security & Authority', icon: ShieldCheck },
   ];
 
   return (
@@ -218,11 +223,13 @@ export const WardenDashboard: React.FC = () => {
             {activeTab === 'students' && <WardenStudentsTab />}
             {activeTab === 'rooms' && <WardenRoomsTab />}
             {activeTab === 'leaves' && <WardenLeavesTab />}
+            {activeTab === 'whatsapp' && <WardenWhatsAppTab />}
             {activeTab === 'complaints' && <WardenComplaintsTab />}
             {activeTab === 'mess' && <WardenMessTab />}
             {activeTab === 'expenses' && <WardenExpensesTab />}
             {activeTab === 'notices' && <WardenNoticesTab />}
             {activeTab === 'analytics' && <WardenAnalyticsTab />}
+            {activeTab === 'security' && <WardenSecurityTab />}
           </motion.div>
         </AnimatePresence>
       </main>

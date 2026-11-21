@@ -1,4 +1,13 @@
-export type UserRole = 'student' | 'warden' | 'guest';
+export type SystemRole =
+  | 'super_admin'
+  | 'administrator'
+  | 'authority_officer'
+  | 'department_manager'
+  | 'moderator'
+  | 'regular_user'
+  | 'guest';
+
+export type UserRole = 'student' | 'warden' | 'guest' | SystemRole;
 
 export interface Student {
   id: string;
@@ -105,6 +114,11 @@ export interface LeaveRequest {
   rejectionReason?: string;
   wardenRemarks?: string;
   gatePassCode?: string;
+  source?: 'Web Portal' | 'WhatsApp' | string;
+  whatsappPhone?: string;
+  departureTime?: string;
+  expectedReturnTime?: string;
+  whatsappNotified?: boolean;
   parentVerification?: {
     verified: boolean;
     contactPerson: string;

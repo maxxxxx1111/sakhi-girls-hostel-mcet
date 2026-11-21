@@ -40,6 +40,7 @@ import {
   INITIAL_GATE_LOGS,
 } from '../data/mockData';
 import { Language, TranslationDict, TRANSLATIONS } from '../utils/translations';
+import { studentApi, roomApi, leaveApi, complaintApi, messApi, authApi, rbacApi, AuthUserData } from '../services/api';
 
 export type ThemePreference = 'light' | 'dark' | 'system';
 export type EffectiveTheme = 'light' | 'dark';
@@ -94,6 +95,15 @@ interface AppContextType {
   // DBMS Project Showcase Modal
   isDbmsModalOpen: boolean;
   setIsDbmsModalOpen: (open: boolean) => void;
+
+  // Enterprise RBAC & Auth Subsystem
+  authUser: AuthUserData | null;
+  authToken: string | null;
+  hasPermission: (permission: string) => boolean;
+  loginWithCredentials: (identifier: string, password: string, rememberMe?: boolean) => Promise<{ success: boolean; error?: string }>;
+  logoutUser: () => Promise<void>;
+  requestPasswordReset: (identifier: string) => Promise<{ success: boolean; message: string; otpCode?: string }>;
+  submitPasswordReset: (identifier: string, otpCode: string, newPassword: string) => Promise<{ success: boolean; message: string }>;
 
   login: (role: UserRole, idOrEnrollment: string, pass?: string) => boolean;
 
@@ -215,9 +225,47 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [currentUserId, setCurrentUserId] = useState<string | null>(() => loadStorage<string | null>('CURRENT_USER_ID', INITIAL_STUDENTS[0]?.id || null));
   const [activeTab, setActiveTab] = useState<string>(() => loadStorage<string>('ACTIVE_TAB', 'overview'));
 
+  // Enterprise RBAC & Authenticated Identity State
+  const [authUser, setAuthUser] = useState<AuthUserData | null>(() => loadStorage<AuthUserData | null>('AUTH_USER', null));
+  const [authToken, setAuthTokenState] = useState<string | null>(() => {
+    try {
+      return localStorage.getItem('sakhi_auth_token');
+    } catch {
+      return null;
+    }
+  });
+
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [authModalRole, setAuthModalRole] = useState<UserRole>('student');
   const [isSOSModalOpen, setIsSOSModalOpen] = useState<boolean>(false);
+
+  // Re-hydrate authenticated session on initial mount
+  useEffect(() => {
+    const token = localStorage.getItem('sakhi_auth_token');
+    if (token) {
+      authApi.getMe()
+        .then((profile) => {
+          setAuthUser(profile);
+          saveStorage('AUTH_USER', profile);
+          if (
+            profile.role_id === 'administrator' ||
+            profile.role_id === 'super_admin' ||
+            profile.role_id === 'authority_officer'
+          ) {
+            setRole('warden');
+          } else {
+            setRole('student');
+          }
+        })
+        .catch(() => {
+          setAuthUser(null);
+          try {
+            localStorage.removeItem('sakhi_auth_token');
+            localStorage.removeItem(LOCAL_STORAGE_PREFIX + 'AUTH_USER');
+          } catch {}
+        });
+    }
+  }, []);
 
   // Collections
   const [hostels, setHostels] = useState<Hostel[]>(() => loadStorage('HOSTELS', INITIAL_HOSTELS));
@@ -460,7 +508,74 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setIsAuthModalOpen(false);
   };
 
-  const login = (selectedRole: UserRole, idOrEnrollment: string): boolean => {
+  const hasPermission = (permission: string): boolean => {
+    if (!authUser) return false;
+    if (authUser.permissions.includes('*') || authUser.role_id === 'super_admin') return true;
+    return authUser.permissions.includes(permission);
+  };
+
+  const loginWithCredentials = async (
+    identifier: string,
+    password: string,
+    rememberMe = true
+  ): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const response = await authApi.login(identifier, password, rememberMe);
+      setAuthUser(response.user);
+      setAuthTokenState(response.accessToken);
+      saveStorage('AUTH_USER', response.user);
+
+      // Route view role
+      if (
+        response.user.role_id === 'administrator' ||
+        response.user.role_id === 'super_admin' ||
+        response.user.role_id === 'authority_officer'
+      ) {
+        setRole('warden');
+        const matchedWarden = wardens.find((w) => w.wardenId === response.user.username || w.email === response.user.email) || wardens[0];
+        setCurrentUserId(matchedWarden?.id || 'warden-01');
+      } else {
+        setRole('student');
+        const matchedStudent = students.find((s) => s.studentId === response.user.username || s.email === response.user.email) || students[0];
+        setCurrentUserId(matchedStudent?.id || 'std-fe-1');
+      }
+
+      setActiveTab('overview');
+      setIsAuthModalOpen(false);
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err.message || 'Authentication failed' };
+    }
+  };
+
+  const logoutUser = async (): Promise<void> => {
+    try {
+      await authApi.logout();
+    } catch (err) {
+      console.warn('Backend logout:', err);
+    }
+    setAuthUser(null);
+    setAuthTokenState(null);
+    try {
+      localStorage.removeItem('sakhi_auth_token');
+      localStorage.removeItem(LOCAL_STORAGE_PREFIX + 'AUTH_USER');
+    } catch {}
+    setRole(null);
+  };
+
+  const requestPasswordReset = async (identifier: string) => {
+    return authApi.forgotPassword(identifier);
+  };
+
+  const submitPasswordReset = async (identifier: string, otpCode: string, newPassword: string) => {
+    return authApi.resetPassword(identifier, otpCode, newPassword);
+  };
+
+  const login = (selectedRole: UserRole, idOrEnrollment: string, pass = 'password123'): boolean => {
+    // 1. Trigger real backend authentication asynchronously
+    loginWithCredentials(idOrEnrollment, pass, true).catch(() => {});
+
+    // 2. Optimistic instant local UI transition
     const query = idOrEnrollment.trim().toUpperCase();
     if (selectedRole === 'student') {
       const found = students.find((s) => s.studentId.toUpperCase() === query || s.id === idOrEnrollment || s.email.toLowerCase() === idOrEnrollment.toLowerCase());
@@ -471,7 +586,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setIsAuthModalOpen(false);
         return true;
       }
-      // Fallback demo login if typed loosely
       const demoStd = students[0];
       setRole('student');
       setCurrentUserId(demoStd.id);
@@ -487,7 +601,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setIsAuthModalOpen(false);
         return true;
       }
-      // Fallback warden
       const demoWarden = wardens[0];
       setRole('warden');
       setCurrentUserId(demoWarden.id);
@@ -554,6 +667,26 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     // Update state
     setStudents((prev) => [newStudent, ...prev]);
+
+    // Asynchronous backend MySQL persistence
+    studentApi.register({
+      name: newStudent.name,
+      studentId: newStudent.studentId,
+      gender: newStudent.gender,
+      course: newStudent.course,
+      department: newStudent.department,
+      year: newStudent.year,
+      division: newStudent.division,
+      mobile: newStudent.mobile,
+      email: newStudent.email,
+      parentName: newStudent.parentName,
+      parentPhone: newStudent.parentPhone,
+      emergencyContact: newStudent.emergencyContact,
+      roomNumber: newStudent.roomNumber,
+      bedNumber: newStudent.bedNumber,
+      roomType: newStudent.roomType,
+      bloodGroup: newStudent.bloodGroup,
+    }).catch((err) => console.warn('[BackendSync] Student registration saved locally, backend sync note:', err.message));
 
     // Occupy bed if assigned
     if (matchingRoom && availableBed) {
@@ -638,6 +771,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
     setLeaveRequests((prev) => [newLeave, ...prev]);
 
+    // Asynchronous backend MySQL persistence
+    leaveApi.create({
+      studentId: newLeave.studentId,
+      studentName: newLeave.studentName,
+      roomNumber: newLeave.roomNumber,
+      leaveType: newLeave.leaveType,
+      fromDate: newLeave.fromDate,
+      toDate: newLeave.toDate,
+      reason: newLeave.reason,
+      destination: newLeave.destination,
+      parentContact: newLeave.parentContact,
+    }).catch((err) => console.warn('[BackendSync] Leave application saved locally, backend sync note:', err.message));
+
     // Send notification to wardens
     const newNtf: AppNotification = {
       id: `ntf-${Date.now()}`,
@@ -682,6 +828,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       dateSubmitted: new Date().toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }),
     };
     setComplaints((prev) => [newComp, ...prev]);
+
+    // Asynchronous backend MySQL persistence
+    complaintApi.create({
+      studentId: newComp.studentId,
+      studentName: newComp.studentName,
+      roomNumber: newComp.roomNumber,
+      category: newComp.category,
+      subject: newComp.subject,
+      description: newComp.description,
+      priority: newComp.priority,
+    }).catch((err) => console.warn('[BackendSync] Complaint ticket saved locally, backend sync note:', err.message));
 
     const newNtf: AppNotification = {
       id: `ntf-${Date.now()}`,
@@ -791,6 +948,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         linkTab: 'leave',
       };
       setNotifications((prev) => [ntf, ...prev]);
+    }
+
+    // Asynchronous backend MySQL persistence
+    if (status === 'Approved') {
+      leaveApi.approve(leaveId, currentWarden?.id || 'WARDEN-SAKHI-01')
+        .catch((err) => console.warn('[BackendSync] Leave approval saved locally, backend sync note:', err.message));
+    } else if (status === 'Rejected') {
+      leaveApi.reject(leaveId, currentWarden?.id || 'WARDEN-SAKHI-01', remarks || 'Rejected by Warden')
+        .catch((err) => console.warn('[BackendSync] Leave rejection saved locally, backend sync note:', err.message));
     }
   };
 
@@ -979,6 +1145,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       };
       setNotifications((prev) => [ntf, ...prev]);
     }
+
+    // Asynchronous backend MySQL persistence
+    complaintApi.updateStatus(complaintId, status === 'Resolved' ? 'Resolved' : 'In Progress', currentWarden?.id || 'WARDEN-SAKHI-01', remarks)
+      .catch((err) => console.warn('[BackendSync] Complaint update saved locally, backend sync note:', err.message));
   };
 
   const rateComplaint = (complaintId: string, rating: number, feedback?: string) => {
@@ -1022,6 +1192,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       };
       setNotifications((prev) => [ntf, ...prev]);
     }
+
+    // Asynchronous backend MySQL persistence
+    complaintApi.updateStatus(complaintId, 'In Progress', 'STUDENT-REOPEN', reason)
+      .catch((err) => console.warn('[BackendSync] Complaint reopen saved locally, backend sync note:', err.message));
   };
 
   const updateDayMenu = (updatedDay: DayMenu) => {
@@ -1125,6 +1299,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         )
       );
     }
+
+    // Asynchronous backend MySQL persistence
+    roomApi.allotBed(roomId, bedId, studentId, targetStudent.name)
+      .catch((err) => console.warn('[BackendSync] Bed allotment saved locally, backend sync note:', err.message));
   };
 
   const vacateBed = (roomId: string, bedId: string) => {
@@ -1157,6 +1335,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         return r;
       })
     );
+
+    // Asynchronous backend MySQL persistence
+    roomApi.vacateBed(roomId, bedId)
+      .catch((err) => console.warn('[BackendSync] Bed vacate saved locally, backend sync note:', err.message));
   };
 
   const updateRoomStatus = (roomId: string, status: Room['status']) => {
@@ -1325,6 +1507,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         registerStudent,
         logout,
         switchDemoUser,
+
+        // Enterprise RBAC & Auth Subsystem
+        authUser,
+        authToken,
+        hasPermission,
+        loginWithCredentials,
+        logoutUser,
+        requestPasswordReset,
+        submitPasswordReset,
         hostels,
         students,
         wardens,

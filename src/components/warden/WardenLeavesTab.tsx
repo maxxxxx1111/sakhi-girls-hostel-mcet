@@ -261,9 +261,23 @@ export const WardenLeavesTab: React.FC = () => {
                       </td>
 
                       <td className="py-3.5 px-4">
-                        <p className="font-semibold text-white">{leave.studentName}</p>
-                        <p className="text-[10px] text-zinc-400 font-mono">
+                        <div className="flex items-center gap-2">
+                          <p className="font-semibold text-white">{leave.studentName}</p>
+                          {leave.source === 'WhatsApp' ? (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-[10px] font-semibold font-mono shadow-xs">
+                              💬 WhatsApp Bot
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-white/[0.06] text-zinc-400 text-[9px] font-mono">
+                              Web Portal
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[10px] text-zinc-400 font-mono mt-0.5">
                           Room {leave.roomNumber} • {leave.hostelName}
+                          {leave.whatsappPhone && (
+                            <span className="text-emerald-400 ml-1.5">({leave.whatsappPhone})</span>
+                          )}
                         </p>
                       </td>
 
@@ -274,6 +288,12 @@ export const WardenLeavesTab: React.FC = () => {
                         <p className="text-[10px] text-zinc-400 font-mono mt-1">
                           {leave.fromDate} → {leave.toDate}
                         </p>
+                        {(leave.departureTime || leave.expectedReturnTime) && (
+                          <p className="text-[10px] text-teal-300 font-mono flex items-center gap-1 mt-0.5">
+                            <Clock className="w-2.5 h-2.5" />
+                            <span>{leave.departureTime || '--'} → {leave.expectedReturnTime || '--'}</span>
+                          </p>
+                        )}
                       </td>
 
                       <td className="py-3.5 px-4 max-w-xs">
@@ -523,10 +543,18 @@ export const WardenLeavesTab: React.FC = () => {
 
             <div className="p-4 bg-white rounded-2xl mx-auto w-48 h-48 flex flex-col items-center justify-center space-y-2">
               <QrCode className="w-28 h-28 text-black" />
-              <span className="text-[10px] font-mono text-black font-bold">AUTH-{selectedPass.id.slice(-6).toUpperCase()}</span>
+              <span className="text-[10px] font-mono text-black font-bold">
+                {selectedPass.gatePassCode || `AUTH-${selectedPass.id.slice(-6).toUpperCase()}`}
+              </span>
             </div>
 
             <div className="text-xs space-y-1.5 text-left bg-[#16181D] p-3.5 rounded-xl border border-white/[0.08]">
+              <div className="flex justify-between">
+                <span className="text-zinc-400">Channel / Source:</span>
+                <span className="font-semibold text-emerald-400 font-mono">
+                  {selectedPass.source === 'WhatsApp' ? '💬 WhatsApp Bot' : 'Web Portal'}
+                </span>
+              </div>
               <div className="flex justify-between">
                 <span className="text-zinc-400">Type:</span>
                 <span className="font-semibold text-white">{selectedPass.leaveType}</span>
@@ -535,6 +563,14 @@ export const WardenLeavesTab: React.FC = () => {
                 <span className="text-zinc-400">Duration:</span>
                 <span className="font-mono text-white font-semibold">{selectedPass.fromDate} → {selectedPass.toDate}</span>
               </div>
+              {(selectedPass.departureTime || selectedPass.expectedReturnTime) && (
+                <div className="flex justify-between">
+                  <span className="text-zinc-400">Timing:</span>
+                  <span className="font-mono text-teal-300">
+                    {selectedPass.departureTime || '--'} → {selectedPass.expectedReturnTime || '--'}
+                  </span>
+                </div>
+              )}
               <div className="flex justify-between">
                 <span className="text-zinc-400">Destination:</span>
                 <span className="text-zinc-200 font-medium">{selectedPass.destination || 'Home Residence'}</span>

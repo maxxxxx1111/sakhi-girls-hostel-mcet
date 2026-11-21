@@ -1,7 +1,5 @@
 import mysql from 'mysql2/promise';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { config } from './config';
 
 export interface DbStatus {
   connected: boolean;
@@ -14,22 +12,21 @@ export interface DbStatus {
   serverVersion?: string;
 }
 
-const dbConfig = {
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '3306', 10),
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'mcet_hostel_db',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-};
-
 let pool: mysql.Pool | null = null;
 
 export function getPool(): mysql.Pool {
   if (!pool) {
-    pool = mysql.createPool(dbConfig);
+    pool = mysql.createPool({
+      host: config.db.host,
+      port: config.db.port,
+      user: config.db.user,
+      password: config.db.password,
+      database: config.db.name,
+      waitForConnections: true,
+      connectionLimit: config.db.connectionLimit,
+      queueLimit: 0,
+      multipleStatements: true,
+    });
   }
   return pool;
 }
@@ -40,10 +37,10 @@ export function getPool(): mysql.Pool {
 export async function checkDatabaseConnection(): Promise<DbStatus> {
   const status: DbStatus = {
     connected: false,
-    host: dbConfig.host,
-    port: dbConfig.port,
-    user: dbConfig.user,
-    database: dbConfig.database,
+    host: config.db.host,
+    port: config.db.port,
+    user: config.db.user,
+    database: config.db.name,
   };
 
   try {
@@ -66,10 +63,29 @@ export async function checkDatabaseConnection(): Promise<DbStatus> {
 }
 
 /**
- * Generic query executor
+ * Generic parameterized query executor
  */
 export async function query<T = any>(sql: string, params?: any[]): Promise<T> {
   const activePool = getPool();
   const [results] = await activePool.query(sql, params);
   return results as T;
+}
+
+/**
+ * Transaction executor helper
+ */
+export async function transaction<T>(callback: (conn: mysql.PoolConnection) => Promise<T>): Promise<T> {
+  const activePool = getPool();
+  const conn = await activePool.getConnection();
+  await conn.beginTransaction();
+  try {
+    const result = await callback(conn);
+    await conn.commit();
+    return result;
+  } catch (err) {
+    await conn.rollback();
+    throw err;
+  } finally {
+    conn.release();
+  }
 }

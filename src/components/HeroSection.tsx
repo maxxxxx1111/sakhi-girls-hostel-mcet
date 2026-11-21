@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { useVideoFadeLoop } from '../hooks/useVideoFadeLoop';
 import { useApp } from '../context/AppContext';
-import { ArrowRight, Sparkles, Building2, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Sparkles, Building2, CheckCircle2, MessageSquare } from 'lucide-react';
 
 const VIDEO_URL =
   'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4';
@@ -9,7 +9,7 @@ const VIDEO_URL =
 export function HeroSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
   useVideoFadeLoop(videoRef);
-  const { openAuthModal, role, setActiveTab } = useApp();
+  const { openAuthModal, role, setActiveTab, switchDemoUser, wardens } = useApp();
 
   const handleGetStarted = () => {
     if (role) {
@@ -86,6 +86,20 @@ export function HeroSection() {
               <span style={{ color: '#FFFFFF' }}>Warden Administration</span>
             </button>
           )}
+
+          <button
+            onClick={() => {
+              if (role !== 'warden') {
+                switchDemoUser('warden', wardens[0]?.id || 'warden-1');
+              }
+              setActiveTab('whatsapp');
+            }}
+            className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-emerald-600/90 hover:bg-emerald-500 text-white font-semibold text-sm transition-all shadow-[0_0_24px_rgba(16,185,129,0.35)] flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+            style={{ color: '#FFFFFF' }}
+          >
+            <MessageSquare className="w-4 h-4 text-emerald-200" />
+            <span style={{ color: '#FFFFFF' }}>💬 WhatsApp Gate Pass Bot</span>
+          </button>
         </div>
 
         {/* Glass Trust Badges */}

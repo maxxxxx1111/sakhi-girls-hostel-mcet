@@ -37,6 +37,9 @@ export const AuthModal: React.FC = () => {
     closeAuthModal,
     authModalRole,
     login,
+    loginWithCredentials,
+    requestPasswordReset,
+    submitPasswordReset,
     registerStudent,
     students,
     wardens,
@@ -58,6 +61,10 @@ export const AuthModal: React.FC = () => {
   const [isForgotOpen, setIsForgotOpen] = useState(false);
   const [forgotEmail, setForgotEmail] = useState('');
   const [forgotSuccess, setForgotSuccess] = useState(false);
+  const [receivedOtp, setReceivedOtp] = useState<string | null>(null);
+  const [resetOtpInput, setResetOtpInput] = useState('');
+  const [resetNewPassword, setResetNewPassword] = useState('');
+  const [resetSuccess, setResetSuccess] = useState(false);
 
   // Sign Up / Registration States
   const [signUpData, setSignUpData] = useState({
@@ -109,7 +116,7 @@ export const AuthModal: React.FC = () => {
     }
   };
 
-  const handleSignIn = (e: React.FormEvent) => {
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!identifier.trim()) {
       setErrorMsg('Please enter your Institutional ID or Email');
@@ -118,31 +125,67 @@ export const AuthModal: React.FC = () => {
     setIsSubmitting(true);
     setErrorMsg('');
 
-    setTimeout(() => {
-      const success = login(selectedRole, identifier, password);
+    try {
+      const res = await loginWithCredentials(identifier, password, rememberMe);
       setIsSubmitting(false);
-      if (!success) {
-        setErrorMsg('Invalid institutional credentials. Please check your Student PRN / Staff ID.');
+      if (!res.success) {
+        setErrorMsg(res.error || 'Invalid institutional credentials. Please check your credentials.');
       }
-    }, 400);
+    } catch (err: any) {
+      setIsSubmitting(false);
+      setErrorMsg(err.message || 'Authentication failed. Please verify credentials.');
+    }
   };
 
-  const handleSSOLogin = () => {
+  const handleSSOLogin = async () => {
     setIsSubmitting(true);
-    setTimeout(() => {
-      if (selectedRole === 'student') {
-        login('student', students[0]?.studentId || 'MCET2026CS012');
-      } else {
-        login('warden', wardens[0]?.wardenId || 'WARDEN-SAKHI-01');
-      }
-      setIsSubmitting(false);
-    }, 450);
+    const demoId = selectedRole === 'student' ? 'MCET2026CS012' : 'WARDEN-SAKHI-01';
+    await loginWithCredentials(demoId, 'password123', true);
+    setIsSubmitting(false);
   };
 
-  const handleForgotSubmit = (e: React.FormEvent) => {
+  const handleForgotSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!forgotEmail.trim()) return;
-    setForgotSuccess(true);
+    setIsSubmitting(true);
+    setErrorMsg('');
+    try {
+      const res = await requestPasswordReset(forgotEmail);
+      if (res.otpCode) {
+        setReceivedOtp(res.otpCode);
+      }
+      setForgotSuccess(true);
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Failed to dispatch reset OTP');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleResetPasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!resetOtpInput || !resetNewPassword) {
+      setErrorMsg('Please enter the 6-digit OTP code and new password');
+      return;
+    }
+    setIsSubmitting(true);
+    setErrorMsg('');
+    try {
+      const res = await submitPasswordReset(forgotEmail, resetOtpInput, resetNewPassword);
+      setResetSuccess(true);
+      setErrorMsg('');
+      setTimeout(() => {
+        setIsForgotOpen(false);
+        setPassword(resetNewPassword);
+        setForgotSuccess(false);
+        setResetSuccess(false);
+        setReceivedOtp(null);
+      }, 2500);
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Password reset failed. Invalid or expired OTP.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleSignUpSubmit = (e: React.FormEvent) => {
@@ -407,7 +450,7 @@ export const AuthModal: React.FC = () => {
                   type="button"
                   onClick={handleSSOLogin}
                   disabled={isSubmitting}
-                  className="w-full py-2.5 px-4 rounded-2xl bg-white/[0.05] light:bg-white hover:bg-white/[0.09] light:hover:bg-zinc-50 border border-white/15 light:border-zinc-300 text-xs font-semibold text-zinc-100 light:text-zinc-800 flex items-center justify-center gap-3 transition-all cursor-pointer hover:border-pink-500/40 shadow-xs"
+                  className="google-sso-btn w-full py-2.5 px-4 rounded-2xl bg-white/[0.05] light:bg-white hover:bg-white/[0.09] light:hover:bg-zinc-50 border border-white/15 light:border-zinc-300 text-xs font-semibold text-zinc-100 light:text-zinc-800 flex items-center justify-center gap-3 transition-all cursor-pointer hover:border-pink-500/40 shadow-xs"
                 >
                   <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
                     <path
@@ -513,13 +556,59 @@ export const AuthModal: React.FC = () => {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="p-3.5 rounded-2xl bg-pink-500/10 light:bg-pink-50 border border-pink-500/20 light:border-pink-200 text-xs space-y-2 overflow-hidden"
+                        className="p-3.5 rounded-2xl bg-pink-500/10 light:bg-pink-50 border border-pink-500/20 light:border-pink-200 text-xs space-y-3 overflow-hidden"
                       >
-                        {forgotSuccess ? (
-                          <div className="text-emerald-400 light:text-emerald-700 flex items-center gap-2">
-                            <Check className="w-4 h-4 shrink-0" />
-                            <span>Password reset OTP sent to your registered institutional email &amp; parent phone!</span>
+                        {resetSuccess ? (
+                          <div className="text-emerald-400 light:text-emerald-700 flex items-center gap-2 p-2 bg-emerald-500/10 rounded-xl">
+                            <Check className="w-4 h-4 shrink-0 text-emerald-400" />
+                            <span>Password reset successful! You can now sign in with your new password.</span>
                           </div>
+                        ) : forgotSuccess ? (
+                          <form onSubmit={handleResetPasswordSubmit} className="space-y-2.5">
+                            <div className="flex items-center justify-between text-[11px] text-zinc-300 light:text-zinc-700">
+                              <span>Enter the 6-digit OTP dispatched to: <b>{forgotEmail}</b></span>
+                              {receivedOtp && (
+                                <span className="font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold">
+                                  OTP: {receivedOtp}
+                                </span>
+                              )}
+                            </div>
+                            <div className="grid grid-cols-2 gap-2">
+                              <input
+                                type="text"
+                                maxLength={6}
+                                value={resetOtpInput}
+                                onChange={(e) => setResetOtpInput(e.target.value)}
+                                placeholder="6-Digit OTP"
+                                className="px-3 py-1.5 rounded-xl bg-black/40 light:bg-white border border-white/10 light:border-zinc-300 text-xs text-white light:text-zinc-900 outline-none font-mono text-center tracking-widest"
+                                required
+                              />
+                              <input
+                                type="password"
+                                value={resetNewPassword}
+                                onChange={(e) => setResetNewPassword(e.target.value)}
+                                placeholder="New Password"
+                                className="px-3 py-1.5 rounded-xl bg-black/40 light:bg-white border border-white/10 light:border-zinc-300 text-xs text-white light:text-zinc-900 outline-none"
+                                required
+                              />
+                            </div>
+                            <div className="flex items-center justify-between gap-2 pt-1">
+                              <button
+                                type="button"
+                                onClick={() => setForgotSuccess(false)}
+                                className="text-[10px] text-zinc-400 hover:text-zinc-200 cursor-pointer"
+                              >
+                                &larr; Resend or change ID
+                              </button>
+                              <button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 text-white text-xs font-bold cursor-pointer shadow-xs"
+                              >
+                                {isSubmitting ? 'Verifying...' : 'Set New Password'}
+                              </button>
+                            </div>
+                          </form>
                         ) : (
                           <div>
                             <p className="text-zinc-300 light:text-zinc-700 text-[11px] mb-2">
@@ -536,9 +625,10 @@ export const AuthModal: React.FC = () => {
                               <button
                                 type="button"
                                 onClick={handleForgotSubmit}
-                                className="px-3 py-1.5 rounded-xl bg-pink-600 hover:bg-pink-500 text-white text-xs font-semibold cursor-pointer shadow-xs"
+                                disabled={isSubmitting}
+                                className="px-3 py-1.5 rounded-xl bg-pink-600 hover:bg-pink-500 text-white text-xs font-semibold cursor-pointer shadow-xs disabled:opacity-50"
                               >
-                                Send OTP
+                                {isSubmitting ? 'Sending...' : 'Send OTP'}
                               </button>
                             </div>
                           </div>
@@ -656,64 +746,123 @@ export const AuthModal: React.FC = () => {
                       </button>
                     </div>
                   ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIdentifier('WARDEN-SAKHI-01');
-                          login('warden', 'WARDEN-SAKHI-01');
-                        }}
-                        className="p-2.5 rounded-2xl bg-white/[0.04] hover:bg-amber-500/10 light:bg-amber-50/60 hover:light:bg-amber-100/70 border border-white/10 hover:border-amber-500/30 light:border-amber-200/80 hover:light:border-amber-300 text-left transition-all cursor-pointer group shadow-xs"
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <img
-                            src={wardens[0]?.avatar || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80'}
-                            alt="Dr. Sunita Gaikwad"
-                            className="w-7 h-7 rounded-full object-cover border border-amber-400/40"
-                            referrerPolicy="no-referrer"
-                          />
-                          <div className="min-w-0">
-                            <span className="font-bold text-xs text-zinc-200 light:text-zinc-800 group-hover:text-amber-400 light:group-hover:text-amber-600 block truncate">
-                              Dr. Sunita M. Gaikwad
-                            </span>
-                            <span className="text-[10px] text-amber-400 light:text-amber-600 font-semibold">
-                              Chief Warden • Rector
-                            </span>
+                    <div className="space-y-2">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {/* 1. Administrator */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIdentifier('WARDEN-SAKHI-01');
+                            setPassword('password123');
+                            login('warden', 'WARDEN-SAKHI-01');
+                          }}
+                          className="p-2.5 rounded-2xl bg-white/[0.04] hover:bg-amber-500/10 light:bg-amber-50/60 hover:light:bg-amber-100/70 border border-white/10 hover:border-amber-500/30 light:border-amber-200/80 hover:light:border-amber-300 text-left transition-all cursor-pointer group shadow-xs"
+                        >
+                          <div className="flex items-center gap-2">
+                            <img
+                              src={wardens[0]?.avatar || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80'}
+                              alt="Dr. Sunita Gaikwad"
+                              className="w-7 h-7 rounded-full object-cover border border-amber-400/40"
+                              referrerPolicy="no-referrer"
+                            />
+                            <div className="min-w-0">
+                              <span className="font-bold text-xs text-zinc-200 light:text-zinc-800 group-hover:text-amber-400 light:group-hover:text-amber-600 block truncate">
+                                Dr. Sunita M. Gaikwad
+                              </span>
+                              <span className="text-[10px] text-amber-400 light:text-amber-600 font-semibold block">
+                                Administrator (Chief Warden)
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                        <p className="text-[10px] text-zinc-400 light:text-zinc-500 font-mono mt-1.5 pl-0.5">
-                          WARDEN-SAKHI-01 • Full Admin Access
-                        </p>
-                      </button>
+                          <p className="text-[10px] text-zinc-400 light:text-zinc-500 font-mono mt-1 pl-0.5">
+                            WARDEN-SAKHI-01 • Hierarchy Rank 80
+                          </p>
+                        </button>
 
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIdentifier('WARDEN-SAKHI-02');
-                          login('warden', 'WARDEN-SAKHI-02');
-                        }}
-                        className="p-2.5 rounded-2xl bg-white/[0.04] hover:bg-pink-500/10 light:bg-pink-50/60 hover:light:bg-pink-100/70 border border-white/10 hover:border-pink-500/30 light:border-pink-200/80 hover:light:border-pink-300 text-left transition-all cursor-pointer group shadow-xs"
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <img
-                            src={wardens[1]?.avatar || 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80'}
-                            alt="Mrs. Pratibha Deshmukh"
-                            className="w-7 h-7 rounded-full object-cover border border-pink-400/40"
-                            referrerPolicy="no-referrer"
-                          />
-                          <div className="min-w-0">
-                            <span className="font-bold text-xs text-zinc-200 light:text-zinc-800 group-hover:text-pink-400 light:group-hover:text-pink-600 block truncate">
-                              Mrs. Pratibha Deshmukh
-                            </span>
-                            <span className="text-[10px] text-pink-400 light:text-pink-600 font-semibold">
-                              Assistant Warden
-                            </span>
+                        {/* 2. Super Administrator */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIdentifier('mcet_superadmin');
+                            setPassword('password123');
+                            login('warden', 'mcet_superadmin');
+                          }}
+                          className="p-2.5 rounded-2xl bg-white/[0.04] hover:bg-purple-500/10 light:bg-purple-50/60 hover:light:bg-purple-100/70 border border-white/10 hover:border-purple-500/30 light:border-purple-200/80 hover:light:border-purple-300 text-left transition-all cursor-pointer group shadow-xs"
+                        >
+                          <div className="flex items-center gap-2">
+                            <div className="w-7 h-7 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold text-xs border border-purple-400/40">
+                              P
+                            </div>
+                            <div className="min-w-0">
+                              <span className="font-bold text-xs text-zinc-200 light:text-zinc-800 group-hover:text-purple-400 light:group-hover:text-purple-600 block truncate">
+                                Prof. H. M. Jethe
+                              </span>
+                              <span className="text-[10px] text-purple-400 light:text-purple-600 font-semibold block">
+                                Super Admin (Principal)
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                        <p className="text-[10px] text-zinc-400 light:text-zinc-500 font-mono mt-1.5 pl-0.5">
-                          WARDEN-SAKHI-02 • Residential Wing
-                        </p>
-                      </button>
+                          <p className="text-[10px] text-zinc-400 light:text-zinc-500 font-mono mt-1 pl-0.5">
+                            mcet_superadmin • Hierarchy Rank 100
+                          </p>
+                        </button>
+
+                        {/* 3. Authority Officer */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIdentifier('sentry_gate1');
+                            setPassword('password123');
+                            login('warden', 'sentry_gate1');
+                          }}
+                          className="p-2.5 rounded-2xl bg-white/[0.04] hover:bg-cyan-500/10 light:bg-cyan-50/60 hover:light:bg-cyan-100/70 border border-white/10 hover:border-cyan-500/30 light:border-cyan-200/80 hover:light:border-cyan-300 text-left transition-all cursor-pointer group shadow-xs"
+                        >
+                          <div className="flex items-center gap-2">
+                            <div className="w-7 h-7 rounded-full bg-cyan-600 text-white flex items-center justify-center font-bold text-xs border border-cyan-400/40">
+                              S
+                            </div>
+                            <div className="min-w-0">
+                              <span className="font-bold text-xs text-zinc-200 light:text-zinc-800 group-hover:text-cyan-400 light:group-hover:text-cyan-600 block truncate">
+                                Subedar B. R. Pawar
+                              </span>
+                              <span className="text-[10px] text-cyan-400 light:text-cyan-600 font-semibold block">
+                                Authority Officer (Security)
+                              </span>
+                            </div>
+                          </div>
+                          <p className="text-[10px] text-zinc-400 light:text-zinc-500 font-mono mt-1 pl-0.5">
+                            sentry_gate1 • Hierarchy Rank 60
+                          </p>
+                        </button>
+
+                        {/* 4. Department Manager */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIdentifier('cse_manager');
+                            setPassword('password123');
+                            login('warden', 'cse_manager');
+                          }}
+                          className="p-2.5 rounded-2xl bg-white/[0.04] hover:bg-emerald-500/10 light:bg-emerald-50/60 hover:light:bg-emerald-100/70 border border-white/10 hover:border-emerald-500/30 light:border-emerald-200/80 hover:light:border-emerald-300 text-left transition-all cursor-pointer group shadow-xs"
+                        >
+                          <div className="flex items-center gap-2">
+                            <div className="w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs border border-emerald-400/40">
+                              D
+                            </div>
+                            <div className="min-w-0">
+                              <span className="font-bold text-xs text-zinc-200 light:text-zinc-800 group-hover:text-emerald-400 light:group-hover:text-emerald-600 block truncate">
+                                Dr. R. R. Karwa
+                              </span>
+                              <span className="text-[10px] text-emerald-400 light:text-emerald-600 font-semibold block">
+                                Dept Manager (HOD CSE)
+                              </span>
+                            </div>
+                          </div>
+                          <p className="text-[10px] text-zinc-400 light:text-zinc-500 font-mono mt-1 pl-0.5">
+                            cse_manager • Hierarchy Rank 50
+                          </p>
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>

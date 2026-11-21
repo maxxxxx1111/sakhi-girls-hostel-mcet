@@ -515,4 +515,94 @@ html.light body,
   border-color: rgba(244, 114, 182, 0.35) !important;
 }
 
+/* =========================================================================
+   AUTH MODAL INTERACTIVE FORM CONTRAST & LUXURY POLISH
+   Guarantees pristine high-contrast inputs, crystal clear labels,
+   and beautiful styling in both Light and Dark modes.
+   ========================================================================= */
+
+.light #auth-modal-card {
+  background-color: #FFFFFF !important;
+  border-color: #FCE7F3 !important;
+  color: #18181B !important;
+}
+
+.light #auth-modal-card input,
+.light #auth-modal-card select,
+.light #auth-modal-card textarea {
+  background-color: #F8FAFC !important;
+  border-color: #E2E8F0 !important;
+  color: #0F172A !important;
+}
+
+.light #auth-modal-card input::placeholder,
+.light #auth-modal-card textarea::placeholder {
+  color: #94A3B8 !important;
+}
+
+.light #auth-modal-card input:focus,
+.light #auth-modal-card select:focus,
+.light #auth-modal-card textarea:focus {
+  background-color: #FFFFFF !important;
+  border-color: #EC4899 !important;
+  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.18) !important;
+}
+
+.light #auth-modal-card .google-sso-btn {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  color: #1E293B !important;
+}
+
+.light #auth-modal-card .google-sso-btn span {
+  color: #1E293B !important;
+}
+
+.light #auth-modal-card .google-sso-btn:hover {
+  background-color: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
+}
+
+.light #auth-modal-card label {
+  color: #334155 !important;
+}
+
+.dark #auth-modal-card {
+  background-color: #0D0B14 !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #F4F4F5 !important;
+}
+
+.dark #auth-modal-card input,
+.dark #auth-modal-card select,
+.dark #auth-modal-card textarea {
+  background-color: #161322 !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #FFFFFF !important;
+}
+
+.dark #auth-modal-card input::placeholder,
+.dark #auth-modal-card textarea::placeholder {
+  color: #71717A !important;
+}
+
+.dark #auth-modal-card input:focus,
+.dark #auth-modal-card select:focus,
+.dark #auth-modal-card textarea:focus {
+  background-color: #1A1628 !important;
+  border-color: #EC4899 !important;
+  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.25) !important;
+}
+
+.dark #auth-modal-card .google-sso-btn {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: #F4F4F5 !important;
+}
+
+.dark #auth-modal-card .google-sso-btn span {
+  color: #F4F4F5 !important;
+}
+
+
 
