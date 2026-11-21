@@ -119,7 +119,7 @@ The project includes a 3NF normalized schema across **17 relational tables** and
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yashmanwar-11/sakhi-girls-hostel-mcet.git
+git clone https://github.com/maxxxxx1111/sakhi-girls-hostel-mcet.git
 cd sakhi-girls-hostel-mcet
 ```
 
@@ -181,4 +181,4 @@ SELECT * FROM v_vacant_beds;
 ## 👩‍💻 Authors & Academic Credits
 - **Project**: DBMS Course Mini-Project & Collegiate ERP
 - **Institution**: Mauli College of Engineering and Technology (MCET), Shegaon - 444203
-- **Repository**: [https://github.com/yashmanwar-11/sakhi-girls-hostel-mcet](https://github.com/yashmanwar-11/sakhi-girls-hostel-mcet)
+- **Repository**: [https://github.com/maxxxxx1111/sakhi-girls-hostel-mcet](https://github.com/maxxxxx1111/sakhi-girls-hostel-mcet)
