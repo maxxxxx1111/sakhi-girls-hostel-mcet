@@ -20,6 +20,10 @@ import {
   Star,
   RotateCcw,
   MessageSquare,
+  ShieldCheck,
+  Flame,
+  AlertTriangle,
+  UserCheck,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -38,7 +42,6 @@ export const StudentComplaintsTab: React.FC = () => {
   const [subject, setSubject] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState<PriorityLevel>('Medium');
-  const [photoName, setPhotoName] = useState<string | null>(null);
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   if (!currentStudent) return null;
@@ -88,28 +91,27 @@ export const StudentComplaintsTab: React.FC = () => {
       setIsSlideOverOpen(false);
       setSubject('');
       setDescription('');
-      setPhotoName(null);
     }, 1200);
   };
 
   const getCategoryIcon = (cat: ComplaintCategory) => {
     switch (cat) {
       case 'Electrical':
-        return <Zap className="w-4 h-4 text-[#F59E0B]" />;
+        return <Zap className="w-4 h-4 text-amber-500" />;
       case 'Plumbing':
       case 'Water Supply':
         return <Droplets className="w-4 h-4 text-sky-500" />;
       case 'Wi-Fi / LAN':
-        return <Wifi className="w-4 h-4 text-[#EC4899] dark:text-[#F472B6]" />;
+        return <Wifi className="w-4 h-4 text-pink-500" />;
       case 'Cleaning':
-        return <Brush className="w-4 h-4 text-[#15803D] dark:text-[#2DD4A8]" />;
+        return <Brush className="w-4 h-4 text-emerald-500" />;
       default:
-        return <Armchair className="w-4 h-4 text-[#EC4899] dark:text-[#F472B6]" />;
+        return <Armchair className="w-4 h-4 text-purple-500" />;
     }
   };
 
   const renderProgressSteps = (status: string) => {
-    const steps = ['Submitted', 'Assigned', 'In Progress', 'Resolved'];
+    const steps = ['Logged', 'Assigned', 'In Progress', 'Resolved'];
     const currentIndex =
       status === 'Resolved'
         ? 3
@@ -128,21 +130,21 @@ export const StudentComplaintsTab: React.FC = () => {
             <React.Fragment key={step}>
               <div className="flex items-center gap-1.5">
                 <div
-                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold transition-colors ${
+                  className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold transition-colors ${
                     isDone
-                      ? 'bg-[#DCFCE7] dark:bg-[#2DD4A8]/20 text-[#15803D] dark:text-[#2DD4A8]'
-                      : 'bg-[#F3F4F6] dark:bg-[#120F14] text-[#9CA3AF] dark:text-[#6B7280]'
+                      ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300'
+                      : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-400'
                   }`}
                 >
-                  {isDone ? <Check className="w-3 h-3" /> : idx + 1}
+                  {isDone ? <Check className="w-3.5 h-3.5" /> : idx + 1}
                 </div>
                 <span
                   className={`text-[11px] hidden sm:inline ${
                     isCurrent
-                      ? 'font-bold text-[#1F2937] dark:text-white'
+                      ? 'font-bold text-zinc-900 dark:text-white'
                       : isDone
-                      ? 'text-[#15803D] dark:text-[#2DD4A8]'
-                      : 'text-[#9CA3AF] dark:text-[#6B7280]'
+                      ? 'text-emerald-700 dark:text-emerald-300 font-semibold'
+                      : 'text-zinc-400 dark:text-zinc-500'
                   }`}
                 >
                   {step}
@@ -152,8 +154,8 @@ export const StudentComplaintsTab: React.FC = () => {
                 <div
                   className={`flex-1 h-0.5 rounded-full ${
                     idx < currentIndex
-                      ? 'bg-[#22C55E]'
-                      : 'bg-[#E5E7EB] dark:bg-[#282A37]'
+                      ? 'bg-emerald-500'
+                      : 'bg-zinc-200 dark:bg-zinc-800'
                   }`}
                 />
               )}
@@ -165,50 +167,80 @@ export const StudentComplaintsTab: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 font-body text-[#1F2937] dark:text-[#FDF2F8] max-w-5xl mx-auto pb-12">
-      {/* Header with single primary action */}
-      <section className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#1F2937] dark:text-white">
-            Room Maintenance &amp; Repairs
-          </h1>
-          <p className="text-xs text-[#6B7280] dark:text-[#A79CB0]">
-            Log repair requests for electrician, carpentry, plumbing, and network dispatch.
-          </p>
-        </div>
+    <div className="space-y-8 font-body text-[#1F2937] dark:text-[#FDF2F8] max-w-5xl mx-auto pb-16">
+      {/* 1. Maintenance Command Center Hero Banner */}
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-pink-500/10 via-rose-500/5 to-purple-500/10 dark:from-pink-950/40 dark:via-purple-950/20 dark:to-zinc-950/60 border border-pink-200/60 dark:border-pink-900/40 p-6 sm:p-8 backdrop-blur-xl shadow-lg shadow-pink-500/5">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-pink-400/15 via-rose-300/10 to-transparent rounded-full blur-3xl pointer-events-none -mr-16 -mt-16" />
 
-        <button
-          type="button"
-          onClick={() => setIsSlideOverOpen(true)}
-          className="h-10 px-5 rounded-xl bg-gradient-to-r from-[#F472B6] to-[#EC4899] hover:from-[#EC4899] hover:to-[#DB2777] text-white text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-[0_4px_14px_rgba(236,72,153,0.3)] hover:scale-[1.02] active:scale-[0.98] self-start sm:self-auto shrink-0"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Report an issue</span>
-        </button>
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 dark:bg-white/10 backdrop-blur-md border border-pink-200 dark:border-pink-800/60 text-xs font-semibold text-pink-700 dark:text-pink-300 shadow-xs">
+              <Wrench className="w-3.5 h-3.5 text-pink-500" />
+              <span>Campus Engineering &amp; Facilities Helpdesk</span>
+              <span className="w-1 h-1 rounded-full bg-pink-400" />
+              <span>4-Hour SLA Emergency Guarantee</span>
+            </div>
+
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
+              Room Maintenance &amp; Repairs
+            </h1>
+
+            <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 max-w-xl leading-relaxed">
+              Real-time work order dispatch for electrical fixtures, carpentry, plumbing, geyser heating, and Wi-Fi access points in Room {currentStudent.roomNumber}.
+            </p>
+
+            {/* SLA Badges */}
+            <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/50 font-medium">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                98% Same-Day Resolution
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/50 font-medium">
+                <Clock className="w-3.5 h-3.5 text-blue-600" />
+                Avg Response: 4.2 Hours
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/50 font-medium">
+                <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                4.9 / 5 Scholar Satisfaction
+              </span>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row md:flex-col gap-3 shrink-0">
+            <button
+              type="button"
+              onClick={() => setIsSlideOverOpen(true)}
+              className="h-11 px-5 rounded-2xl bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 hover:from-pink-600 hover:to-rose-600 text-white text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-[0_4px_16px_rgba(236,72,153,0.35)] hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Log Maintenance Ticket</span>
+            </button>
+          </div>
+        </div>
       </section>
 
-      {/* Search & Filter Controls */}
+      {/* 2. Search & Category Filter Controls */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         {/* Status Pills */}
         <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
           <button
             type="button"
             onClick={() => setFilterState('all')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors cursor-pointer whitespace-nowrap ${
+            className={`px-3.5 py-2 rounded-2xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
               filterState === 'all'
-                ? 'bg-[#FCE7F3] dark:bg-[#2B2333] border border-[#FBCFE8] dark:border-[#38283B] text-[#EC4899] dark:text-[#F472B6]'
-                : 'text-[#6B7280] dark:text-[#A79CB0] hover:text-[#1F2937] dark:hover:text-white'
+                ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-xs'
+                : 'bg-white dark:bg-[#1B1720] border border-[#F3E8EF] dark:border-[#332A3B] text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
             }`}
           >
-            All ({myComplaints.length})
+            All Tickets ({myComplaints.length})
           </button>
           <button
             type="button"
             onClick={() => setFilterState('active')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors cursor-pointer whitespace-nowrap ${
+            className={`px-3.5 py-2 rounded-2xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
               filterState === 'active'
-                ? 'bg-[#FCE7F3] dark:bg-[#2B2333] border border-[#FBCFE8] dark:border-[#38283B] text-[#EC4899] dark:text-[#F472B6]'
-                : 'text-[#6B7280] dark:text-[#A79CB0] hover:text-[#1F2937] dark:hover:text-white'
+                ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-xs'
+                : 'bg-white dark:bg-[#1B1720] border border-[#F3E8EF] dark:border-[#332A3B] text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
             }`}
           >
             In Progress ({myComplaints.filter((c) => c.status !== 'Resolved').length})
@@ -216,10 +248,10 @@ export const StudentComplaintsTab: React.FC = () => {
           <button
             type="button"
             onClick={() => setFilterState('resolved')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors cursor-pointer whitespace-nowrap ${
+            className={`px-3.5 py-2 rounded-2xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
               filterState === 'resolved'
-                ? 'bg-[#FCE7F3] dark:bg-[#2B2333] border border-[#FBCFE8] dark:border-[#38283B] text-[#EC4899] dark:text-[#F472B6]'
-                : 'text-[#6B7280] dark:text-[#A79CB0] hover:text-[#1F2937] dark:hover:text-white'
+                ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-xs'
+                : 'bg-white dark:bg-[#1B1720] border border-[#F3E8EF] dark:border-[#332A3B] text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
             }`}
           >
             Resolved ({myComplaints.filter((c) => c.status === 'Resolved').length})
@@ -228,20 +260,20 @@ export const StudentComplaintsTab: React.FC = () => {
 
         {/* Search & Category Filter */}
         <div className="flex items-center gap-2">
-          <div className="relative flex-1 sm:w-56">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF] pointer-events-none" />
+          <div className="relative flex-1 sm:w-60">
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" />
             <input
               type="text"
-              placeholder="Search tickets..."
+              placeholder="Search work orders..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-8 pl-8 pr-3 rounded-xl bg-white dark:bg-[#1B1720] border border-[#F3E8EF] dark:border-[#332A3B] text-xs text-[#1F2937] dark:text-white placeholder:text-[#9CA3AF] dark:placeholder:text-[#6B7280] focus:outline-hidden focus:border-[#EC4899]"
+              className="w-full h-9 pl-9 pr-3 rounded-2xl bg-white dark:bg-[#1B1720] border border-[#F3E8EF] dark:border-[#332A3B] text-xs text-zinc-900 dark:text-white placeholder:text-zinc-400 focus:outline-hidden focus:border-pink-500"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#9CA3AF] hover:text-[#1F2937] dark:hover:text-white text-xs cursor-pointer"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 text-xs cursor-pointer"
               >
                 ✕
               </button>
@@ -251,7 +283,7 @@ export const StudentComplaintsTab: React.FC = () => {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="h-8 px-2.5 rounded-xl bg-white dark:bg-[#1B1720] border border-[#F3E8EF] dark:border-[#332A3B] text-xs text-[#1F2937] dark:text-white focus:outline-hidden focus:border-[#EC4899] cursor-pointer"
+            className="h-9 px-3 rounded-2xl bg-white dark:bg-[#1B1720] border border-[#F3E8EF] dark:border-[#332A3B] text-xs text-zinc-800 dark:text-zinc-200 focus:outline-hidden focus:border-pink-500 cursor-pointer"
           >
             <option value="all">All Categories</option>
             <option value="Electrical">Electrical</option>
@@ -263,19 +295,19 @@ export const StudentComplaintsTab: React.FC = () => {
         </div>
       </div>
 
-      {/* Tickets List */}
+      {/* 3. Tickets List */}
       <section className="space-y-4">
         {filteredTickets.length === 0 ? (
-          <div className="bg-white dark:bg-[#1B1720] border border-[#F3E8EF] dark:border-[#332A3B] rounded-2xl p-10 text-center space-y-4 shadow-sm">
-            <div className="w-12 h-12 rounded-2xl bg-[#DCFCE7] text-[#15803D] dark:bg-[#2DD4A8]/10 dark:text-[#2DD4A8] border border-[#BBF7D0] dark:border-[#2DD4A8]/20 flex items-center justify-center mx-auto">
-              <CheckCircle2 className="w-6 h-6" />
+          <div className="bg-white dark:bg-[#1B1720] border border-[#F3E8EF] dark:border-[#332A3B] rounded-3xl p-12 text-center space-y-4 shadow-sm max-w-xl mx-auto">
+            <div className="w-16 h-16 rounded-3xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60 flex items-center justify-center mx-auto shadow-xs">
+              <CheckCircle2 className="w-8 h-8" />
             </div>
-            <div className="max-w-md mx-auto space-y-1">
-              <h3 className="text-base font-bold text-[#1F2937] dark:text-white">
+            <div className="space-y-1">
+              <h3 className="text-lg font-bold text-zinc-900 dark:text-white">
                 All Fixtures Operational
               </h3>
-              <p className="text-xs text-[#6B7280] dark:text-[#A79CB0]">
-                There are no open repair tickets for Room {currentStudent.roomNumber}.
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-md mx-auto">
+                No outstanding maintenance tickets on file for Room {currentStudent.roomNumber}. If an electrical point or tap is malfunctioning, log an issue.
               </p>
             </div>
           </div>
@@ -284,42 +316,42 @@ export const StudentComplaintsTab: React.FC = () => {
             {filteredTickets.map((ticket) => (
               <div
                 key={ticket.id}
-                className="bg-white dark:bg-[#1B1720] border border-[#F3E8EF] dark:border-[#332A3B] rounded-2xl p-5 sm:p-6 space-y-4 shadow-sm"
+                className="bg-white dark:bg-[#1B1720] border border-[#F3E8EF] dark:border-[#332A3B] rounded-3xl p-6 sm:p-7 space-y-5 shadow-xs hover:border-pink-300 dark:hover:border-pink-800 transition-all"
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-[#FFF5F8] dark:bg-[#120F14] border border-[#F3E8EF] dark:border-[#332A3B] flex items-center justify-center shrink-0">
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-11 h-11 rounded-2xl bg-pink-50 dark:bg-[#151218] border border-pink-200 dark:border-zinc-800 flex items-center justify-center shrink-0 shadow-2xs">
                       {getCategoryIcon(ticket.category)}
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h3 className="text-sm font-bold text-[#1F2937] dark:text-white">
+                        <h3 className="text-base font-bold text-zinc-900 dark:text-white">
                           {ticket.subject}
                         </h3>
-                        <span className="text-[10px] font-mono text-[#6B7280] dark:text-[#A79CB0]">
+                        <span className="text-xs font-mono font-bold text-pink-600 dark:text-pink-400">
                           #{ticket.ticketNumber || ticket.id.replace(/[^0-9]/g, '') || '201'}
                         </span>
                       </div>
-                      <p className="text-xs text-[#6B7280] dark:text-[#A79CB0]">
-                        {ticket.category} • Room {ticket.roomNumber}
+                      <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                        {ticket.category} • Suite {ticket.roomNumber} • Priority: <span className="font-semibold text-amber-600 dark:text-amber-400">{ticket.priority}</span>
                       </p>
                     </div>
                   </div>
 
                   <span
-                    className={`px-2.5 py-1 rounded-xl text-xs font-semibold ${
+                    className={`px-3 py-1 rounded-xl text-xs font-bold ${
                       ticket.status === 'Resolved'
-                        ? 'bg-[#DCFCE7] dark:bg-[#2DD4A8]/10 text-[#15803D] dark:text-[#2DD4A8] border border-[#BBF7D0] dark:border-[#2DD4A8]/20'
+                        ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60'
                         : ticket.status === 'In Progress'
-                        ? 'bg-[#FCE7F3] dark:bg-[#2B2333] text-[#EC4899] dark:text-[#F472B6] border border-[#FBCFE8] dark:border-[#38283B]'
-                        : 'bg-[#FEF3C7] dark:bg-[#F6B657]/10 text-[#B45309] dark:text-[#F6B657] border border-[#FDE68A] dark:border-[#F6B657]/20'
+                        ? 'bg-pink-50 dark:bg-pink-950/40 text-pink-700 dark:text-pink-300 border border-pink-200 dark:border-pink-800/60'
+                        : 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60'
                     }`}
                   >
                     {ticket.status}
                   </span>
                 </div>
 
-                <p className="text-xs text-[#1F2937] dark:text-[#D1C5D8] bg-[#FFF5F8] dark:bg-[#120F14] p-3 rounded-xl border border-[#F3E8EF] dark:border-[#332A3B]">
+                <p className="text-xs text-zinc-800 dark:text-zinc-200 bg-pink-50/40 dark:bg-[#120F14] p-3.5 rounded-2xl border border-pink-100 dark:border-zinc-800 leading-relaxed">
                   {ticket.description}
                 </p>
 
@@ -328,12 +360,12 @@ export const StudentComplaintsTab: React.FC = () => {
 
                 {/* Resolution & Student Feedback (for Resolved tickets) */}
                 {ticket.status === 'Resolved' && (
-                  <div className="p-3.5 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-200/80 dark:border-emerald-800/40 space-y-3">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="p-4 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40 space-y-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <div className="space-y-0.5">
-                        <span className="text-[11px] font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1.5">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                          Work Order Completed
+                        <span className="text-xs font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1.5">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                          Repair Verified &amp; Signed Off
                         </span>
                         {ticket.resolutionRemarks && (
                           <p className="text-xs text-emerald-700 dark:text-emerald-400">
@@ -344,20 +376,20 @@ export const StudentComplaintsTab: React.FC = () => {
 
                       {/* Satisfaction Rating */}
                       <div className="flex items-center gap-2">
-                        <span className="text-[11px] text-zinc-600 dark:text-zinc-400 font-medium">
-                          {ticket.satisfactionRating ? 'Rating:' : 'Rate Service:'}
+                        <span className="text-xs text-zinc-600 dark:text-zinc-400 font-medium">
+                          {ticket.satisfactionRating ? 'Rating:' : 'Rate Workmanship:'}
                         </span>
-                        <div className="flex items-center gap-0.5">
+                        <div className="flex items-center gap-1">
                           {[1, 2, 3, 4, 5].map((star) => (
                             <button
                               key={star}
                               type="button"
                               onClick={() => rateComplaint(ticket.id, star)}
-                              className="cursor-pointer transition-transform hover:scale-110"
+                              className="cursor-pointer transition-transform hover:scale-125"
                               title={`Rate ${star} star`}
                             >
                               <Star
-                                className={`w-3.5 h-3.5 ${
+                                className={`w-4 h-4 ${
                                   star <= (ticket.satisfactionRating || 0)
                                     ? 'text-amber-500 fill-amber-500'
                                     : 'text-zinc-300 dark:text-zinc-600 hover:text-amber-400'
@@ -375,10 +407,10 @@ export const StudentComplaintsTab: React.FC = () => {
                         <div className="w-full flex items-center gap-2">
                           <input
                             type="text"
-                            placeholder="Reason for re-opening (e.g. still leaking)..."
+                            placeholder="State reason for re-opening..."
                             value={reopenReason}
                             onChange={(e) => setReopenReason(e.target.value)}
-                            className="flex-1 h-7 px-2.5 rounded-lg bg-white dark:bg-[#1B1720] border border-zinc-200 dark:border-zinc-700 text-xs text-zinc-800 dark:text-zinc-200 focus:outline-hidden focus:border-emerald-500"
+                            className="flex-1 h-8 px-3 rounded-xl bg-white dark:bg-[#1B1720] border border-zinc-200 dark:border-zinc-700 text-xs text-zinc-800 dark:text-zinc-200 focus:outline-hidden focus:border-emerald-500"
                           />
                           <button
                             type="button"
@@ -389,14 +421,14 @@ export const StudentComplaintsTab: React.FC = () => {
                                 setReopenReason('');
                               }
                             }}
-                            className="h-7 px-3 rounded-lg bg-red-600 hover:bg-red-700 text-white text-[11px] font-semibold cursor-pointer shrink-0 transition-colors"
+                            className="h-8 px-3.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-semibold cursor-pointer shrink-0 transition-colors"
                           >
-                            Confirm Re-open
+                            Re-open Work Order
                           </button>
                           <button
                             type="button"
                             onClick={() => setReopenTicketId(null)}
-                            className="text-xs text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 cursor-pointer"
+                            className="text-xs text-zinc-500 hover:text-zinc-700 cursor-pointer"
                           >
                             Cancel
                           </button>
@@ -404,7 +436,7 @@ export const StudentComplaintsTab: React.FC = () => {
                       ) : (
                         <div className="flex items-center justify-between w-full">
                           <span className="text-[11px] text-zinc-500 dark:text-zinc-400">
-                            Closed on {ticket.resolvedDate || 'Recent inspection'}
+                            Completed on {ticket.resolvedDate || 'Recent inspection'}
                           </span>
                           <button
                             type="button"
@@ -412,10 +444,10 @@ export const StudentComplaintsTab: React.FC = () => {
                               setReopenTicketId(ticket.id);
                               setReopenReason('');
                             }}
-                            className="text-[11px] text-zinc-600 dark:text-zinc-400 hover:text-red-500 dark:hover:text-red-400 font-medium flex items-center gap-1 cursor-pointer transition-colors"
+                            className="text-xs text-zinc-600 dark:text-zinc-400 hover:text-red-500 dark:hover:text-red-400 font-medium flex items-center gap-1.5 cursor-pointer transition-colors"
                           >
-                            <RotateCcw className="w-3 h-3" />
-                            <span>Issue persisting? Re-open</span>
+                            <RotateCcw className="w-3.5 h-3.5" />
+                            <span>Issue unresolved? Reopen Ticket</span>
                           </button>
                         </div>
                       )}
@@ -423,9 +455,14 @@ export const StudentComplaintsTab: React.FC = () => {
                   </div>
                 )}
 
-                <div className="flex items-center justify-between text-[11px] text-[#6B7280] dark:text-[#A79CB0] pt-1">
-                  <span>Logged: {ticket.dateSubmitted || ticket.createdAt || 'Recent'}</span>
-                  {ticket.assignedTo && <span>Technician: {ticket.assignedTo}</span>}
+                <div className="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400 pt-1 border-t border-zinc-100 dark:border-zinc-800">
+                  <span>Logged on: {ticket.dateSubmitted || ticket.createdAt || 'Recent'}</span>
+                  {ticket.assignedTo && (
+                    <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium">
+                      <UserCheck className="w-3.5 h-3.5" />
+                      Assigned: {ticket.assignedTo}
+                    </span>
+                  )}
                 </div>
               </div>
             ))}
@@ -451,158 +488,120 @@ export const StudentComplaintsTab: React.FC = () => {
               <div className="space-y-6">
                 <div className="flex items-center justify-between pb-4 border-b border-[#F3E8EF] dark:border-[#2C2436]">
                   <div>
-                    <h3 className="text-lg font-bold text-[#1F2937] dark:text-white">
-                      Report Maintenance Issue
+                    <h3 className="text-lg font-bold text-zinc-900 dark:text-white">
+                      Log Maintenance Ticket
                     </h3>
-                    <p className="text-xs text-[#6B7280] dark:text-[#A79CB0]">
-                      Technician dispatch for Room {currentStudent.roomNumber}
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                      Dispatched directly to the Sakhi Engineering &amp; Facilities Desk
                     </p>
                   </div>
                   <button
                     type="button"
                     onClick={() => setIsSlideOverOpen(false)}
-                    className="w-8 h-8 rounded-xl bg-[#FFF5F8] dark:bg-[#120F14] hover:bg-[#FCE7F3] dark:hover:bg-[#261E2E] border border-[#F3E8EF] dark:border-[#332A3B] text-[#6B7280] dark:text-[#A79CB0] hover:text-[#1F2937] dark:hover:text-white flex items-center justify-center cursor-pointer transition-colors"
+                    className="w-8 h-8 rounded-xl bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 text-zinc-600 dark:text-zinc-300 flex items-center justify-center cursor-pointer transition-colors"
                   >
                     <X className="w-4 h-4" />
                   </button>
                 </div>
 
                 {formSubmitted ? (
-                  <div className="p-6 rounded-2xl bg-[#DCFCE7] dark:bg-[#2DD4A8]/10 border border-[#BBF7D0] dark:border-[#2DD4A8]/30 text-center space-y-2">
-                    <CheckCircle2 className="w-8 h-8 text-[#15803D] dark:text-[#2DD4A8] mx-auto" />
-                    <h4 className="text-sm font-bold text-[#15803D] dark:text-[#2DD4A8]">
-                      Ticket Dispatched!
+                  <div className="p-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40 text-center space-y-2">
+                    <CheckCircle2 className="w-8 h-8 text-emerald-600 dark:text-emerald-400 mx-auto" />
+                    <h4 className="text-sm font-bold text-emerald-800 dark:text-emerald-300">
+                      Work Order Logged Successfully!
                     </h4>
-                    <p className="text-xs text-[#6B7280] dark:text-[#A79CB0]">
-                      A maintenance technician has been assigned to inspect your room.
+                    <p className="text-xs text-zinc-600 dark:text-zinc-400">
+                      Ticket forwarded to Chief Electrician / Plumber. Expected technician visit within 4 hours.
                     </p>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-4 text-xs">
                     {/* Category Selection */}
                     <div className="space-y-1.5">
-                      <label className="text-[#6B7280] dark:text-[#A79CB0] font-semibold">
+                      <label className="text-zinc-700 dark:text-zinc-300 font-semibold">
                         Issue Category
                       </label>
                       <select
                         value={category}
                         onChange={(e) => setCategory(e.target.value as ComplaintCategory)}
-                        className="w-full h-10 px-3 rounded-xl bg-[#FFF5F8] dark:bg-[#120F14] border border-[#F3E8EF] dark:border-[#332A3B] text-[#1F2937] dark:text-white focus:outline-hidden focus:border-[#EC4899] dark:focus:border-[#F472B6]"
+                        className="w-full h-10 px-3 rounded-xl bg-pink-50/50 dark:bg-[#120F14] border border-[#F3E8EF] dark:border-[#332A3B] text-zinc-900 dark:text-white focus:outline-hidden focus:border-pink-500"
                       >
-                        <option value="Electrical">Electrical (Fan, Light, Socket)</option>
-                        <option value="Plumbing">Plumbing (Tap, Drainage, Flush)</option>
-                        <option value="Wi-Fi / LAN">Wi-Fi / Internet Access</option>
-                        <option value="Cleaning">Cleaning &amp; Housekeeping</option>
-                        <option value="Furniture">Furniture &amp; Carpentry</option>
+                        <option value="Electrical">Electrical (Lights, Sockets, Fan, Geyser)</option>
+                        <option value="Plumbing">Plumbing (Taps, Drain, Flush, Geyser Leak)</option>
+                        <option value="Wi-Fi / LAN">Wi-Fi / LAN Connection / Speed</option>
+                        <option value="Cleaning">Sanitation / Mopping / Trash</option>
+                        <option value="Furniture">Furniture / Study Desk / Locker Lock</option>
                       </select>
                     </div>
 
-                    {/* Subject */}
+                    {/* Priority Level */}
                     <div className="space-y-1.5">
-                      <label className="text-[#6B7280] dark:text-[#A79CB0] font-semibold">
-                        Brief Subject
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="e.g. Desk reading lamp bulb flickering"
-                        value={subject}
-                        onChange={(e) => setSubject(e.target.value)}
-                        className="w-full h-10 px-3 rounded-xl bg-[#FFF5F8] dark:bg-[#120F14] border border-[#F3E8EF] dark:border-[#332A3B] text-[#1F2937] dark:text-white placeholder:text-[#9CA3AF] dark:placeholder:text-[#6B7280] focus:outline-hidden focus:border-[#EC4899] dark:focus:border-[#F472B6]"
-                      />
-                    </div>
-
-                    {/* Detailed Description */}
-                    <div className="space-y-1.5">
-                      <label className="text-[#6B7280] dark:text-[#A79CB0] font-semibold">
-                        Description &amp; Exact Location
-                      </label>
-                      <textarea
-                        required
-                        rows={3}
-                        placeholder="Explain the fault or damage..."
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        className="w-full p-3 rounded-xl bg-[#FFF5F8] dark:bg-[#120F14] border border-[#F3E8EF] dark:border-[#332A3B] text-[#1F2937] dark:text-white placeholder:text-[#9CA3AF] dark:placeholder:text-[#6B7280] focus:outline-hidden focus:border-[#EC4899] dark:focus:border-[#F472B6] resize-none"
-                      />
-                    </div>
-
-                    {/* Priority */}
-                    <div className="space-y-1.5">
-                      <label className="text-[#6B7280] dark:text-[#A79CB0] font-semibold">
-                        Priority Level
+                      <label className="text-zinc-700 dark:text-zinc-300 font-semibold">
+                        Urgency &amp; Priority Level
                       </label>
                       <div className="grid grid-cols-3 gap-2">
-                        {(['Low', 'Medium', 'High'] as PriorityLevel[]).map((lvl) => (
+                        {(['Low', 'Medium', 'High'] as const).map((p) => (
                           <button
-                            key={lvl}
+                            key={p}
                             type="button"
-                            onClick={() => setPriority(lvl)}
-                            className={`py-2 rounded-xl border text-center font-semibold transition-colors cursor-pointer ${
-                              priority === lvl
-                                ? 'bg-[#FCE7F3] dark:bg-[#2B2333] border-[#EC4899] dark:border-[#F472B6] text-[#EC4899] dark:text-[#F472B6]'
-                                : 'bg-[#FFF5F8] dark:bg-[#120F14] border-[#F3E8EF] dark:border-[#332A3B] text-[#6B7280] dark:text-[#A79CB0]'
+                            onClick={() => setPriority(p)}
+                            className={`py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                              priority === p
+                                ? 'bg-pink-500 text-white border-pink-500 shadow-xs'
+                                : 'bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700'
                             }`}
                           >
-                            {lvl}
+                            {p}
                           </button>
                         ))}
                       </div>
                     </div>
 
-                    {/* Optional Photo Attachment */}
+                    {/* Subject */}
                     <div className="space-y-1.5">
-                      <label className="text-[#6B7280] dark:text-[#A79CB0] font-semibold">
-                        Photo of Issue (Optional)
+                      <label className="text-zinc-700 dark:text-zinc-300 font-semibold">
+                        Brief Headline / Subject
                       </label>
-                      <div className="border border-dashed border-[#F3E8EF] dark:border-[#332A3B] hover:border-[#EC4899]/50 rounded-xl p-4 text-center cursor-pointer transition-colors bg-[#FFF5F8] dark:bg-[#120F14]">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => {
-                            if (e.target.files?.[0]) {
-                              setPhotoName(e.target.files[0].name);
-                            }
-                          }}
-                          className="hidden"
-                          id="maintenance-photo-input"
-                        />
-                        <label
-                          htmlFor="maintenance-photo-input"
-                          className="cursor-pointer flex flex-col items-center gap-1.5"
-                        >
-                          {photoName ? (
-                            <div className="flex items-center gap-1.5 text-[#15803D] dark:text-[#2DD4A8]">
-                              <FileImage className="w-4 h-4" />
-                              <span className="font-semibold truncate max-w-[200px]">{photoName}</span>
-                            </div>
-                          ) : (
-                            <>
-                              <UploadCloud className="w-5 h-5 text-[#9CA3AF] dark:text-[#6B7280]" />
-                              <span className="text-[#6B7280] dark:text-[#A79CB0]">
-                                Click or drag photo to attach
-                              </span>
-                            </>
-                          )}
-                        </label>
-                      </div>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. Study desk reading lamp switch loose"
+                        value={subject}
+                        onChange={(e) => setSubject(e.target.value)}
+                        className="w-full h-10 px-3 rounded-xl bg-pink-50/50 dark:bg-[#120F14] border border-[#F3E8EF] dark:border-[#332A3B] text-zinc-900 dark:text-white placeholder:text-zinc-400 focus:outline-hidden focus:border-pink-500"
+                      />
                     </div>
 
-                    <div className="pt-3">
+                    {/* Description */}
+                    <div className="space-y-1.5">
+                      <label className="text-zinc-700 dark:text-zinc-300 font-semibold">
+                        Detailed Description &amp; Specific Location
+                      </label>
+                      <textarea
+                        required
+                        rows={4}
+                        placeholder="Explain exact symptoms, timing of failure, and berth location..."
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        className="w-full p-3.5 rounded-2xl bg-pink-50/50 dark:bg-[#120F14] border border-[#F3E8EF] dark:border-[#332A3B] text-zinc-900 dark:text-white placeholder:text-zinc-400 focus:outline-hidden focus:border-pink-500 resize-none"
+                      />
+                    </div>
+
+                    <div className="pt-2">
                       <button
                         type="submit"
-                        className="w-full h-10 rounded-xl bg-gradient-to-r from-[#F472B6] to-[#EC4899] hover:from-[#EC4899] hover:to-[#DB2777] text-white font-semibold flex items-center justify-center gap-2 cursor-pointer transition-all shadow-[0_4px_14px_rgba(236,72,153,0.3)]"
+                        className="w-full h-11 rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-semibold flex items-center justify-center gap-2 cursor-pointer transition-all shadow-[0_4px_14px_rgba(236,72,153,0.3)] hover:scale-[1.01]"
                       >
                         <span>Dispatch Maintenance Request</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
+                        <ArrowRight className="w-4 h-4" />
                       </button>
                     </div>
                   </form>
                 )}
               </div>
 
-              <p className="text-[11px] text-[#6B7280] dark:text-[#A79CB0] pt-4 border-t border-[#F3E8EF] dark:border-[#2C2436]">
-                Technicians attend standard maintenance tickets between 09:00 AM and 05:30 PM.
+              <p className="text-[11px] text-zinc-500 dark:text-zinc-400 pt-4 border-t border-[#F3E8EF] dark:border-[#2C2436]">
+                Hostel staff will verify entry permissions with resident scholars prior to room entrance.
               </p>
             </motion.div>
           </div>

@@ -15,6 +15,10 @@ import {
   Square,
   PhoneCall,
   Check,
+  Sparkles,
+  MessageSquare,
+  CalendarCheck,
+  TrendingUp,
 } from 'lucide-react';
 import { GateSentryModal } from './GateSentryModal';
 
@@ -127,6 +131,53 @@ export const WardenLeavesTab: React.FC = () => {
           <ShieldCheck className="w-4 h-4" />
           <span>Sentry Gate Scanner</span>
         </button>
+      </div>
+
+      {/* Top 4-KPI Metric Ribbon */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="p-4 rounded-2xl bg-[#16181D]/90 border border-white/[0.08] shadow-sm space-y-1">
+          <div className="flex items-center justify-between text-zinc-400 text-xs">
+            <span>Total Requests</span>
+            <CalendarCheck className="w-4 h-4 text-violet-400" />
+          </div>
+          <div className="text-2xl font-bold font-mono text-white">
+            {leaveRequests.length}
+          </div>
+          <p className="text-[11px] text-zinc-500">AY 2025-26 term records</p>
+        </div>
+
+        <div className="p-4 rounded-2xl bg-[#16181D]/90 border border-amber-500/30 shadow-sm space-y-1 relative overflow-hidden">
+          <div className="flex items-center justify-between text-amber-300 text-xs">
+            <span>Pending Sign-Off</span>
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+          </div>
+          <div className="text-2xl font-bold font-mono text-amber-400">
+            {leaveRequests.filter((l) => l.status === 'Pending').length}
+          </div>
+          <p className="text-[11px] text-zinc-400">Awaiting warden signature</p>
+        </div>
+
+        <div className="p-4 rounded-2xl bg-[#16181D]/90 border border-emerald-500/30 shadow-sm space-y-1">
+          <div className="flex items-center justify-between text-emerald-300 text-xs">
+            <span>WhatsApp Bot Leads</span>
+            <MessageSquare className="w-4 h-4 text-emerald-400" />
+          </div>
+          <div className="text-2xl font-bold font-mono text-emerald-400">
+            {leaveRequests.filter((l) => l.source === 'WhatsApp').length}
+          </div>
+          <p className="text-[11px] text-zinc-400">Auto-dispatched via Meta API</p>
+        </div>
+
+        <div className="p-4 rounded-2xl bg-[#16181D]/90 border border-white/[0.08] shadow-sm space-y-1">
+          <div className="flex items-center justify-between text-teal-300 text-xs">
+            <span>Approved Permits</span>
+            <ShieldCheck className="w-4 h-4 text-teal-400" />
+          </div>
+          <div className="text-2xl font-bold font-mono text-teal-300">
+            {leaveRequests.filter((l) => l.status === 'Approved').length}
+          </div>
+          <p className="text-[11px] text-zinc-500">Cryptographically active QR</p>
+        </div>
       </div>
 
       {/* Bulk Action Bar (Visible when items selected) */}
