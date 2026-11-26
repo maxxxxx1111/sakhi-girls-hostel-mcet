@@ -218,7 +218,7 @@ export const TodayTimelineSection: React.FC = () => {
         isRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2.5 motion-reduce:opacity-100 motion-reduce:translate-y-0'
       }`}
     >
-      <div className="bg-white dark:bg-[#18141F] border border-[#F3E8EF] dark:border-[#2C2436] rounded-2xl p-5 sm:p-6 shadow-[0_4px_20px_rgba(236,72,153,0.06)]">
+      <div className="bg-white dark:bg-[#18141F] border border-pink-100 dark:border-[#2C2436] rounded-3xl p-6 sm:p-7 shadow-[0_4px_24px_rgba(236,72,153,0.05)]">
         {/* Header: Title, Curfew Status & Category Filter */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#F3E8EF] dark:border-[#2C2436]">
           <div className="flex items-center gap-3">

@@ -9,3 +9,5 @@ coverage/
 data/baileys_auth/
 scratch*
 
+
+.vercel
