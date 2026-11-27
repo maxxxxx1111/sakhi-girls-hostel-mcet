@@ -8,7 +8,8 @@ export interface RevealOptions {
 export function useIntersectionReveal(options: RevealOptions = {}) {
   const { threshold = 0.08, delayMs = 0 } = options;
   const ref = useRef<HTMLDivElement>(null);
-  const [isRevealed, setIsRevealed] = useState(false);
+  // Default to true so components are immediately visible without relying on scroll triggers
+  const [isRevealed, setIsRevealed] = useState(true);
 
   useEffect(() => {
     // Check for reduced motion

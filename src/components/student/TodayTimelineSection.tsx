@@ -214,9 +214,7 @@ export const TodayTimelineSection: React.FC = () => {
     <section
       ref={ref}
       aria-labelledby="today-timeline-heading"
-      className={`transition-all duration-200 ease-out ${
-        isRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2.5 motion-reduce:opacity-100 motion-reduce:translate-y-0'
-      }`}
+      className="transition-all duration-200 ease-out opacity-100 translate-y-0"
     >
       <div className="bg-white dark:bg-[#18141F] border border-pink-100 dark:border-[#2C2436] rounded-3xl p-6 sm:p-7 shadow-[0_4px_24px_rgba(236,72,153,0.05)]">
         {/* Header: Title, Curfew Status & Category Filter */}

@@ -291,9 +291,7 @@ export const StudentOverviewTab: React.FC = () => {
       ========================================================================= */}
       <section
         ref={metricsRef}
-        className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 transition-all duration-300 ${
-          isMetricsRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
-        }`}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 transition-all duration-300 opacity-100 translate-y-0"
       >
         {/* Metric 1: Sanctuary Suite */}
         <div className="relative overflow-hidden p-5 rounded-2xl bg-white dark:bg-[#18141F] border border-pink-100 dark:border-[#2C2436] shadow-[0_4px_20px_rgba(236,72,153,0.04)] hover:border-pink-300 dark:hover:border-pink-800 transition-all duration-200 group">
@@ -399,9 +397,7 @@ export const StudentOverviewTab: React.FC = () => {
       {pendingLeave && (
         <section
           ref={attentionRef}
-          className={`transition-all duration-300 ${
-            isAttentionRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
-          }`}
+          className="transition-all duration-300 opacity-100 translate-y-0"
         >
           <div className="p-6 rounded-3xl bg-gradient-to-r from-amber-500/[0.07] via-amber-500/[0.04] to-transparent bg-white dark:bg-[#18141F] border-2 border-amber-400/80 dark:border-amber-500/60 shadow-[0_8px_30px_rgba(245,158,11,0.12)] space-y-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -573,9 +569,7 @@ export const StudentOverviewTab: React.FC = () => {
       ========================================================================= */}
       <section
         ref={modulesRef}
-        className={`grid grid-cols-1 lg:grid-cols-12 gap-6 transition-all duration-300 ${
-          isModulesRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
-        }`}
+        className="grid grid-cols-1 lg:grid-cols-12 gap-6 transition-all duration-300 opacity-100 translate-y-0"
       >
         {/* Left Column: Room Sanctuary & Annapurna Mess Live Card */}
         <div className="lg:col-span-7 space-y-6">

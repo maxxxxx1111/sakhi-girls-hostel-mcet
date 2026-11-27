@@ -370,13 +370,21 @@ html.light body,
 }
 
 #hero-section h1,
-#hero-section h1 *,
 .light #hero-section h1,
-.light #hero-section h1 *,
 .light #hero-section h1.text-white,
 .light #hero-section .font-display.text-white {
   color: #FFFFFF !important;
   text-shadow: 0 4px 24px rgba(0, 0, 0, 0.95), 0 2px 8px rgba(0, 0, 0, 0.85) !important;
+}
+
+#hero-section h2,
+#hero-section h3,
+#hero-section h4,
+.light #hero-section h2,
+.light #hero-section h3,
+.light #hero-section h4 {
+  color: #FFFFFF !important;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9) !important;
 }
 
 /* Gradient highlight text inside hero stays vibrant */
@@ -386,6 +394,8 @@ html.light body,
   -webkit-text-fill-color: transparent !important;
   background-clip: text !important;
   -webkit-background-clip: text !important;
+  text-shadow: none !important;
+  filter: drop-shadow(0 2px 18px rgba(244, 114, 182, 0.5)) !important;
 }
 
 #hero-section p,
