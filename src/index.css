@@ -358,100 +358,18 @@ html.light body,
 }
 
 /* =========================================================================
-   HERO & VIDEO OVERLAYS - ALWAYS MAINTAIN PRISTINE CONTRAST
-   These sections feature dark video backgrounds and MUST ALWAYS render
-   crisp white text, high contrast drop-shadows, and readable badges.
+   COLLEGIATE HERO & INSTITUTIONAL SECTIONS
+   Clean, dignified typography with natural contrast in both light & dark mode.
    ========================================================================= */
 
-#hero-section,
 .light #hero-section {
-  background-color: #09090B !important;
-  color: #FFFFFF !important;
+  background-color: #FAF8F5;
+  color: #0F1E36;
 }
 
-#hero-section h1,
-.light #hero-section h1,
-.light #hero-section h1.text-white,
-.light #hero-section .font-display.text-white {
-  color: #FFFFFF !important;
-  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.95), 0 2px 8px rgba(0, 0, 0, 0.85) !important;
-}
-
-#hero-section h2,
-#hero-section h3,
-#hero-section h4,
-.light #hero-section h2,
-.light #hero-section h3,
-.light #hero-section h4 {
-  color: #FFFFFF !important;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9) !important;
-}
-
-/* Gradient highlight text inside hero stays vibrant */
-#hero-section h1 span.bg-clip-text,
-.light #hero-section h1 span.bg-clip-text {
-  color: transparent !important;
-  -webkit-text-fill-color: transparent !important;
-  background-clip: text !important;
-  -webkit-background-clip: text !important;
-  text-shadow: none !important;
-  filter: drop-shadow(0 2px 18px rgba(244, 114, 182, 0.5)) !important;
-}
-
-#hero-section p,
-.light #hero-section p,
-.light #hero-section p.text-zinc-200,
-.light #hero-section .hero-description {
-  color: #F4F4F5 !important;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.95), 0 1px 4px rgba(0, 0, 0, 0.85) !important;
-}
-
-/* Campus identity badge */
-#hero-section .hero-badge,
-.light #hero-section .hero-badge {
-  background-color: rgba(17, 18, 21, 0.85) !important;
-  border-color: rgba(255, 255, 255, 0.2) !important;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-
-#hero-section .hero-badge span,
-.light #hero-section .hero-badge span {
-  color: #DDD6FE !important;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
-}
-
-/* Glass Trust Badges at bottom of hero */
-#hero-section .hero-trust-badge,
-.light #hero-section .hero-trust-badge {
-  background-color: rgba(17, 18, 21, 0.85) !important;
-  border-color: rgba(255, 255, 255, 0.18) !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-
-#hero-section .hero-trust-badge span,
-.light #hero-section .hero-trust-badge span {
-  color: #FFFFFF !important;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
-}
-
-/* Warden button on Hero */
-#hero-section .hero-btn-secondary,
-.light #hero-section .hero-btn-secondary {
-  background-color: rgba(22, 24, 29, 0.88) !important;
-  border-color: rgba(255, 255, 255, 0.24) !important;
-  color: #FFFFFF !important;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-
-#hero-section .hero-btn-secondary:hover,
-.light #hero-section .hero-btn-secondary:hover {
-  background-color: rgba(35, 38, 46, 0.95) !important;
-  border-color: rgba(255, 255, 255, 0.4) !important;
-  color: #FFFFFF !important;
+.dark #hero-section {
+  background-color: #0B1120;
+  color: #F8FAFC;
 }
 
 /* CTA Footer section protection */

@@ -98,11 +98,7 @@ export const Navbar: React.FC = () => {
   return (
     <header
       id="main-navbar"
-      className={`sticky top-0 z-40 backdrop-blur-xl border-b px-4 sm:px-6 lg:px-8 py-3 transition-all font-body ${
-        !role
-          ? 'bg-[#0A070D]/90 border-white/[0.1] text-white shadow-lg shadow-black/40'
-          : 'bg-[#09090B]/85 dark:bg-[#09090B]/85 light:bg-white/95 border-white/[0.08] light:border-[#F3E8EF] light:shadow-xs text-zinc-100 light:text-zinc-900'
-      }`}
+      className="sticky top-0 z-40 backdrop-blur-xl border-b px-4 sm:px-6 lg:px-8 py-3 transition-all font-body bg-white/95 dark:bg-[#0B1120]/95 border-zinc-200/80 dark:border-white/[0.08] shadow-xs text-zinc-900 dark:text-zinc-100"
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
         
@@ -118,28 +114,20 @@ export const Navbar: React.FC = () => {
           }}
           className="flex items-center gap-3 cursor-pointer select-none group"
         >
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-pink-500 via-rose-500 to-pink-600 text-white flex items-center justify-center shadow-[0_2px_16px_rgba(236,72,153,0.35)] border border-pink-400/30 group-hover:scale-105 transition-transform duration-200">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-rose-700 via-rose-600 to-pink-600 text-white flex items-center justify-center shadow-md border border-rose-400/30 group-hover:scale-105 transition-transform duration-200">
             <Building2 className="w-4 h-4 text-white" />
           </div>
 
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
-              <span
-                className={`text-base font-bold tracking-tight font-display ${
-                  !role ? 'text-white' : 'text-zinc-100 light:text-zinc-900'
-                }`}
-              >
+              <span className="text-base font-bold tracking-tight font-display text-zinc-900 dark:text-white">
                 Sakhi
               </span>
-              <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-md bg-white/[0.08] light:bg-pink-100 text-rose-300 light:text-pink-700 border border-white/[0.1] light:border-pink-200 tracking-wider">
+              <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-md bg-rose-100 dark:bg-rose-950/80 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-800 tracking-wider">
                 MCET
               </span>
             </div>
-            <span
-              className={`text-[11px] hidden sm:inline -mt-0.5 ${
-                !role ? 'text-zinc-400' : 'text-zinc-400 light:text-zinc-500'
-              }`}
-            >
+            <span className="text-[11px] hidden sm:inline -mt-0.5 text-zinc-500 dark:text-zinc-400">
               Girls Residential Wing &amp; Annapurna Dining
             </span>
           </div>
@@ -147,15 +135,15 @@ export const Navbar: React.FC = () => {
 
         {/* Center: Clean visitor navigation */}
         {!role && (
-          <nav className="hidden md:flex items-center gap-1 bg-white/[0.05] p-1 rounded-full border border-white/[0.1] backdrop-blur-md">
+          <nav className="hidden md:flex items-center gap-1 bg-zinc-100/90 dark:bg-white/[0.06] p-1 rounded-full border border-zinc-200/90 dark:border-white/[0.1] backdrop-blur-md">
             {NAV_ITEMS.map((item) => (
               <button
                 key={item.label}
                 onClick={() => handleNavClick(item.label, item.sectionId)}
                 className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 cursor-pointer ${
                   activeItem === item.label
-                    ? 'bg-white/[0.15] text-white shadow-xs'
-                    : 'text-zinc-300 hover:text-white hover:bg-white/[0.08]'
+                    ? 'bg-white dark:bg-white/[0.18] text-rose-700 dark:text-white shadow-2xs font-bold'
+                    : 'text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/[0.08]'
                 }`}
               >
                 {item.label}
@@ -170,16 +158,12 @@ export const Navbar: React.FC = () => {
           <div className="relative" ref={demoMenuRef}>
             <button
               onClick={() => setIsDemoMenuOpen(!isDemoMenuOpen)}
-              className={`flex items-center gap-2 px-3 py-1.5 text-xs rounded-full border transition-all cursor-pointer font-medium ${
-                !role
-                  ? 'bg-white/[0.06] hover:bg-white/[0.12] text-zinc-200 border-white/[0.15]'
-                  : 'bg-white/[0.04] light:bg-white hover:bg-white/[0.08] light:hover:bg-pink-50/70 text-zinc-300 light:text-zinc-700 border-white/[0.1] light:border-pink-200 light:shadow-2xs'
-              }`}
+              className="flex items-center gap-2 px-3 py-1.5 text-xs rounded-full border transition-all cursor-pointer font-medium bg-white dark:bg-white/[0.06] hover:bg-zinc-50 dark:hover:bg-white/[0.1] text-zinc-800 dark:text-zinc-200 border-zinc-200 dark:border-white/[0.15] shadow-2xs"
               title="Switch demo account"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" />
-              <span className={`hidden sm:inline text-[11px] ${!role ? 'text-zinc-400' : 'text-zinc-400 light:text-zinc-500'}`}>Role:</span>
-              <span className={`font-semibold ${!role ? 'text-white' : 'text-zinc-100 light:text-zinc-900'}`}>
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
+              <span className="hidden sm:inline text-[11px] text-zinc-500 dark:text-zinc-400">Role:</span>
+              <span className="font-semibold text-zinc-900 dark:text-white">
                 {role === 'student' ? 'Student' : role === 'warden' ? 'Warden' : 'Switch'}
               </span>
               <ChevronDown className="w-3.5 h-3.5 text-zinc-400" />
@@ -257,14 +241,10 @@ export const Navbar: React.FC = () => {
           {/* DBMS Project Showcase Trigger */}
           <button
             onClick={() => setIsDbmsModalOpen(true)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-medium transition-all duration-200 cursor-pointer ${
-              !role
-                ? 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
-                : 'bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 light:text-zinc-700 border-white/[0.1] light:border-pink-200'
-            }`}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 text-xs font-semibold transition-all duration-200 cursor-pointer shadow-2xs"
             title="Academic DBMS Project Architecture, ER Schema & Interactive SQL Sandbox"
           >
-            <Database className="w-3.5 h-3.5 text-emerald-400" />
+            <Database className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
             <span className="hidden sm:inline font-semibold">DBMS</span>
           </button>
 
@@ -276,24 +256,20 @@ export const Navbar: React.FC = () => {
               }
               setActiveTab('whatsapp');
             }}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-medium transition-all duration-200 cursor-pointer group ${
-              !role
-                ? 'bg-white/[0.06] hover:bg-white/[0.12] text-zinc-200 border-white/[0.15]'
-                : 'bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 light:text-zinc-700 border-white/[0.1] light:border-pink-200'
-            }`}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-white/[0.06] hover:bg-zinc-50 dark:hover:bg-white/[0.1] text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-white/[0.15] text-xs font-semibold transition-all duration-200 cursor-pointer shadow-2xs group"
             title="Interactive WhatsApp Cloud Gate Pass Chatbot & Live MySQL Logs"
           >
-            <MessageSquare className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" />
+            <MessageSquare className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform" />
             <span className="hidden sm:inline font-semibold">WhatsApp Bot</span>
           </button>
 
           {/* Emergency SOS Trigger with subtle pulse */}
           <button
             onClick={() => setIsSOSModalOpen(true)}
-            className="group relative flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/40 text-xs font-medium transition-all duration-200 cursor-pointer"
+            className="group relative flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-100 dark:hover:bg-rose-900/40 text-rose-800 dark:text-rose-300 border border-rose-300 dark:border-rose-700 text-xs font-bold transition-all duration-200 cursor-pointer shadow-2xs"
             title="Campus Emergency SOS Desk"
           >
-            <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
+            <ShieldAlert className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
             <span className="hidden sm:inline font-semibold">SOS</span>
           </button>
 
@@ -418,7 +394,7 @@ export const Navbar: React.FC = () => {
           ) : (
             <button
               onClick={() => openAuthModal('student')}
-              className="px-5 py-2 rounded-xl bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 hover:from-pink-600 hover:to-rose-600 text-white text-xs font-semibold transition-all shadow-[0_2px_14px_rgba(236,72,153,0.35)] cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+              className="px-5 py-2 rounded-xl bg-gradient-to-r from-rose-700 to-pink-600 hover:from-rose-800 hover:to-pink-700 text-white text-xs font-bold transition-all shadow-xs cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
             >
               Sign In
             </button>

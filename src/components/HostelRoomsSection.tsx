@@ -211,34 +211,34 @@ export const HostelRoomsSection: React.FC = () => {
   return (
     <section
       id="rooms-section"
-      className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 py-24 border-t border-white/[0.08] font-body"
+      className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 py-20 border-t border-zinc-200/80 dark:border-white/[0.08] font-body"
     >
       {/* Section Header */}
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
         <div>
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-pink-500/10 border border-pink-500/20 text-pink-400 text-xs font-semibold uppercase tracking-wider font-mono mb-3.5">
-            <Building className="w-3.5 h-3.5 text-pink-400" />
-            <span>Sakhi Girls Hostel Accommodation</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-900 text-rose-800 dark:text-rose-300 text-xs font-semibold uppercase tracking-wider font-mono mb-3.5">
+            <Building className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
+            <span>Sakhi Girls' Hostel Accommodation</span>
           </div>
-          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-white font-extrabold tracking-tight">
-            Sakhi Girls Hostel Living Suites
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-zinc-900 dark:text-white font-extrabold tracking-tight">
+            Residential Rooms &amp; Living Wings
           </h2>
-          <p className="text-sm text-zinc-400 max-w-2xl mt-3 leading-relaxed">
-            Four residential floors dedicated to 1st, 2nd, 3rd, and 4th year female engineering scholars across CS, IT, ENTC, ELPO, CIVIL, and MECHANICAL branches at MCET Shegaon.
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 max-w-2xl mt-3 leading-relaxed">
+            Four dedicated residential floors for First Year (FE), Second Year (SE), Third Year (TE), and Final Year (BE) female engineering scholars across all departments at MCET Shegaon.
           </p>
         </div>
 
         {/* Filter Badges */}
         <div className="flex flex-wrap items-center gap-2 self-start lg:self-end">
-          <div className="flex items-center p-1 rounded-2xl bg-[#111215] border border-white/[0.08] shadow-inner">
+          <div className="flex items-center p-1 rounded-2xl bg-zinc-100 dark:bg-[#111215] border border-zinc-200 dark:border-white/[0.08]">
             {(['all', 'single', 'twin', 'triple'] as const).map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold capitalize transition-all cursor-pointer ${
                   selectedCategory === cat
-                    ? 'bg-violet-600 text-white shadow-[0_0_14px_rgba(139,92,246,0.4)]'
-                    : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
+                    ? 'bg-rose-700 text-white shadow-xs font-bold'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/[0.04]'
                 }`}
               >
                 {cat === 'all' ? 'All Layouts' : `${cat} Sharing`}
@@ -246,10 +246,10 @@ export const HostelRoomsSection: React.FC = () => {
             ))}
           </div>
 
-          <div className="hidden sm:flex items-center p-1 rounded-2xl bg-[#111215] border border-pink-500/20">
-            <span className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-pink-600/20 text-pink-300 font-mono flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Sakhi Girls Hostel (Floors 1-4)</span>
+          <div className="hidden sm:flex items-center p-1 rounded-2xl bg-rose-50 dark:bg-[#111215] border border-rose-200 dark:border-rose-900">
+            <span className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-300 font-mono flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Wings A, B, C &amp; D (Floors 1-4)</span>
             </span>
           </div>
         </div>
@@ -268,10 +268,10 @@ export const HostelRoomsSection: React.FC = () => {
               transition={{ duration: 0.35, delay: idx * 0.08 }}
               onMouseEnter={() => setHoveredRoomId(room.id)}
               onMouseLeave={() => setHoveredRoomId(null)}
-              className="group relative rounded-3xl bg-[#111215] border border-white/[0.08] hover:border-violet-500/50 transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.5)] hover:shadow-[0_12px_40px_rgba(139,92,246,0.15)]"
+              className="group relative rounded-3xl bg-white dark:bg-[#111622] border border-zinc-200 dark:border-white/[0.08] hover:border-rose-400 dark:hover:border-rose-500/50 transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_36px_rgba(225,29,72,0.12)]"
             >
               {/* Image & Overlay Badges */}
-              <div className="relative h-64 w-full bg-[#16181D] overflow-hidden">
+              <div className="relative h-64 w-full bg-zinc-100 dark:bg-[#16181D] overflow-hidden">
                 <img
                   src={room.image}
                   alt={room.name}
@@ -280,25 +280,25 @@ export const HostelRoomsSection: React.FC = () => {
                 />
 
                 {/* Subtle vignette gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#111215] via-[#111215]/20 to-black/40 pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 pointer-events-none" />
 
                 {/* Price Pill */}
-                <div className="absolute top-4 right-4 bg-[#111215]/90 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/[0.15] shadow-lg flex items-center gap-1.5">
+                <div className="absolute top-4 right-4 bg-black/75 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/20 shadow-lg flex items-center gap-1.5">
                   <span className="font-display font-extrabold text-sm text-white tracking-tight">
                     ₹{(room.priceSemester ?? 0).toLocaleString('en-IN')}
                   </span>
-                  <span className="text-[10px] text-zinc-400 font-mono">/ sem</span>
+                  <span className="text-[10px] text-zinc-300 font-mono">/ sem</span>
                 </div>
 
                 {/* Occupancy Badge */}
-                <div className="absolute top-4 left-4 bg-violet-600/90 backdrop-blur-md text-white px-3 py-1 rounded-full text-[11px] font-bold border border-violet-400/40 shadow-md flex items-center gap-1.5">
+                <div className="absolute top-4 left-4 bg-rose-700/95 backdrop-blur-md text-white px-3 py-1 rounded-full text-[11px] font-bold border border-rose-400/40 shadow-md flex items-center gap-1.5">
                   <Users className="w-3.5 h-3.5" />
                   <span>{room.occupancyLabel}</span>
                 </div>
 
                 {/* Availability status bar */}
                 <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 text-emerald-400 font-mono text-[11px]">
+                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-md border border-white/10 text-emerald-300 font-mono text-[11px]">
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                     <span>{room.spotsLeft} Beds Available</span>
                   </div>
@@ -308,9 +308,9 @@ export const HostelRoomsSection: React.FC = () => {
                       setActiveModalRoom(room);
                       setActiveGalleryIndex(0);
                     }}
-                    className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/20 text-white font-medium text-[11px] transition-colors cursor-pointer"
+                    className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/30 text-white font-medium text-[11px] transition-colors cursor-pointer"
                   >
-                    <Eye className="w-3.5 h-3.5 text-violet-300" />
+                    <Eye className="w-3.5 h-3.5 text-rose-200" />
                     <span>View Specs</span>
                   </button>
                 </div>
@@ -321,24 +321,24 @@ export const HostelRoomsSection: React.FC = () => {
                 <div>
                   {/* Title & Tagline */}
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <h3 className="font-display text-xl font-bold text-white tracking-tight group-hover:text-violet-300 transition-colors">
+                    <h3 className="font-serif text-xl font-bold text-zinc-900 dark:text-white tracking-tight group-hover:text-rose-700 dark:group-hover:text-rose-400 transition-colors">
                       {room.name}
                     </h3>
                   </div>
 
-                  <p className="text-xs text-zinc-400 leading-relaxed line-clamp-2 mb-4">
+                  <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed line-clamp-2 mb-4">
                     {room.description}
                   </p>
 
                   {/* Dimension & Eligibility Info */}
-                  <div className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.05] text-[11px] text-zinc-400 space-y-1 mb-4">
+                  <div className="p-3 rounded-xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/[0.05] text-[11px] text-zinc-600 dark:text-zinc-400 space-y-1 mb-4">
                     <div className="flex items-center gap-2">
-                      <Maximize2 className="w-3.5 h-3.5 text-violet-400 shrink-0" />
+                      <Maximize2 className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400 shrink-0" />
                       <span>{room.dimensions}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                      <span className="text-zinc-300 font-medium truncate">{room.eligibility}</span>
+                      <Sparkles className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
+                      <span className="text-zinc-800 dark:text-zinc-200 font-medium truncate">{room.eligibility}</span>
                     </div>
                   </div>
 
@@ -347,10 +347,10 @@ export const HostelRoomsSection: React.FC = () => {
                     <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-500 font-semibold block">
                       Furnished Hostel Amenities:
                     </span>
-                    <ul className="grid grid-cols-1 gap-1.5 text-xs text-zinc-300">
+                    <ul className="grid grid-cols-1 gap-1.5 text-xs text-zinc-700 dark:text-zinc-300">
                       {room.features.map((feat, fIdx) => (
                         <li key={fIdx} className="flex items-center gap-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                           <span className="truncate">{feat}</span>
                         </li>
                       ))}
@@ -359,22 +359,22 @@ export const HostelRoomsSection: React.FC = () => {
                 </div>
 
                 {/* Card Action Buttons */}
-                <div className="space-y-2.5 pt-4 border-t border-white/[0.06]">
+                <div className="space-y-2.5 pt-4 border-t border-zinc-100 dark:border-white/[0.06]">
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       onClick={() => {
                         setActiveModalRoom(room);
                         setActiveGalleryIndex(0);
                       }}
-                      className="w-full py-2.5 px-3 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-zinc-200 border border-white/[0.1] text-xs font-medium transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                      className="w-full py-2.5 px-3 rounded-xl bg-zinc-100 dark:bg-white/[0.06] hover:bg-zinc-200 dark:hover:bg-white/[0.1] text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-white/[0.1] text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                     >
-                      <Info className="w-3.5 h-3.5 text-violet-400" />
+                      <Info className="w-3.5 h-3.5 text-zinc-600 dark:text-zinc-400" />
                       <span>Inventory Details</span>
                     </button>
 
                     <button
                       onClick={() => openAuthModal('student')}
-                      className="w-full py-2.5 px-3 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold transition-all shadow-[0_0_18px_rgba(139,92,246,0.35)] flex items-center justify-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                      className="w-full py-2.5 px-3 rounded-xl bg-rose-700 hover:bg-rose-800 text-white text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
                     >
                       <span>Apply Allotment</span>
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -382,7 +382,7 @@ export const HostelRoomsSection: React.FC = () => {
                   </div>
 
                   <p className="text-[10px] text-center text-zinc-500 font-mono">
-                    Security Deposit: ₹{(room.securityDeposit ?? 0).toLocaleString('en-IN')} (Refundable)
+                    Security Deposit: ₹{(room.securityDeposit ?? 0).toLocaleString('en-IN')} (100% Refundable)
                   </p>
                 </div>
               </div>
@@ -392,50 +392,50 @@ export const HostelRoomsSection: React.FC = () => {
       </motion.div>
 
       {/* Campus Hostel Quality Standards Strip */}
-      <div className="mt-14 p-6 sm:p-8 rounded-3xl bg-[#111215] border border-white/[0.08] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="mt-14 p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#111215] border border-zinc-200/90 dark:border-white/[0.08] shadow-xs grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="flex items-start gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-violet-500/15 border border-violet-500/25 flex items-center justify-center text-violet-400 shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 flex items-center justify-center text-rose-700 dark:text-rose-400 shrink-0">
             <Wifi className="w-5 h-5" />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-white mb-0.5">Gigabit LAN &amp; Wi-Fi 6</h4>
-            <p className="text-[11px] text-zinc-400 leading-snug">
+            <h4 className="text-xs font-bold text-zinc-900 dark:text-white mb-0.5">Gigabit LAN &amp; Wi-Fi 6</h4>
+            <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-snug">
               Every study desk has a dedicated RJ45 CAT6 port connected to campus fiber.
             </p>
           </div>
         </div>
 
         <div className="flex items-start gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/25 flex items-center justify-center text-amber-400 shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 flex items-center justify-center text-amber-700 dark:text-amber-400 shrink-0">
             <Sun className="w-5 h-5" />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-white mb-0.5">Solar Hot Water Array</h4>
-            <p className="text-[11px] text-zinc-400 leading-snug">
+            <h4 className="text-xs font-bold text-zinc-900 dark:text-white mb-0.5">Solar Hot Water Array</h4>
+            <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-snug">
               5000L rooftop solar collectors providing thermostatic hot water 24×7.
             </p>
           </div>
         </div>
 
         <div className="flex items-start gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center text-emerald-400 shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-emerald-700 dark:text-emerald-400 shrink-0">
             <Shield className="w-5 h-5" />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-white mb-0.5">Biometric &amp; RFID Gates</h4>
-            <p className="text-[11px] text-zinc-400 leading-snug">
+            <h4 className="text-xs font-bold text-zinc-900 dark:text-white mb-0.5">Biometric &amp; Sentry Gates</h4>
+            <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-snug">
               Guarded 24×7 with automated curfew logging and QR gate pass verification.
             </p>
           </div>
         </div>
 
         <div className="flex items-start gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-blue-500/15 border border-blue-500/25 flex items-center justify-center text-blue-400 shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 flex items-center justify-center text-blue-700 dark:text-blue-400 shrink-0">
             <Zap className="w-5 h-5" />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-white mb-0.5">Dual UPS Generator</h4>
-            <p className="text-[11px] text-zinc-400 leading-snug">
+            <h4 className="text-xs font-bold text-zinc-900 dark:text-white mb-0.5">Dual UPS Generator</h4>
+            <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-snug">
               100% uninterrupted study desk power backup during exam preparation.
             </p>
           </div>
